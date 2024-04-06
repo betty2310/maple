@@ -9,7 +9,7 @@ const counter = ref(0)
     <div class="custom-node">
         <Handle type="target" :position="Position.Top" />
         <button @click="counter++">Increment</button>
-        <div v-for="count of counter" :key="count">{{ count }}</div>
+        <div>{{ counter }}</div>
     </div>
 </template>
 
@@ -23,6 +23,6 @@ const counter = ref(0)
     gap: 10px;
     background: white;
     border: 1px solid black;
-    border-radius: 4px;
+    border-radius: 14px;
 }
 </style>
