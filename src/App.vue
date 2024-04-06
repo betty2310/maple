@@ -4,8 +4,9 @@ import { Background } from '@vue-flow/background'
 import { VueFlow, useVueFlow, type Node, type Edge, Position } from '@vue-flow/core'
 import CustomNode from './CustomNode.vue'
 import CustomEdge from './CustomEdge.vue'
+import CircuitsListBar from './components/CircuitsListBar.vue'
 
-const { onConnect, addEdges, addNodes } = useVueFlow()
+const { onConnect, addEdges } = useVueFlow()
 
 const nodes = ref<Node[]>([
   { id: '1', type: 'input', label: 'Rectangle', position: { x: 250, y: 5 } },
@@ -22,26 +23,12 @@ onConnect((params) => {
   addEdges([params])
 })
 
-function generateRandomNode(): Node {
-  return {
-    id: Math.random().toString(36).substring(7),
-    position: { x: Math.random() * 400, y: Math.random() * 400 },
-    label: "Random node",
-    targetPosition: Position.Left,
-    sourcePosition: Position.Right,
-  }
-}
-
-const onAddNodes = () => {
-  addNodes(generateRandomNode())
-}
-
 </script>
 
 <template>
-  <div style="height: 100vh">
-    <button @click="onAddNodes" class="btn btn-primary">click</button>
-    <VueFlow v-model:nodes="nodes" v-model:edges="edges" fit-view-on-init class="vue-flow-basic-example"
+  <div class="relative h-screen">
+    <CircuitsListBar />
+    <VueFlow v-model:nodes="nodes" v-model:edges="edges" fit-view-on-init class="vue-flow-basic-example z-0"
       :default-zoom="0.5" :min-zoom="0.2" :max-zoom="4">
       <Background pattern-color="#aaa" :gap="8" />
 
