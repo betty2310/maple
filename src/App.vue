@@ -1,39 +1,40 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { Background } from '@vue-flow/background'
-import { VueFlow, useVueFlow, type Node, type Edge } from '@vue-flow/core'
+import { ConnectionLineType, VueFlow, useVueFlow, type DefaultEdgeOptions, type Node } from '@vue-flow/core'
 import CustomNode from './CustomNode.vue'
-import CustomEdge from './CustomEdge.vue'
 import ResisterNode from './circuit_components/ResisterNode.vue'
 import CircuitsListBar from './components/CircuitsListBar.vue'
+import useDragAndDrop from './hooks/useDnD'
 
-const { onConnect, addEdges } = useVueFlow()
+const { onConnect, addEdges, onPaneReady } = useVueFlow()
 
-const nodes = ref<Node[]>([
-  { id: '1', type: 'input', label: 'Rectangle', position: { x: 250, y: 5 } },
-  { id: '2', type: 'output', label: 'Voltage source', position: { x: 100, y: 100 } },
-  { id: '3', type: 'custom', label: 'Node 3', position: { x: 400, y: 100 } },
-  { id: '4', type: 'test', label: 'Resiter node', position: { x: 300, y: 300 } }
-])
+const { onDragOver, onDrop, onDragLeave, isDragOver } = useDragAndDrop()
 
-const edges = ref<Edge[]>([
-  { id: 'e1-2', source: '1', target: '2', type: 'custom' },
-  { id: 'e1-3', source: '1', target: '3', animated: true },
-])
+const nodes = ref<Node[]>([])
 
-onConnect((params) => {
-  addEdges([params])
+const edgeOptions: DefaultEdgeOptions = {
+  type: 'smoothstep',
+}
+
+onConnect(addEdges)
+
+onPaneReady(({ fitView }) => {
+  fitView()
 })
-
 </script>
 
 <template>
-  <div class="relative h-screen">
+  <div class="relative h-screen" @drop="onDrop">
     <CircuitsListBar />
-    <VueFlow v-model:nodes="nodes" v-model:edges="edges" fit-view-on-init class="vue-flow-basic-example z-0"
-      :default-zoom="0.5" :min-zoom="0.2" :max-zoom="4">
-      <Background pattern-color="#aaa" :gap="8" />
-
+    <VueFlow :nodes="nodes" :connectionLineType="ConnectionLineType.SmoothStep" :default-edge-options="edgeOptions"
+      @dragover="onDragOver" @dragleave="onDragLeave">
+      <div style="height: 100%; width: 100%">
+        <Background :size="2" :gap="20" pattern-color="#BDBDBD" :style="{
+          backgroundColor: isDragOver ? '#e7f3ff' : 'transparent',
+          transition: 'background-color 0.2s ease',
+        }" />
+      </div>
       <!-- <MiniMap /> -->
 
       <!-- <Controls /> -->
@@ -42,12 +43,8 @@ onConnect((params) => {
         <CustomNode v-bind="nodeProps" />
       </template>
 
-      <template #node-test="nodeProps">
+      <template #node-resister="nodeProps">
         <ResisterNode v-bind="nodeProps" />
-      </template>
-
-      <template #edge-custom="edgeProps">
-        <CustomEdge v-bind="edgeProps" />
       </template>
     </VueFlow>
   </div>

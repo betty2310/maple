@@ -17,10 +17,11 @@ import { Handle, Position } from '@vue-flow/core'
     width: 100%;
     padding: 1rem;
     display: flex;
+    border-radius: 5px;
     flex-direction: column;
     gap: 10px;
     background: blue;
+    color: white;
     border: 1px solid black;
-    border-radius: 14px;
 }
 </style>
