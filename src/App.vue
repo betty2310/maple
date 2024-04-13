@@ -5,7 +5,7 @@ import { ConnectionLineType, VueFlow, useVueFlow, type DefaultEdgeOptions, type 
 import CustomNode from './CustomNode.vue'
 import ResisterNode from './circuit_components/ResisterNode.vue'
 import CircuitsListBar from './components/CircuitsListBar.vue'
-import useDragAndDrop from './hooks/useDnD'
+import useDragAndDrop from './hooks/useDnDCircuitComponent'
 
 const { onConnect, addEdges, onPaneReady } = useVueFlow()
 
@@ -40,11 +40,11 @@ onPaneReady(({ fitView }) => {
       <!-- <Controls /> -->
 
       <template #node-custom="nodeProps">
-        <CustomNode v-bind="nodeProps" />
+        <CustomNode v-bind="nodeProps"/>
       </template>
 
       <template #node-resister="nodeProps">
-        <ResisterNode v-bind="nodeProps" />
+        <ResisterNode v-bind="nodeProps" :id="nodeProps.id" />
       </template>
     </VueFlow>
   </div>

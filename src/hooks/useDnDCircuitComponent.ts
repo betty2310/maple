@@ -1,11 +1,6 @@
 import { useVueFlow, type Node } from '@vue-flow/core'
 import { ref, watch, type Ref } from 'vue'
-
-let id = 0
-
-function getId() {
-  return `dnd-${id++}`
-}
+import { useIDStore } from '@/stores/idStore'
 
 type DnDState = {
   draggedType: Ref<string | null>
@@ -67,7 +62,7 @@ export default function useDragAndDrop() {
   const onDrop = (event: DragEvent) => {
     const position = screenToFlowCoordinate({ x: event.clientX, y: event.clientY })
 
-    const id = getId()
+    const id = useIDStore().getID
 
     const newNode: Node = {
       id: id,

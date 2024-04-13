@@ -1,27 +1,35 @@
 <script lang="ts" setup>
 import { Handle, Position } from '@vue-flow/core'
+import { ref } from 'vue'
+
+defineProps({
+  id: String,
+})
+
+const resistance = ref(0)
 
 </script>
 
 <template>
-    <div class="custom-node">
-        <Handle type="source" :position="Position.Left" />
-        <Handle type="target" :position="Position.Right" />
-        <div>Resister</div>
-    </div>
+  <div>{{ resistance }} Ω {{ id }}</div>
+  <div class="custom-node">
+    <Handle type="source" :position="Position.Left" />
+    <Handle type="target" :position="Position.Right" />
+    <div>Resister</div>
+  </div>
 </template>
 
 <style scoped>
 .custom-node {
-    height: 100%;
-    width: 100%;
-    padding: 1rem;
-    display: flex;
-    border-radius: 5px;
-    flex-direction: column;
-    gap: 10px;
-    background: blue;
-    color: white;
-    border: 1px solid black;
+  height: 100%;
+  width: 100%;
+  padding: 1rem;
+  display: flex;
+  border-radius: 5px;
+  flex-direction: column;
+  gap: 10px;
+  background: blue;
+  color: white;
+  border: 1px solid black;
 }
 </style>
