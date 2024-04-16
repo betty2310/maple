@@ -14,5 +14,13 @@ export const useIDStore = defineStore('circuitComponentID', {
     getID(state): string {
       return `node-${state.id++}`
     }
+  },
+  actions: {
+    resetID() {
+      this.id = 0
+    },
+    increment() {
+      this.id++
+    }
   }
 })
