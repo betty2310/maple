@@ -3,16 +3,13 @@
         <div>
             <ToolBar />
         </div>
-        <!-- Toolbar -->
         <div class="flex flex-1">
-            <!-- Activity Bar -->
             <ActivityBar />
-            <!-- Main Content -->
-            <div class="flex-1 ml-16 mr-0">
+            <div class="flex-auto mr-0 border-2 mb-6 mt-9 border-red-500"
+                :class="layoutStore.isShowLeftPanel ? 'ml-[28rem]' : 'ml-14'">
                 <MainCircuit />
             </div>
         </div>
-        <!-- Status Bar -->
         <div>
             <StatusBar />
         </div>
@@ -24,5 +21,7 @@ import ToolBar from './ToolBar.vue';
 import ActivityBar from './ActivityBar.vue';
 import StatusBar from './StatusBar.vue';
 import MainCircuit from './MainCircuit.vue';
+import { useLayoutStore } from './stores/layoutStore';
 
+const layoutStore = useLayoutStore();
 </script>

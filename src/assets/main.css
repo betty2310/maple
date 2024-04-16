@@ -6,6 +6,7 @@
 
 @import '@vue-flow/controls/dist/style.css';
 @import '@vue-flow/minimap/dist/style.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -13,17 +14,14 @@
 
 body {
   color: #111;
-  padding: 5px;
 }
 
 #app {
   text-transform: uppercase;
-  font-weight: 600;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
 }
 
 html,
