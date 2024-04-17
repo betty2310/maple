@@ -2,14 +2,14 @@
 import { ref } from 'vue'
 import { Background } from '@vue-flow/background'
 import { ConnectionLineType, VueFlow, useVueFlow, type DefaultEdgeOptions, type Node } from '@vue-flow/core'
-import CustomNode from './CustomNode.vue'
-import ResisterNode from './components/circuits/ResisterNode.vue'
-import useDragAndDrop from './hooks/useDnDCircuitComponent'
+import CustomNode from '@/CustomNode.vue'
+import ResisterNode from '@/components/circuits/ResisterNode.vue'
+import useDragAndDrop from '@/hooks/useDnDCircuitComponent'
 import useCircuitStore from '@/stores/circuitStore'
 
 const { onConnect, addEdges, onPaneReady, toObject } = useVueFlow()
 
-const { onDragOver, onDrop, onDragLeave, isDragOver } = useDragAndDrop()
+const { onDragOver, onDragLeave, isDragOver } = useDragAndDrop()
 
 const nodes = ref<Node[]>([])
 

@@ -2,7 +2,8 @@
 import { Squares2X2Icon } from '@heroicons/vue/24/outline';
 import { MagnifyingGlassCircleIcon } from '@heroicons/vue/24/outline';
 import { ref } from 'vue';
-import { useLayoutStore } from './stores/layoutStore';
+import { useLayoutStore } from '@/stores/layoutStore';
+import CircuitsListBar from './CircuitsListBar.vue';
 
 enum ActivityBarItems {
     Components = "Components",
@@ -48,7 +49,9 @@ const isCurrentPanel = (item: ActivityBarItems) => {
                 "Property"
                 }}</h1>
             <div class="flex-1">
-                <!-- Add your panel content here -->
+                <div v-if="panelItem == ActivityBarItems.Components">
+                    <CircuitsListBar />
+                </div>
             </div>
         </div>
     </div>

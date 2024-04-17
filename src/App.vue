@@ -5,7 +5,7 @@
         </div>
         <div class="flex flex-1">
             <ActivityBar />
-            <div class="flex-auto mr-0 border-2 mb-6 mt-9 border-red-500"
+            <div @drop="onDrop" class="flex-auto mr-0 border-2 mb-6 mt-9 border-red-500"
                 :class="layoutStore.isShowLeftPanel ? 'ml-[28rem]' : 'ml-14'">
                 <MainCircuit />
             </div>
@@ -17,11 +17,14 @@
 </template>
 
 <script setup>
-import ToolBar from './ToolBar.vue';
-import ActivityBar from './ActivityBar.vue';
-import StatusBar from './StatusBar.vue';
-import MainCircuit from './MainCircuit.vue';
+import ToolBar from './components/ToolBar.vue';
+import ActivityBar from './components/ActivityBar.vue';
+import StatusBar from './components/StatusBar.vue';
+import MainCircuit from './components/MainCircuit.vue';
 import { useLayoutStore } from './stores/layoutStore';
+import useDragAndDrop from '@/hooks/useDnDCircuitComponent'
+
+const { onDrop } = useDragAndDrop()
 
 const layoutStore = useLayoutStore();
 </script>
