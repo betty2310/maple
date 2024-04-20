@@ -6,8 +6,9 @@ import CustomNode from '@/CustomNode.vue'
 import ResisterNode from '@/components/circuits/ResisterNode.vue'
 import useDragAndDrop from '@/hooks/useDnDCircuitComponent'
 import useCircuitStore from '@/stores/circuitStore'
+import VoltageSource from './circuits/voltageSource.vue'
 
-const { onConnect, addEdges, onPaneReady, toObject } = useVueFlow()
+const { onConnect, addEdges, onPaneReady, toObject, onNodeClick } = useVueFlow()
 
 const { onDragOver, onDragLeave, isDragOver } = useDragAndDrop()
 
@@ -28,6 +29,10 @@ onPaneReady(({ fitView }) => {
 
 const circuitStore = useCircuitStore()
 
+onNodeClick((event) => {
+  circuitStore.setSelectedNode(event.node as Node)
+})
+
 function logToObject() {
   console.log(toObject())
 }
@@ -40,7 +45,7 @@ function logToObject() {
   <!-- <CircuitsListBar /> -->
   <!-- <button class="btn" @click="logToObject">Log of vueflow</button>
       <button class="btn" @click="circuitStore.log">Log of my store</button> -->
-  <VueFlow v-bind="circuitStore.elements" :connectionLineType="ConnectionLineType.SmoothStep" :snapToGrid="true"
+  <VueFlow :nodes="nodes" :connectionLineType="ConnectionLineType.SmoothStep" :snapToGrid="true"
     :default-edge-options="edgeOptions" @dragover="onDragOver" @dragleave="onDragLeave">
     <div style="height: 100%; width: 100%">
       <Background :size="2" :gap="15" pattern-color="#BDBDBD" :style="{
@@ -58,6 +63,10 @@ function logToObject() {
 
     <template #node-resister="nodeProps">
       <ResisterNode v-bind="nodeProps" :id="nodeProps.id" />
+    </template>
+
+    <template #node-voltagesource="nodeProps">
+      <VoltageSource v-bind="nodeProps" :id="nodeProps.id" />
     </template>
   </VueFlow>
   <!-- </div> -->

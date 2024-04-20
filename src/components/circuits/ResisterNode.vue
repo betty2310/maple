@@ -11,7 +11,6 @@ const resistance = ref(0)
 </script>
 
 <template>
-  <div>{{ resistance }} Ω {{ id }}</div>
   <div class="custom-node">
     <Handle type="source" :position="Position.Left" />
     <Handle type="target" :position="Position.Right" />

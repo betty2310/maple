@@ -11,6 +11,9 @@
         <button class="btn" :draggable="true" @click="onAutoCreate('resister')"
           @dragstart="onDragStart($event, 'resister')">Resister
         </button>
+        <button class="btn" :draggable="true" @click="onAutoCreate('voltagesource')"
+          @dragstart="onDragStart($event, 'voltagesource')">Voltage Source
+        </button>
       </div>
     </div>
   </aside>

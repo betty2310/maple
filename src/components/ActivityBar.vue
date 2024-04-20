@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { Squares2X2Icon } from '@heroicons/vue/24/outline';
 import { MagnifyingGlassCircleIcon } from '@heroicons/vue/24/outline';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useLayoutStore } from '@/stores/layoutStore';
+import useCircuitStore from '@/stores/circuitStore'
 import CircuitsListBar from './CircuitsListBar.vue';
+import PropertiesListBar from './PropertiesListBar.vue';
+import type { Node } from '@vue-flow/core';
 
 enum ActivityBarItems {
     Components = "Components",
@@ -25,7 +28,11 @@ const handleClicked = (item: ActivityBarItems) => {
 const isCurrentPanel = (item: ActivityBarItems) => {
     return panelItem.value === item && layoutStore.isShowLeftPanel;
 };
-
+const selectedComponent = ref<Node | null>(null);
+watch(() => useCircuitStore().selectedNode, (value) => {
+    selectedComponent.value = value;
+    console.log(selectedComponent.value);
+});
 </script>
 
 <template>
@@ -51,6 +58,9 @@ const isCurrentPanel = (item: ActivityBarItems) => {
             <div class="flex-1">
                 <div v-if="panelItem == ActivityBarItems.Components">
                     <CircuitsListBar />
+                </div>
+                <div v-else-if="panelItem == ActivityBarItems.Properties">
+                    <PropertiesListBar :selectedComponent="selectedComponent" />
                 </div>
             </div>
         </div>
