@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Handle, Position, useVueFlow } from '@vue-flow/core'
 import { onMounted, ref } from 'vue'
-import type { VoltageSourceData } from './types';
+import type { VoltageSourceData } from '@/types';
 
 const props = defineProps({
     id: {

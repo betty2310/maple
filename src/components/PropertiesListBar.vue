@@ -19,15 +19,26 @@
                 </table>
             </div>
             <div class="divider"></div>
-            <div>Description</div>
-            <div>{{ props.selectedComponent.data }}</div>
-
+            <div class="grid grid-cols-2">
+                <div>Description</div>
+                <div>{{ props.selectedComponent.data.description }}</div>
+            </div>
+            <div class="divider"></div>
+            <div v-if="props.selectedComponent.data.type == 'resistor'">
+                <ResistorProperty :id="props.selectedComponent.id"
+                    :resistance="props.selectedComponent.data.resistance" />
+            </div>
+            <div v-else-if="props.selectedComponent.data.type == 'voltageSource'">
+                <VoltageSourceProperty :id="props.selectedComponent.id" :dc="props.selectedComponent.data.Dc" />
+            </div>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import type { Node } from '@vue-flow/core';
+import { type Node } from '@vue-flow/core';
+import ResistorProperty from './properties/ResistorProperty.vue';
+import VoltageSourceProperty from './properties/VoltageSourceProperty.vue';
 
 interface Props {
     selectedComponent: Node | null;

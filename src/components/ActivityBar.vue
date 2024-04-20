@@ -31,7 +31,7 @@ const isCurrentPanel = (item: ActivityBarItems) => {
 const selectedComponent = ref<Node | null>(null);
 watch(() => useCircuitStore().selectedNode, (value) => {
     selectedComponent.value = value;
-    console.log(selectedComponent.value);
+    // console.log(selectedComponent.value);
 });
 </script>
 

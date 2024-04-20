@@ -20,6 +20,9 @@ const useCircuitStore = defineStore('circuitStore', {
     },
     setSelectedNode(node: Node) {
       this.selectedNode = node
+    },
+    getSelectedNode(): Node | null {
+      return this.selectedNode
     }
   }
 })

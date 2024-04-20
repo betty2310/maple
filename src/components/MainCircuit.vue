@@ -2,18 +2,25 @@
 import { ref } from 'vue'
 import { Background } from '@vue-flow/background'
 import { ConnectionLineType, VueFlow, useVueFlow, type DefaultEdgeOptions, type Node } from '@vue-flow/core'
-import CustomNode from '@/CustomNode.vue'
 import useDragAndDrop from '@/hooks/useDnDCircuitComponent'
 import useCircuitStore from '@/stores/circuitStore'
 
 import ResistorNode from '@/components/circuits/ResistorNode.vue'
 import VoltageSource from '@/components/circuits/VoltageSource.vue'
 
+import { type ComponentData } from '@/types'
+
+
+type NodeTypes = 'resistor' | 'voltagesource' | 'ground'
+
+
+type MyNode = Node<ComponentData, any, NodeTypes>
+
 const { onConnect, addEdges, onPaneReady, onNodeClick } = useVueFlow()
 
 const { onDragOver, onDragLeave, isDragOver } = useDragAndDrop()
 
-const nodes = ref<Node[]>([])
+const nodes = ref<MyNode[]>([])
 
 const edgeOptions: DefaultEdgeOptions = {
   type: 'smoothstep',
@@ -55,16 +62,12 @@ onNodeClick((event) => {
 
     <!-- <Controls /> -->
 
-    <template #node-custom="nodeProps">
-      <CustomNode v-bind="nodeProps" />
+    <template #node-resistor="resistorNodeProps">
+      <ResistorNode v-bind="resistorNodeProps" :id="resistorNodeProps.id" />
     </template>
 
-    <template #node-resistor="nodeProps">
-      <ResistorNode v-bind="nodeProps" :id="nodeProps.id" />
-    </template>
-
-    <template #node-voltagesource="nodeProps">
-      <VoltageSource v-bind="nodeProps" :id="nodeProps.id" />
+    <template #node-voltagesource="voltagesourceNodeProps">
+      <VoltageSource v-bind="voltagesourceNodeProps" :id="voltagesourceNodeProps.id" />
     </template>
   </VueFlow>
   <!-- </div> -->

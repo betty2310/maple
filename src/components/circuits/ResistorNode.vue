@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Handle, Position, useVueFlow } from '@vue-flow/core'
 import { onMounted, ref } from 'vue';
-import type { ResistorData } from './types';
+import type { ResistorData } from '@/types';
 
 const props = defineProps({
   id: {
@@ -25,7 +25,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>{{ props.id }}</div>
   <div class="custom-node">
     <Handle type="source" :position="Position.Left" />
     <Handle type="target" :position="Position.Right" />
