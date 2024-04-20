@@ -5,7 +5,7 @@
         </div>
         <div class="flex flex-1">
             <ActivityBar />
-            <div @drop="onDrop" class="flex-auto mr-0 border-2 mb-6 mt-9 border-red-500"
+            <div @drop="onDrop" class="flex-auto mr-0 mb-6 mt-9"
                 :class="layoutStore.isShowLeftPanel ? 'ml-[28rem]' : 'ml-14'">
                 <MainCircuit />
             </div>

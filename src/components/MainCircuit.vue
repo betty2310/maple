@@ -3,12 +3,13 @@ import { ref } from 'vue'
 import { Background } from '@vue-flow/background'
 import { ConnectionLineType, VueFlow, useVueFlow, type DefaultEdgeOptions, type Node } from '@vue-flow/core'
 import CustomNode from '@/CustomNode.vue'
-import ResisterNode from '@/components/circuits/ResisterNode.vue'
 import useDragAndDrop from '@/hooks/useDnDCircuitComponent'
 import useCircuitStore from '@/stores/circuitStore'
-import VoltageSource from './circuits/voltageSource.vue'
 
-const { onConnect, addEdges, onPaneReady, toObject, onNodeClick } = useVueFlow()
+import ResistorNode from '@/components/circuits/ResistorNode.vue'
+import VoltageSource from '@/components/circuits/VoltageSource.vue'
+
+const { onConnect, addEdges, onPaneReady, onNodeClick } = useVueFlow()
 
 const { onDragOver, onDragLeave, isDragOver } = useDragAndDrop()
 
@@ -33,9 +34,6 @@ onNodeClick((event) => {
   circuitStore.setSelectedNode(event.node as Node)
 })
 
-function logToObject() {
-  console.log(toObject())
-}
 </script>
 
 <template>
@@ -61,8 +59,8 @@ function logToObject() {
       <CustomNode v-bind="nodeProps" />
     </template>
 
-    <template #node-resister="nodeProps">
-      <ResisterNode v-bind="nodeProps" :id="nodeProps.id" />
+    <template #node-resistor="nodeProps">
+      <ResistorNode v-bind="nodeProps" :id="nodeProps.id" />
     </template>
 
     <template #node-voltagesource="nodeProps">

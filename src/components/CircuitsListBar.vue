@@ -1,15 +1,15 @@
 <template>
   <aside>
     <div>
-      <div class="flex flex-col space-y-4 cotent-center">
+      <div class="flex flex-col space-y-4 content-center mx-8">
         <button class="btn" :draggable="true" @click="onAutoCreate('default')"
           @dragstart="onDragStart($event, 'default')">Default Node
         </button>
         <button class="btn" :draggable="true" @click="onAutoCreate('output')"
           @dragstart="onDragStart($event, 'output')">Ground
         </button>
-        <button class="btn" :draggable="true" @click="onAutoCreate('resister')"
-          @dragstart="onDragStart($event, 'resister')">Resister
+        <button class="btn" :draggable="true" @click="onAutoCreate('resistor')"
+          @dragstart="onDragStart($event, 'resistor')">Resistor
         </button>
         <button class="btn" :draggable="true" @click="onAutoCreate('voltagesource')"
           @dragstart="onDragStart($event, 'voltagesource')">Voltage Source

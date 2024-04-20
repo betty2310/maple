@@ -1,5 +1,5 @@
 <template>
     <div>
-        Resister Property
+        resistor Property
     </div>
 </template>

@@ -1,12 +1,28 @@
 <script lang="ts" setup>
-import { Handle, Position } from '@vue-flow/core'
-import { ref } from 'vue'
+import { Handle, Position, useVueFlow } from '@vue-flow/core'
+import { onMounted, ref } from 'vue'
+import type { VoltageSourceData } from './types';
 
-defineProps({
-    id: String,
+const props = defineProps({
+    id: {
+        type: String,
+        required: true,
+    },
 })
 
-const dc = ref(0)
+const { updateNodeData } = useVueFlow()
+
+const dc = ref(1000) // base V
+
+const voltageSourceData: VoltageSourceData = {
+    type: 'voltageSource',
+    description: 'Voltage source description',
+    Dc: dc.value
+}
+
+onMounted(() => {
+    updateNodeData<VoltageSourceData>(props.id, voltageSourceData)
+})
 
 </script>
 

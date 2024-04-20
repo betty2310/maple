@@ -49,13 +49,12 @@ watch(() => useCircuitStore().selectedNode, (value) => {
         </div>
     </div>
     <!-- <Transition name="slide-in-left"> -->
-    <div v-if="layoutStore.isShowLeftPanel"
-        class="bg-primary-content fixed left-14 top-9 bottom-6 w-96 flex border-2 border-blue-500">
-        <div class="flex flex-col p-4">
-            <h1 class="text-2xl font-bold mb-4">{{ panelItem == ActivityBarItems.Components ? "Components" :
+    <div v-if="layoutStore.isShowLeftPanel" class="bg-primary-content fixed left-14 top-9 bottom-6 w-96 flex">
+        <div class="flex flex-col items-start w-full">
+            <div class="font-bold m-4">{{ panelItem == ActivityBarItems.Components ? "Components" :
                 "Property"
-                }}</h1>
-            <div class="flex-1">
+                }}</div>
+            <div class="flex-1 w-full">
                 <div v-if="panelItem == ActivityBarItems.Components">
                     <CircuitsListBar />
                 </div>
