@@ -67,7 +67,8 @@ onNodeClick((event) => {
     </template>
 
     <template #node-voltagesource="voltagesourceNodeProps">
-      <VoltageSource v-bind="voltagesourceNodeProps" :id="voltagesourceNodeProps.id" />
+      <VoltageSource v-bind="voltagesourceNodeProps" :id="voltagesourceNodeProps.id"
+        :data="voltagesourceNodeProps.data" />
     </template>
   </VueFlow>
   <!-- </div> -->

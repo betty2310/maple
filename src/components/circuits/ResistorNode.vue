@@ -1,16 +1,22 @@
 <script lang="ts" setup>
+import { onMounted, ref, type PropType } from 'vue';
 import { Handle, Position, useVueFlow } from '@vue-flow/core'
-import { onMounted, ref } from 'vue';
-import type { ResistorData } from '@/types';
+import { NodeToolbar } from '@vue-flow/node-toolbar'
+
+import type { ResistorData, VoltageSourceData } from '@/types';
 
 const props = defineProps({
   id: {
     type: String,
     required: true,
   },
+  data: {
+    type: Object as PropType<VoltageSourceData>,
+    required: true,
+  },
 })
 
-const { updateNodeData } = useVueFlow()
+const { updateNodeData, onNodeClick, removeNodes } = useVueFlow()
 
 const resistance = ref(1000)
 
@@ -18,18 +24,36 @@ onMounted(() => {
   updateNodeData<ResistorData>(props.id, {
     type: 'resistor',
     description: 'resistor description',
-    resistance: resistance.value
+    resistance: resistance.value,
+    toolbarPosition: Position.Right,
+    toolbarVisible: false,
   })
 })
+const toolbarVisible = ref(props.data.toolbarVisible)
+
+onNodeClick((event) => {
+  if (event.node.id !== props.id) return
+  toolbarVisible.value = !toolbarVisible.value
+})
+
+const handleRemoveNode = () => {
+  removeNodes(props.id, true)
+}
 
 </script>
 
 <template>
+  <NodeToolbar style="display: flex; gap: 0.5rem; align-items: center" :is-visible="toolbarVisible"
+    :position="data.toolbarPosition">
+    <div class="flex flex-col gap-2">
+      <button class="btn btn-error" @click="handleRemoveNode">x</button>
+    </div>
+  </NodeToolbar>
   <div class="custom-node">
-    <Handle type="source" :position="Position.Left" />
-    <Handle type="target" :position="Position.Right" />
     <div>resistor</div>
   </div>
+  <Handle type="source" :position="Position.Left" />
+  <Handle type="target" :position="Position.Right" />
 </template>
 
 <style scoped>

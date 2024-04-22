@@ -1,6 +1,10 @@
+import type { Position } from '@vue-flow/core'
+
 interface ComponentData {
   type: string
   description: string
+  toolbarPosition?: Position
+  toolbarVisible?: boolean
 }
 
 interface VoltageSourceData extends ComponentData {
