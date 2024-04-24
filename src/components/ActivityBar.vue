@@ -14,8 +14,13 @@ enum ActivityBarItems {
     Simulation = "Simulation",
 }
 
+enum ActivityBottomBarItems {
+    Simulation = "Simulation",
+}
+
 const layoutStore = useLayoutStore();
 const panelItem = ref(ActivityBarItems.Components);
+const panelBottomItem = ref(ActivityBottomBarItems.Simulation);
 
 const handleLeftClicked = (item: ActivityBarItems) => {
     if (panelItem.value === item) {
@@ -26,11 +31,11 @@ const handleLeftClicked = (item: ActivityBarItems) => {
     }
 };
 
-const handleBottomClicked = (item: ActivityBarItems) => {
-    if (panelItem.value === item) {
+const handleBottomClicked = (item: ActivityBottomBarItems) => {
+    if (panelBottomItem.value === item) {
         layoutStore.toggleBottomPanel();
     } else {
-        panelItem.value = item;
+        panelBottomItem.value = item;
         layoutStore.isShowBottomPanel = true;
     }
 };
@@ -38,8 +43,8 @@ const handleBottomClicked = (item: ActivityBarItems) => {
 const isCurrentPanel = (item: ActivityBarItems) => {
     return panelItem.value === item && layoutStore.isShowLeftPanel;
 };
-const isCurrentBottomPanel = (item: ActivityBarItems) => {
-    return panelItem.value === item && layoutStore.isShowBottomPanel;
+const isCurrentBottomPanel = (item: ActivityBottomBarItems) => {
+    return panelBottomItem.value === item && layoutStore.isShowBottomPanel;
 };
 const selectedComponent = ref<Node | null>(null);
 watch(() => useCircuitStore().selectedNode, (value) => {
@@ -62,8 +67,8 @@ watch(() => useCircuitStore().selectedNode, (value) => {
         </div>
 
         <div class="items-center space-y-2">
-            <button class="btn focus:outline-none p-2" @click="handleBottomClicked(ActivityBarItems.Simulation)"
-                :class="isCurrentBottomPanel(ActivityBarItems.Simulation) ? 'btn-primary' : 'btn-ghost'">
+            <button class="btn focus:outline-none p-2" @click="handleBottomClicked(ActivityBottomBarItems.Simulation)"
+                :class="isCurrentBottomPanel(ActivityBottomBarItems.Simulation) ? 'btn-primary' : 'btn-ghost'">
                 <PlayIcon class="h-6 w-8 text-centre-content" />
             </button>
             <!-- Open the modal using ID.showModal() method -->
