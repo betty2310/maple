@@ -7,6 +7,7 @@ import CircuitsListBar from './CircuitsListBar.vue';
 import PropertiesListBar from './PropertiesListBar.vue';
 import type { Node } from '@vue-flow/core';
 import SimulationBottombar from './SimulationBottombar.vue';
+import SettingModal from './SettingModal.vue';
 
 enum ActivityBarItems {
     Components = "Components",
@@ -75,18 +76,7 @@ watch(() => useCircuitStore().selectedNode, (value) => {
             <button class="btn focus:outline-none p-2 btn-ghost" onclick="my_modal_1.showModal()">
                 <Cog6ToothIcon class="h-6 w-8 text-centre-content" />
             </button>
-            <dialog id="my_modal_1" class="modal">
-                <div class="modal-box">
-                    <h3 class="font-bold text-lg">Setting</h3>
-                    <p class="py-4">Toggle dark/light theme</p>
-                    <div class="modal-action">
-                        <form method="dialog">
-                            <!-- if there is a button in form, it will close the modal -->
-                            <button class="btn">Close</button>
-                        </form>
-                    </div>
-                </div>
-            </dialog>
+            <SettingModal />
         </div>
     </div>
     <!-- <Transition name="slide-in-left"> -->

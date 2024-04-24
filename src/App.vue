@@ -23,6 +23,12 @@ import StatusBar from './components/StatusBar.vue';
 import MainCircuit from './components/MainCircuit.vue';
 import { useLayoutStore } from './stores/layoutStore';
 import useDragAndDrop from '@/hooks/useDnDCircuitComponent'
+import { onMounted } from 'vue'
+import { themeChange } from 'theme-change'
+
+onMounted(() => {
+    themeChange(false)
+})
 
 const { onDrop } = useDragAndDrop()
 
