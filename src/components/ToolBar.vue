@@ -29,13 +29,14 @@ import { useFetch } from '@vueuse/core'
 
 import useRunStore from '@/stores/runStore';
 
+import useOutputStore from '@/stores/outputStore';
+
 const { toObject } = useVueFlow()
 
 const netlist = ref({})
 
 const onRun = async () => {
     netlist.value = handleAPI(toObject())
-    console.log(JSON.stringify(netlist.value))
     const { isFetching, error, data } = await useFetch('http://localhost:5109/api/Simulator', {
         method: 'POST',
         headers: {
@@ -48,10 +49,14 @@ const onRun = async () => {
     if (error.value) {
         console.error(error.value)
     }
-    console.log(data.value)
+    const outputStore = useOutputStore()
+    if (data.value) {
+        outputStore.setValue(JSON.parse(data.value).output)
+        outputStore.setInput(JSON.parse(data.value).input)
+    }
 }
 
-const selected = ref<"Interactive" | "Transient" | "DC sweep">('Interactive')
+const selected = ref<"Interactive" | "Transient" | "DC sweep">('DC sweep')
 
 const runStore = useRunStore()
 watch(selected, () => {
