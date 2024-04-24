@@ -1,6 +1,7 @@
 import type { Position } from '@vue-flow/core'
 
 interface ComponentData {
+  id: string
   type: string
   description: string
   toolbarPosition?: Position

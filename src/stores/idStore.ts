@@ -12,7 +12,7 @@ export const useIDStore = defineStore('circuitComponentID', {
   },
   getters: {
     getID(state): string {
-      return `node-${state.id++}`
+      return `${state.id++}`
     }
   },
   actions: {

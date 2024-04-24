@@ -9,7 +9,7 @@
                     <tbody>
                         <tr>
                             <th>ID</th>
-                            <td>{{ props.selectedComponent.id }}</td>
+                            <td>{{ props.selectedComponent.data.id }}</td>
                         </tr>
                         <tr>
                             <th>Type</th>

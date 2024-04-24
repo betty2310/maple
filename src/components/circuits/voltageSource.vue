@@ -18,9 +18,10 @@ const props = defineProps({
 
 const { updateNodeData, onNodeClick, removeNodes } = useVueFlow()
 
-const dc = ref(1000) // base V
+const dc = ref(1.0) // base V
 
 const voltageSourceData: VoltageSourceData = {
+  id: `V${props.id}`,
   type: 'voltageSource',
   description: 'Voltage source description',
   Dc: dc.value,
@@ -49,6 +50,7 @@ const handleRemoveNode = () => {
   <!-- <div class="h-20 w-20 flex rounded-full items-center justify-center bg-orange-500 border border-slate-600">
         <div>+</div>
     </div> -->
+
   <NodeToolbar style="display: flex; gap: 0.5rem; align-items: center" :is-visible="toolbarVisible"
     :position="data.toolbarPosition">
     <div class="flex flex-col gap-2">
@@ -57,7 +59,7 @@ const handleRemoveNode = () => {
   </NodeToolbar>
 
   <div class="h-20 w-20 flex rounded-full items-center justify-center bg-orange-400 border border-slate-600">
-    +
+    {{ props.data.id }}
   </div>
   <Handle type="target" :position="Position.Top" />
   <Handle type="source" :position="Position.Bottom" />

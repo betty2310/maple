@@ -1,14 +1,34 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { EdgeProps } from '@vue-flow/core'
-import { BaseEdge, EdgeLabelRenderer, getBezierPath, useVueFlow } from '@vue-flow/core'
+import { BaseEdge, EdgeLabelRenderer, getSmoothStepPath, useVueFlow } from '@vue-flow/core'
 
 const props = defineProps<EdgeProps>()
 
-const { removeEdges } = useVueFlow()
+const path = computed(() => getSmoothStepPath(props))
 
-const path = computed(() => getBezierPath(props))
+const { findEdge } = useVueFlow()
+
+const selectedOption = ref('');
+
+const selectOption = (option: string) => {
+    selectedOption.value = option;
+    let edge = findEdge(props.id)
+    if (edge) {
+        edge.data = option;
+    }
+};
+
+const turnBack = () => {
+    selectedOption.value = '';
+    let edge = findEdge(props.id)
+    if (edge) {
+        edge.data = '';
+    }
+};
 </script>
+
+
 
 <script lang="ts">
 export default {
@@ -21,11 +41,18 @@ export default {
 
     <EdgeLabelRenderer>
         <div :style="{
-        pointerEvents: 'all',
-        position: 'absolute',
-        transform: `translate(-50%, -50%) translate(${path[1]}px,${path[2]}px)`,
-    }" class="nodrag nopan">
-            <button class="edgebutton" @click="removeEdges(id)">×</button>
+            pointerEvents: 'all',
+            position: 'absolute',
+            transform: `translate(-50%, -50%) translate(${path[1]}px,${path[2]}px)`,
+        }" class="nodrag nopan">
+            <details v-if="!selectedOption" class="dropdown">
+                <summary class="btn">+</summary>
+                <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+                    <li><a @click="selectOption('Voltage')">Voltage</a></li>
+                    <li><a @click="selectOption('Current')">Current</a></li>
+                </ul>
+            </details>
+            <button v-else class="btn" @click="turnBack">{{ selectedOption }}</button>
         </div>
     </EdgeLabelRenderer>
 </template>

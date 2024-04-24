@@ -22,6 +22,7 @@ const resistance = ref(1000)
 
 onMounted(() => {
   updateNodeData<ResistorData>(props.id, {
+    id: `R${props.id}`,
     type: 'resistor',
     description: 'resistor description',
     resistance: resistance.value,
@@ -43,6 +44,7 @@ const handleRemoveNode = () => {
 </script>
 
 <template>
+  {{ props.data.id }}
   <NodeToolbar style="display: flex; gap: 0.5rem; align-items: center" :is-visible="toolbarVisible"
     :position="data.toolbarPosition">
     <div class="flex flex-col gap-2">

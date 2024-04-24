@@ -9,6 +9,7 @@ import ResistorNode from '@/components/circuits/ResistorNode.vue'
 import VoltageSource from '@/components/circuits/VoltageSource.vue'
 
 import { type ComponentData } from '@/types'
+import CustomEdge from '@/CustomEdge.vue'
 
 
 type NodeTypes = 'resistor' | 'voltagesource' | 'ground'
@@ -23,12 +24,11 @@ const { onDragOver, onDragLeave, isDragOver } = useDragAndDrop()
 const nodes = ref<MyNode[]>([])
 
 const edgeOptions: DefaultEdgeOptions = {
-  type: 'smoothstep',
+  type: 'custom',
 }
 
 onConnect((connection) => {
   addEdges(connection)
-
 })
 
 onPaneReady(({ fitView }) => {
@@ -69,6 +69,10 @@ onNodeClick((event) => {
     <template #node-voltagesource="voltagesourceNodeProps">
       <VoltageSource v-bind="voltagesourceNodeProps" :id="voltagesourceNodeProps.id"
         :data="voltagesourceNodeProps.data" />
+    </template>
+
+    <template #edge-custom="edgeProps">
+      <CustomEdge v-bind="edgeProps" />
     </template>
   </VueFlow>
   <!-- </div> -->
