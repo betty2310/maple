@@ -12,8 +12,16 @@ interface VoltageSourceData extends ComponentData {
   Dc: number
 }
 
+interface ACVoltageSourceData extends ComponentData {
+  VA: number // Voltage (peak)
+  Freq: number
+  Phase: number
+  AC_mag: number // AC analysis magnitude
+  AC_phase: number
+}
+
 interface ResistorData extends ComponentData {
   resistance: number
 }
 
-export type { ComponentData, VoltageSourceData, ResistorData }
+export type { ComponentData, VoltageSourceData, ResistorData, ACVoltageSourceData }

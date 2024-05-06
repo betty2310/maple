@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { Background } from '@vue-flow/background'
-import { ConnectionLineType, VueFlow, useVueFlow, type DefaultEdgeOptions, type Node } from '@vue-flow/core'
+import { ConnectionLineType, VueFlow, useVueFlow, type DefaultEdgeOptions, type Node, type NodeProps } from '@vue-flow/core'
 import useDragAndDrop from '@/hooks/useDnDCircuitComponent'
 import useCircuitStore from '@/stores/circuitStore'
 
@@ -10,6 +10,7 @@ import VoltageSource from '@/components/circuits/VoltageSource.vue'
 
 import { type ComponentData } from '@/types'
 import CustomEdge from '@/CustomEdge.vue'
+import ACVoltage from './circuits/sources/ACVoltage.vue'
 
 
 type NodeTypes = 'resistor' | 'voltagesource' | 'ground'
@@ -69,6 +70,11 @@ onNodeClick((event) => {
     <template #node-voltagesource="voltagesourceNodeProps">
       <VoltageSource v-bind="voltagesourceNodeProps" :id="voltagesourceNodeProps.id"
         :data="voltagesourceNodeProps.data" />
+    </template>
+
+    <template #node-acvoltagesource="acVoltageSourceNodeProps">
+      <ACVoltage v-bind="acVoltageSourceNodeProps" :id="acVoltageSourceNodeProps.id"
+        :data="acVoltageSourceNodeProps.data" />
     </template>
 
     <template #edge-custom="edgeProps">

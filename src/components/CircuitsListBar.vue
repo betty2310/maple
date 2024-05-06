@@ -12,7 +12,10 @@
           @dragstart="onDragStart($event, 'resistor')">Resistor
         </button>
         <button class="btn" :draggable="true" @click="onAutoCreate('voltagesource')"
-          @dragstart="onDragStart($event, 'voltagesource')">Voltage Source
+          @dragstart="onDragStart($event, 'voltagesource')">DC Voltage
+        </button>
+        <button class="btn" :draggable="true" @click="onAutoCreate('acvoltagesource')"
+          @dragstart="onDragStart($event, 'acvoltagesource')">AC Voltage
         </button>
       </div>
     </div>
