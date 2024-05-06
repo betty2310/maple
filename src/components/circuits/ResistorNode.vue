@@ -1,19 +1,14 @@
 <script lang="ts" setup>
-import { onMounted, ref, type PropType } from 'vue';
-import { Handle, Position, useVueFlow } from '@vue-flow/core'
+import { onMounted, ref } from 'vue';
+import { Handle, Position, useVueFlow, type NodeProps } from '@vue-flow/core'
 import { NodeToolbar } from '@vue-flow/node-toolbar'
 
-import type { ResistorData, VoltageSourceData } from '@/types';
+import type { ResistorData } from '@/types';
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: true,
-  },
-  data: {
-    type: Object as PropType<VoltageSourceData>,
-    required: true,
-  },
+const props = defineProps<NodeProps<ResistorData>>()
+
+defineOptions({
+  inheritAttrs: false
 })
 
 const { updateNodeData, onNodeClick, removeNodes } = useVueFlow()
@@ -21,8 +16,9 @@ const { updateNodeData, onNodeClick, removeNodes } = useVueFlow()
 const resistance = ref(1000)
 
 onMounted(() => {
+  const id = props.id.split(' ')[1]
   updateNodeData<ResistorData>(props.id, {
-    id: `R${props.id}`,
+    id: `R${id}`,
     type: 'resistor',
     description: 'resistor description',
     resistance: resistance.value,

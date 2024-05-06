@@ -1,19 +1,14 @@
 <script lang="ts" setup>
-import { onMounted, ref, type PropType } from 'vue'
-import { Handle, Position, useVueFlow } from '@vue-flow/core'
+import { onMounted, ref } from 'vue'
+import { Handle, Position, useVueFlow, type NodeProps } from '@vue-flow/core'
 import { NodeToolbar } from '@vue-flow/node-toolbar'
 
 import type { VoltageSourceData } from '@/types';
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: true,
-  },
-  data: {
-    type: Object as PropType<VoltageSourceData>,
-    required: true,
-  },
+const props = defineProps<NodeProps<VoltageSourceData>>()
+
+defineOptions({
+  inheritAttrs: false
 })
 
 const { updateNodeData, onNodeClick, removeNodes } = useVueFlow()
@@ -21,7 +16,7 @@ const { updateNodeData, onNodeClick, removeNodes } = useVueFlow()
 const dc = ref(1.0) // base V
 
 const voltageSourceData: VoltageSourceData = {
-  id: `V${props.id}`,
+  id: `DC ${props.id.split(' ')[1]}`,
   type: 'voltageSource',
   description: 'Voltage source description',
   Dc: dc.value,
@@ -52,7 +47,7 @@ const handleRemoveNode = () => {
     </div> -->
 
   <NodeToolbar style="display: flex; gap: 0.5rem; align-items: center" :is-visible="toolbarVisible"
-    :position="data.toolbarPosition">
+    :position="props.data.toolbarPosition">
     <div class="flex flex-col gap-2">
       <button class="btn btn-error" @click="handleRemoveNode">x</button>
     </div>

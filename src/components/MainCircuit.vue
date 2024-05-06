@@ -10,6 +10,7 @@ import VoltageSource from '@/components/circuits/VoltageSource.vue'
 
 import { type ComponentData } from '@/types'
 import CustomEdge from '@/CustomEdge.vue'
+import ACVoltage from './circuits/sources/ACVoltage.vue'
 
 
 type NodeTypes = 'resistor' | 'voltagesource' | 'ground'
@@ -63,12 +64,15 @@ onNodeClick((event) => {
     <!-- <Controls /> -->
 
     <template #node-resistor="resistorNodeProps">
-      <ResistorNode v-bind="resistorNodeProps" :id="resistorNodeProps.id" />
+      <ResistorNode v-bind="resistorNodeProps" />
     </template>
 
     <template #node-voltagesource="voltagesourceNodeProps">
-      <VoltageSource v-bind="voltagesourceNodeProps" :id="voltagesourceNodeProps.id"
-        :data="voltagesourceNodeProps.data" />
+      <VoltageSource v-bind="voltagesourceNodeProps" />
+    </template>
+
+    <template #node-acvoltagesource="acVoltageSourceNodeProps">
+      <ACVoltage v-bind="acVoltageSourceNodeProps" />
     </template>
 
     <template #edge-custom="edgeProps">

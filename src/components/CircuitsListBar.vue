@@ -2,17 +2,20 @@
   <aside>
     <div>
       <div class="flex flex-col space-y-4 content-center mx-8">
-        <button class="btn" :draggable="true" @click="onAutoCreate('default')"
-          @dragstart="onDragStart($event, 'default')">Default Node
+        <button class="btn" :draggable="true" @click="onAutoCreate(CircuitComponent.Ground)"
+          @dragstart="onDragStart($event, CircuitComponent.Ground)">Default Node
         </button>
-        <button class="btn" :draggable="true" @click="onAutoCreate('output')"
-          @dragstart="onDragStart($event, 'output')">Ground
+        <button class="btn" :draggable="true" @click="onAutoCreate(CircuitComponent.output)"
+          @dragstart="onDragStart($event, CircuitComponent.output)">Ground
         </button>
-        <button class="btn" :draggable="true" @click="onAutoCreate('resistor')"
-          @dragstart="onDragStart($event, 'resistor')">Resistor
+        <button class="btn" :draggable="true" @click="onAutoCreate(CircuitComponent.Resistor)"
+          @dragstart="onDragStart($event, CircuitComponent.Resistor)">Resistor
         </button>
-        <button class="btn" :draggable="true" @click="onAutoCreate('voltagesource')"
-          @dragstart="onDragStart($event, 'voltagesource')">Voltage Source
+        <button class="btn" :draggable="true" @click="onAutoCreate(CircuitComponent.DCVoltageSource)"
+          @dragstart="onDragStart($event, CircuitComponent.DCVoltageSource)">DC Voltage
+        </button>
+        <button class="btn" :draggable="true" @click="onAutoCreate(CircuitComponent.ACVoltageSource)"
+          @dragstart="onDragStart($event, CircuitComponent.ACVoltageSource)">AC Voltage
         </button>
       </div>
     </div>
@@ -22,6 +25,7 @@
 <script setup lang="ts">
 import useDragAndDrop from '@/hooks/useDnDCircuitComponent';
 import useCreate from '@/hooks/useCreatCircuitComponent'
+import { CircuitComponent } from '@/types';
 
 const { onDragStart } = useDragAndDrop();
 const { onAutoCreate } = useCreate();
