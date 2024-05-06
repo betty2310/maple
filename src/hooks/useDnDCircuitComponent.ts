@@ -2,6 +2,7 @@ import { useVueFlow, type Node } from '@vue-flow/core'
 import { ref, watch, type Ref } from 'vue'
 import { useIDStore } from '@/stores/idStore'
 import { CircuitComponent } from '@/types'
+import { convertToCircuiComponent } from '@/utils'
 
 type DnDState = {
   draggedType: Ref<string | null>
@@ -63,9 +64,7 @@ export default function useDragAndDrop() {
   const onDrop = (event: DragEvent) => {
     const position = screenToFlowCoordinate({ x: event.clientX, y: event.clientY })
     const type = event.dataTransfer?.getData('application/vueflow')
-    const typeCircuit = type
-      ? CircuitComponent[type as keyof CircuitComponent]
-      : CircuitComponent.Ground
+    const typeCircuit = convertToCircuiComponent(type)
 
     const id = useIDStore().getID(typeCircuit)
 

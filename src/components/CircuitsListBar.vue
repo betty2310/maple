@@ -5,8 +5,8 @@
         <button class="btn" :draggable="true" @click="onAutoCreate(CircuitComponent.Ground)"
           @dragstart="onDragStart($event, CircuitComponent.Ground)">Default Node
         </button>
-        <button class="btn" :draggable="true" @click="onAutoCreate(CircuitComponent.Ground)"
-          @dragstart="onDragStart($event, CircuitComponent.Ground)">Ground
+        <button class="btn" :draggable="true" @click="onAutoCreate(CircuitComponent.output)"
+          @dragstart="onDragStart($event, CircuitComponent.output)">Ground
         </button>
         <button class="btn" :draggable="true" @click="onAutoCreate(CircuitComponent.Resistor)"
           @dragstart="onDragStart($event, CircuitComponent.Resistor)">Resistor
