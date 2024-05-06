@@ -1,0 +1,39 @@
+name: CI/CD
+on:
+  push:
+    branches: [ main ]
+  
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm i
+
+      - name: Build
+        run: npm run build
+
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_USERNAME }}
+          password: ${{ secrets.DO_PASSWORD }}
+          source: "./dist/*"
+          target: "~/" 
