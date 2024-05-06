@@ -9,12 +9,34 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
+
       - name: Install dependencies
         run: npm i
+
       - name: Build
         run: npm run build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-artifact
+          path: dist/*
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist-artifact
+          path: distfiles
+
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_USERNAME }}
+          password: ${{ secrets.DO_PASSWORD }}
+          source: "distfiles/*"
+          target: "~/" 
