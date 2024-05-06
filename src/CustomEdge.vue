@@ -15,7 +15,7 @@ const selectOption = (option: string) => {
     selectedOption.value = option;
     let edge = findEdge(props.id)
     if (edge) {
-        edge.data = option;
+        edge.data.export = option;
     }
 };
 
