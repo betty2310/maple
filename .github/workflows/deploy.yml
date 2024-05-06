@@ -2,6 +2,13 @@ name: CI/CD
 on:
   push:
     branches: [ main ]
+  
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   build:
@@ -22,21 +29,11 @@ jobs:
       - name: Build
         run: npm run build
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: dist-artifact
-          path: dist/*
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: dist-artifact
-          path: distfiles
-
       - name: copy file via ssh password
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USERNAME }}
           password: ${{ secrets.DO_PASSWORD }}
-          source: "distfiles/*"
+          source: "./dist/*"
           target: "~/" 
