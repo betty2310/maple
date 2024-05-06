@@ -40,6 +40,7 @@ class Ground extends Component {
 function convertGraphToNetlist(circuit: FlowExportObject): string {
   const nodeMap: { [nodeId: string]: Component } = {}
   let nodeCounter = 0
+  console.log(circuit)
 
   // Create component objects from nodes list
   circuit.nodes.forEach((node: Node) => {

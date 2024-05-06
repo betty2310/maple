@@ -1,5 +1,13 @@
 import type { Position } from '@vue-flow/core'
 
+enum CircuitComponent {
+  Ground = 'ground',
+  Resistor = 'resistor',
+  DCVoltageSource = 'voltagesource',
+  ACVoltageSource = 'acvoltagesource',
+  output = 'output'
+}
+
 interface ComponentData {
   id: string
   type: string
@@ -25,3 +33,4 @@ interface ResistorData extends ComponentData {
 }
 
 export type { ComponentData, VoltageSourceData, ResistorData, ACVoltageSourceData }
+export { CircuitComponent }

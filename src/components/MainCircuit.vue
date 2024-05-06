@@ -64,7 +64,9 @@ onNodeClick((event) => {
     <!-- <Controls /> -->
 
     <template #node-resistor="resistorNodeProps">
-      <ResistorNode v-bind="resistorNodeProps" :id="resistorNodeProps.id" />
+      <div>
+        <ResistorNode v-bind="resistorNodeProps" :id="resistorNodeProps.id" />
+      </div>
     </template>
 
     <template #node-voltagesource="voltagesourceNodeProps">

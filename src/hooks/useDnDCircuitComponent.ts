@@ -1,6 +1,7 @@
 import { useVueFlow, type Node } from '@vue-flow/core'
 import { ref, watch, type Ref } from 'vue'
 import { useIDStore } from '@/stores/idStore'
+import { CircuitComponent } from '@/types'
 
 type DnDState = {
   draggedType: Ref<string | null>
@@ -9,7 +10,7 @@ type DnDState = {
 }
 
 const state: DnDState = {
-  draggedType: ref(null),
+  draggedType: ref<CircuitComponent>(CircuitComponent.Ground),
   isDragOver: ref(false),
   isDragging: ref(false)
 }
@@ -23,7 +24,7 @@ export default function useDragAndDrop() {
     document.body.style.userSelect = dragging ? 'none' : ''
   })
 
-  const onDragStart = (event: DragEvent, type: string) => {
+  const onDragStart = (event: DragEvent, type: CircuitComponent) => {
     if (event.dataTransfer) {
       event.dataTransfer.setData('application/vueflow', type)
       event.dataTransfer.effectAllowed = 'move'
@@ -61,8 +62,12 @@ export default function useDragAndDrop() {
 
   const onDrop = (event: DragEvent) => {
     const position = screenToFlowCoordinate({ x: event.clientX, y: event.clientY })
+    const type = event.dataTransfer?.getData('application/vueflow')
+    const typeCircuit = type
+      ? CircuitComponent[type as keyof CircuitComponent]
+      : CircuitComponent.Ground
 
-    const id = useIDStore().getID
+    const id = useIDStore().getID(typeCircuit)
 
     const newNode: Node = {
       id: id,
