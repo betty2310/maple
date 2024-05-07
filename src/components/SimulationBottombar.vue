@@ -1,93 +1,58 @@
 <template>
-    <div role="tablist" class="tabs tabs-bordered">
-        <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Table" />
-        <div role="tabpanel" class="tab-content p-2">
-            <div class="overflow-x-auto">
-                <table class="table table-xs">
-                    <thead>
-                        <tr>
-                            <th>{{ indexRow }}</th>
-                            <th>V(out)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(item, index) in outputData" :key="index">
-                            <td>{{ inputData[index].toFixed(2) }}</td>
-                            <td>{{ item.toFixed(2) }}</td>
-                        </tr>
-                    </tbody>
-
-                </table>
-            </div>
-        </div>
-
-        <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Graph" checked />
-        <div role="tabpanel" class="tab-content p-10">
-            <Line :data="data" :options="options" />
-        </div>
+  <div class="flex items-center justify-between px-4 py-2">
+    <div class="flex space-x-4">
+      <button
+        v-for="(option, index) in options"
+        :key="index"
+        class="btn btn-xs"
+        :class="{ 'btn-primary': activeOption === option }"
+        @click="activeOption = option"
+      >
+        <ChartBarIcon class="h-4 w-4 text-centre-content" v-if="option === 'Graph'" />
+        <TableCellsIcon class="h-4 w-4 text-centre-content" v-if="option === 'Table'" />
+        {{ option }}
+      </button>
     </div>
-
+    <button class="btn btn-xs" @click="layoutStore.toggleBottomPanel()">
+      <XMarkIcon class="h-4 w-4 text-centre-content" />
+    </button>
+  </div>
+  <div class="flex-1 overflow-auto px-4 py-2">
+    <LineChartComponent v-if="activeOption === 'Graph'" />
+    <TableOutput v-if="activeOption === 'Table'" />
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
-import useRunStore from '@/stores/runStore';
-import useOutputStore from '@/stores/outputStore';
+import { ref, watch } from 'vue'
+import { ChartBarIcon } from '@heroicons/vue/24/outline'
+import { TableCellsIcon } from '@heroicons/vue/24/solid'
+import { XMarkIcon } from '@heroicons/vue/20/solid'
+import useOutputStore from '@/stores/outputStore'
+import { useLayoutStore } from '@/stores/layoutStore'
+import LineChartComponent from '@/components/charts/LineChartComponent.vue'
+import TableOutput from '@/components/TableOutput.vue'
 
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-    type ChartData,
-} from 'chart.js'
-import { Line } from 'vue-chartjs'
-
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend
-)
-
-const data = ref<ChartData<'line'>>({
-    datasets: [],
-    labels: []
-})
-
-const options = ref({
-    responsive: false,
-    maintainAspectRatio: false
-})
+const options = ['Table', 'Graph']
+const activeOption = ref('Graph')
 
 const outputStore = useOutputStore()
-const runStore = useRunStore()
+const layoutStore = useLayoutStore()
 
-const indexRow = computed(() => {
-    return runStore.getMode() === 1 ? "Time" : "DC"
-})
-
-const outputData = ref<number[]>([])
-const inputData = ref<number[]>([])
+const outputData = ref<number[]>(outputStore.getValue())
+const inputData = ref<number[]>(outputStore.getInput())
 
 watch(
-    () => outputStore.getValue(),
-    (value) => {
-        outputData.value = value
-    }
+  () => outputStore.getValue(),
+  (value) => {
+    outputData.value = value
+  }
 )
 
 watch(
-    () => outputStore.getInput(),
-    (value) => {
-        inputData.value = value
-    }
+  () => outputStore.getInput(),
+  (value) => {
+    inputData.value = value
+  }
 )
 </script>

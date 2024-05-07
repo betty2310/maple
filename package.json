@@ -21,11 +21,11 @@
     "@vue-flow/minimap": "^1.4.0",
     "@vue-flow/node-toolbar": "^1.1.0",
     "@vueuse/core": "^10.9.0",
-    "chart.js": "^4.4.2",
+    "echarts": "^5.5.0",
     "pinia": "^2.1.7",
     "theme-change": "^2.5.0",
     "vue": "^3.4.21",
-    "vue-chartjs": "^5.3.1",
+    "vue-echarts": "^6.7.2",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
