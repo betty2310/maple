@@ -1,10 +1,10 @@
 name: CI/CD
 on:
   push:
-    branches: [ main ]
-  
+    branches: [main]
+
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 permissions:
   id-token: write
@@ -29,11 +29,14 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Test
+        run: npm run test:unit
+
       - name: copy file via ssh password
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USERNAME }}
           password: ${{ secrets.DO_PASSWORD }}
-          source: "./dist/*"
-          target: "~/" 
+          source: './dist/*'
+          target: '~/'

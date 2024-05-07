@@ -16,3 +16,12 @@ export class ACVoltageSource extends Component {
     this.AC_phase = ac_phase
   }
 }
+
+export class DCVoltageSource extends Component {
+  voltage: number
+
+  constructor(id: string, voltage: number) {
+    super(id)
+    this.voltage = voltage
+  }
+}

@@ -1,7 +1,14 @@
 import type { Edge, FlowExportObject, Node } from '@vue-flow/core'
 import useRunStore from '@/stores/runStore'
-import { ACVoltageSource, DCVoltageSource, Ground, Resistor, type Component } from './models'
-import { CircuitComponent } from '@/types'
+import {
+  ACVoltageSource,
+  Capacitor,
+  DCVoltageSource,
+  Ground,
+  Resistor,
+  type Component
+} from './models'
+import { CircuitComponent, type ACVoltageSourceData } from '@/types'
 
 function convertGraphToNetlist(circuit: FlowExportObject): string {
   const nodeMap: { [nodeId: string]: Component } = {}
@@ -17,6 +24,9 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
       case CircuitComponent.Resistor:
         component = new Resistor(node.data.id, node.data.resistance)
         break
+      case CircuitComponent.Capacitor:
+        component = new Capacitor(node.data.id, node.data.capacitance)
+        break
       case CircuitComponent.DCVoltageSource:
         component = new DCVoltageSource(`V${++idSourceComponent}`, node.data.Dc)
         break
@@ -24,7 +34,9 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
         component = new Ground(node.id)
         break
       case CircuitComponent.ACVoltageSource:
-        component = new ACVoltageSource(`V${++idSourceComponent}`, node.data.VA)
+        // eslint-disable-next-line no-case-declarations
+        const data = node.data as ACVoltageSourceData
+        component = new ACVoltageSource(`V${++idSourceComponent}`, data.VA, data.Freq, data.Phase)
         break
       default:
         throw new Error(`Unknown component type: ${node.type}`)
@@ -57,11 +69,17 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
 
     if (component instanceof Resistor) {
       netlist.push(`${component.id} ${component.pos} ${component.neg} ${component.resistance}`)
+    } else if (component instanceof Capacitor) {
+      netlist.push(`${component.id} ${component.pos} ${component.neg} ${component.capacitance}`)
     } else if (component instanceof DCVoltageSource) {
       netlist.push(`${component.id} ${component.pos} ${component.neg} ${component.voltage}`)
+    } else if (component instanceof ACVoltageSource) {
+      netlist.push(
+        `${component.id} ${component.pos} ${component.neg} AC 1 SIN(0 ${component.VA} ${component.Freq} 0 0 ${component.Phase})`
+      )
     }
   }
-
+  console.log(netlist.join('\n'))
   return netlist.join('\n')
 }
 
@@ -82,13 +100,13 @@ function getAnalysisType(edges: Edge[]): exportNode[] {
     if (edge.data.export === 'Voltage') {
       analysisType.push({
         type: exportType.V,
-        node: edge.data.id
+        node: `${edge.data.id}`
       })
     }
     if (edge.data === 'Current') {
       analysisType.push({
         type: exportType.I,
-        node: edge.data.id
+        node: edge.data.id as string
       })
     }
   })

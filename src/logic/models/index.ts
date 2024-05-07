@@ -1,7 +1,6 @@
 import { Component } from './Component'
-import { Resistor } from './Resistor'
-import { DCVoltageSource } from './DCVoltageSource'
+import { Resistor, Capacitor } from './Passive'
 import { Ground } from './Ground'
-import { ACVoltageSource } from './ACVoltageSource'
+import { ACVoltageSource, DCVoltageSource } from './Sources'
 
-export { Component, Resistor, DCVoltageSource, ACVoltageSource, Ground }
+export { Component, Resistor, Capacitor, DCVoltageSource, ACVoltageSource, Ground }
