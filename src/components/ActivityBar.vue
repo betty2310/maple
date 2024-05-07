@@ -50,7 +50,6 @@ const isCurrentBottomPanel = (item: ActivityBottomBarItems) => {
 const selectedComponent = ref<Node | null>(null);
 watch(() => useCircuitStore().selectedNode, (value) => {
     selectedComponent.value = value;
-    // console.log(selectedComponent.value);
 });
 </script>
 
