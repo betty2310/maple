@@ -39,14 +39,18 @@
       <div v-else-if="props.selectedComponent.type == CircuitComponent.ACVoltageSource">
         <ACVoltageSoureProperty v-bind="props.selectedComponent.data as ACVoltageSourceData" />
       </div>
+      <div v-else-if="props.selectedComponent.type == CircuitComponent.Capacitor">
+        <CapacitorProperty v-bind="props.selectedComponent.data as CapacitorData" />
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { type Node } from '@vue-flow/core'
-import { CircuitComponent, type ACVoltageSourceData } from '@/types'
+import { CircuitComponent, type ACVoltageSourceData, type CapacitorData } from '@/types'
 import ResistorProperty from './properties/ResistorProperty.vue'
+import CapacitorProperty from './properties/CapacitorProperty.vue'
 import VoltageSourceProperty from './properties/VoltageSourceProperty.vue'
 import ACVoltageSoureProperty from './properties/ACVoltageSourceProperty.vue'
 

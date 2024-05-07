@@ -5,6 +5,7 @@ enum CircuitComponent {
   Resistor = 'resistor',
   DCVoltageSource = 'voltagesource',
   ACVoltageSource = 'acvoltagesource',
+  Capacitor = 'capacitor',
   output = 'output'
 }
 
@@ -32,5 +33,9 @@ interface ResistorData extends ComponentData {
   resistance: number
 }
 
-export type { ComponentData, VoltageSourceData, ResistorData, ACVoltageSourceData }
+interface CapacitorData extends ComponentData {
+  capacitance: number
+}
+
+export type { ComponentData, VoltageSourceData, ResistorData, ACVoltageSourceData, CapacitorData }
 export { CircuitComponent }

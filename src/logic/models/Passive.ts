@@ -8,3 +8,12 @@ export class Resistor extends Component {
     this.resistance = resistance
   }
 }
+
+export class Capacitor extends Component {
+  capacitance: number
+
+  constructor(id: string, capacitance: number) {
+    super(id)
+    this.capacitance = capacitance
+  }
+}

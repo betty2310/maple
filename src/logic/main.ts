@@ -1,6 +1,13 @@
 import type { Edge, FlowExportObject, Node } from '@vue-flow/core'
 import useRunStore from '@/stores/runStore'
-import { ACVoltageSource, DCVoltageSource, Ground, Resistor, type Component } from './models'
+import {
+  ACVoltageSource,
+  Capacitor,
+  DCVoltageSource,
+  Ground,
+  Resistor,
+  type Component
+} from './models'
 import { CircuitComponent, type ACVoltageSourceData } from '@/types'
 
 function convertGraphToNetlist(circuit: FlowExportObject): string {
@@ -16,6 +23,9 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
     switch (node.type) {
       case CircuitComponent.Resistor:
         component = new Resistor(node.data.id, node.data.resistance)
+        break
+      case CircuitComponent.Capacitor:
+        component = new Capacitor(node.data.id, node.data.capacitance)
         break
       case CircuitComponent.DCVoltageSource:
         component = new DCVoltageSource(`V${++idSourceComponent}`, node.data.Dc)
@@ -59,6 +69,8 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
 
     if (component instanceof Resistor) {
       netlist.push(`${component.id} ${component.pos} ${component.neg} ${component.resistance}`)
+    } else if (component instanceof Capacitor) {
+      netlist.push(`${component.id} ${component.pos} ${component.neg} ${component.capacitance}`)
     } else if (component instanceof DCVoltageSource) {
       netlist.push(`${component.id} ${component.pos} ${component.neg} ${component.voltage}`)
     } else if (component instanceof ACVoltageSource) {
