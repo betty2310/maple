@@ -34,6 +34,7 @@ jobs:
 
       - name: copy file via ssh password
         uses: appleboy/scp-action@v0.1.7
+        if: github.event_name == 'push'
         with:
           host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USERNAME }}
