@@ -40,6 +40,13 @@ const { toObject } = useVueFlow()
 
 const netlist = ref({})
 
+const selected = ref<SimulationMode>(SimulationMode.Transient)
+
+const runStore = useRunStore()
+watch(selected, () => {
+  runStore.setMode(selected.value)
+})
+
 const onRun = async () => {
   netlist.value = handleAPI(toObject())
   const { isFetching, error, data } = await useFetch<string>(
@@ -61,13 +68,7 @@ const onRun = async () => {
   if (data.value) {
     outputStore.setValue(JSON.parse(data.value).output)
     outputStore.setInput(JSON.parse(data.value).input)
+    outputStore.setMode(selected.value)
   }
 }
-
-const selected = ref<SimulationMode>(SimulationMode.Transient)
-
-const runStore = useRunStore()
-watch(selected, () => {
-  runStore.setMode(selected.value)
-})
 </script>

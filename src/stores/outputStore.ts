@@ -1,14 +1,17 @@
+import { SimulationMode } from '@/types'
 import { defineStore } from 'pinia'
 
 interface state {
   input: number[]
   output: number[]
+  mode: SimulationMode
 }
 
 const useOutputStore = defineStore('outputStore', {
   state: (): state => ({
     input: [],
-    output: []
+    output: [],
+    mode: SimulationMode.Transient
   }),
 
   actions: {
@@ -23,6 +26,12 @@ const useOutputStore = defineStore('outputStore', {
     },
     getInput(): number[] {
       return this.input
+    },
+    getMode(): SimulationMode {
+      return this.mode
+    },
+    setMode(mode: SimulationMode) {
+      this.mode = mode
     }
   }
 })

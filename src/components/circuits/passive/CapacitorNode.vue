@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { Handle, Position, useVueFlow, type NodeProps } from '@vue-flow/core'
 import { NodeToolbar } from '@vue-flow/node-toolbar'
+import IconComponent from '@/assets/svgs/Capacitor.svg?component'
 
 import type { CapacitorData } from '@/types'
 
@@ -39,7 +40,7 @@ const handleRemoveNode = () => {
 </script>
 
 <template>
-  {{ props.data.id }}
+  <div class="font-mono">{{ props.data.id }}</div>
   <NodeToolbar
     style="display: flex; gap: 0.5rem; align-items: center"
     :is-visible="toolbarVisible"
@@ -49,9 +50,10 @@ const handleRemoveNode = () => {
       <button class="btn btn-error" @click="handleRemoveNode">x</button>
     </div>
   </NodeToolbar>
-  <div class="custom-node">
-    <div>capacitor</div>
-  </div>
+
+  <IconComponent />
+  &#160;
+
   <Handle type="source" :position="Position.Left" />
   <Handle type="target" :position="Position.Right" />
 </template>

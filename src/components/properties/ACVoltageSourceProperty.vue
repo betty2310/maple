@@ -13,7 +13,7 @@
     </div>
   </div>
   <div class="flex items-center justify-between mx-4">
-    <label for="input-field" class="mr-2">Frequenccy</label>
+    <label for="input-field" class="mr-2">Frequency</label>
     <div class="relative">
       <input
         type="number"
@@ -48,6 +48,7 @@ import type { ACVoltageSourceData } from '@/types'
 const props = defineProps<ACVoltageSourceData>()
 
 const AC = ref(props.VA)
+
 watch(
   () => props.VA,
   (value) => {

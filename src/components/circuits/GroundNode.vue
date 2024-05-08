@@ -3,12 +3,12 @@ import { onMounted, ref } from 'vue';
 import { Handle, Position, useVueFlow, type NodeProps } from '@vue-flow/core'
 import { NodeToolbar } from '@vue-flow/node-toolbar'
 
-import IconComponent from '@/assets/svgs/resistor.svg?component'
+import IconComponent from '@/assets/svgs/Ground.svg?component'
 
 
-import type { ResistorData } from '@/types';
+import type { ComponentData } from '@/types';
 
-const props = defineProps<NodeProps<ResistorData>>()
+const props = defineProps<NodeProps<ComponentData>>()
 
 defineOptions({
   inheritAttrs: false
@@ -16,15 +16,12 @@ defineOptions({
 
 const { updateNodeData, onNodeClick, removeNodes } = useVueFlow()
 
-const resistance = ref(1000)
-
 onMounted(() => {
   const id = props.id.split(' ')[1]
-  updateNodeData<ResistorData>(props.id, {
-    id: `R${id}`,
+  updateNodeData<ComponentData>(props.id, {
+    id: `GND ${id}`,
     type: 'resistor',
     description: 'resistor description',
-    resistance: resistance.value,
     toolbarPosition: Position.Right,
     toolbarVisible: false,
   })
@@ -43,34 +40,14 @@ const handleRemoveNode = () => {
 </script>
 
 <template>
-  <div class="font-mono">{{ props.data.id }}</div>
-
-
   <NodeToolbar style="display: flex; gap: 0.5rem; align-items: center" :is-visible="toolbarVisible"
-    :position="data.toolbarPosition">
+               :position="data.toolbarPosition">
     <div class="flex flex-col gap-2">
       <button class="btn btn-error" @click="handleRemoveNode">x</button>
     </div>
   </NodeToolbar>
 
   <IconComponent />
-  &#160;
 
-  <Handle type="target" :position="Position.Right" />
-  <Handle type="source" :position="Position.Left" />
+  <Handle type="target" :position="Position.Top" />
 </template>
-
-<style scoped>
-.custom-node {
-  height: 100%;
-  width: 100%;
-  padding: 1rem;
-  display: flex;
-  border-radius: 5px;
-  flex-direction: column;
-  gap: 10px;
-  background: blue;
-  color: white;
-  border: 1px solid black;
-}
-</style>
