@@ -37,7 +37,7 @@
         />
       </div>
       <div v-else-if="props.selectedComponent.type == CircuitComponent.ACVoltageSource">
-        <ACVoltageSoureProperty v-bind="props.selectedComponent.data as ACVoltageSourceData" />
+        <ACVoltageSourceProperty v-bind="props.selectedComponent.data as ACVoltageSourceData"/>
       </div>
       <div v-else-if="props.selectedComponent.type == CircuitComponent.Capacitor">
         <CapacitorProperty v-bind="props.selectedComponent.data as CapacitorData" />
@@ -52,7 +52,7 @@ import { CircuitComponent, type ACVoltageSourceData, type CapacitorData } from '
 import ResistorProperty from './properties/ResistorProperty.vue'
 import CapacitorProperty from './properties/CapacitorProperty.vue'
 import VoltageSourceProperty from './properties/VoltageSourceProperty.vue'
-import ACVoltageSoureProperty from './properties/ACVoltageSourceProperty.vue'
+import ACVoltageSourceProperty from './properties/ACVoltageSourceProperty.vue'
 
 interface Props {
   selectedComponent: Node | null

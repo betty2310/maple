@@ -15,8 +15,9 @@
           tabindex="0"
           class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
         >
-          <li><a @click="selected = 'Transient'">Transient</a></li>
-          <li><a @click="selected = 'DC sweep'">DC sweep</a></li>
+          <li><a @click="selected = SimulationMode.Transient">Transient</a></li>
+          <li><a @click="selected = SimulationMode.DCSweep">DC sweep</a></li>
+          <li><a @click="selected = SimulationMode.ACSweep">AC sweep</a></li>
         </ul>
       </div>
     </div>
@@ -33,10 +34,18 @@ import { useFetch } from '@vueuse/core'
 import useRunStore from '@/stores/runStore'
 
 import useOutputStore from '@/stores/outputStore'
+import { SimulationMode } from '@/types'
 
 const { toObject } = useVueFlow()
 
 const netlist = ref({})
+
+const selected = ref<SimulationMode>(SimulationMode.Transient)
+
+const runStore = useRunStore()
+watch(selected, () => {
+  runStore.setMode(selected.value)
+})
 
 const onRun = async () => {
   netlist.value = handleAPI(toObject())
@@ -59,13 +68,7 @@ const onRun = async () => {
   if (data.value) {
     outputStore.setValue(JSON.parse(data.value).output)
     outputStore.setInput(JSON.parse(data.value).input)
+    outputStore.setMode(selected.value)
   }
 }
-
-const selected = ref<'Transient' | 'DC sweep'>('Transient')
-
-const runStore = useRunStore()
-watch(selected, () => {
-  runStore.setMode(selected.value)
-})
 </script>

@@ -39,3 +39,6 @@ interface CapacitorData extends ComponentData {
 
 export type { ComponentData, VoltageSourceData, ResistorData, ACVoltageSourceData, CapacitorData }
 export { CircuitComponent }
+
+import { SimulationMode } from './SimulationMode'
+export { SimulationMode }

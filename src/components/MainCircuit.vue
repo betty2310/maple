@@ -19,6 +19,7 @@ import ACVoltage from '@/components/circuits/sources/ACVoltage.vue'
 import { type ComponentData } from '@/types'
 import CustomEdge from '@/CustomEdge.vue'
 import { obj } from '@/stores/exampleFlowObject'
+import GroundNode from '@/components/circuits/GroundNode.vue'
 
 type NodeTypes = 'resistor' | 'voltagesource' | 'ground'
 
@@ -48,9 +49,9 @@ onNodeClick((event) => {
   circuitStore.setSelectedNode(event.node as Node)
 })
 
-onMounted(async () => {
-  await fromObject(obj)
-})
+// onMounted(async () => {
+//   await fromObject(obj)
+// })
 </script>
 
 <template>
@@ -81,6 +82,10 @@ onMounted(async () => {
     <!-- <MiniMap /> -->
 
     <!-- <Controls /> -->
+
+    <template #node-ground="groundNodeProps">
+      <GroundNode v-bind="groundNodeProps" />
+    </template>
 
     <template #node-resistor="resistorNodeProps">
       <ResistorNode v-bind="resistorNodeProps" />

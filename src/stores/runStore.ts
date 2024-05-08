@@ -1,22 +1,23 @@
-import { type Edge, type Node } from '@vue-flow/core'
+import { SimulationMode } from '@/types'
 import { defineStore } from 'pinia'
 
 interface state {
-  mode: 'Transient' | 'DC sweep'
+  mode: SimulationMode
 }
 
 const useRunStore = defineStore('runStore', {
   state: (): state => ({
-    mode: 'Transient'
+    mode: SimulationMode.Transient
   }),
 
   actions: {
-    setMode(mode: 'Transient' | 'DC sweep') {
+    setMode(mode: SimulationMode) {
       this.mode = mode
     },
     getMode(): number {
-      if (this.mode === 'Transient') return 0
-      else if (this.mode === 'DC sweep') return 1
+      if (this.mode === SimulationMode.Transient) return 0
+      else if (this.mode === SimulationMode.DCSweep) return 1
+      else if (this.mode === SimulationMode.ACSweep) return 2
       else return -1
     }
   }

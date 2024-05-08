@@ -33,6 +33,9 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
       case CircuitComponent.output:
         component = new Ground(node.id)
         break
+      case CircuitComponent.Ground:
+        component = new Ground(node.id)
+        break
       case CircuitComponent.ACVoltageSource:
         // eslint-disable-next-line no-case-declarations
         const data = node.data as ACVoltageSourceData
