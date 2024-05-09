@@ -49,8 +49,9 @@ watch(selected, () => {
 
 const onRun = async () => {
   netlist.value = handleAPI(toObject())
+  const serverUrl = import.meta.env.VITE_SERVER_URL
   const { isFetching, error, data } = await useFetch<string>(
-    'http://localhost:5109/api/Simulator',
+    `${serverUrl}/api/Simulator`,
     {
       method: 'POST',
       headers: {
