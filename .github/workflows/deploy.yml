@@ -27,7 +27,7 @@ jobs:
         run: npm i
 
       - name: Build
-        run: npm run build
+        run: npm run build-prod
 
       - name: Test
         run: npm run test:unit
@@ -40,4 +40,4 @@ jobs:
           username: ${{ secrets.DO_USERNAME }}
           password: ${{ secrets.DO_PASSWORD }}
           source: './dist/*'
-          target: '~/'
+          target: '/var/www/circuitcratft/html/'
