@@ -6,6 +6,7 @@ enum CircuitComponent {
   DCVoltageSource = 'voltagesource',
   ACVoltageSource = 'acvoltagesource',
   Capacitor = 'capacitor',
+  Inductor = 'inductor',
   output = 'output'
 }
 
@@ -37,7 +38,11 @@ interface CapacitorData extends ComponentData {
   capacitance: number
 }
 
-export type { ComponentData, VoltageSourceData, ResistorData, ACVoltageSourceData, CapacitorData }
+interface InductorData extends ComponentData {
+  inductance: number
+}
+
+export type { ComponentData, VoltageSourceData, ResistorData, ACVoltageSourceData, CapacitorData, InductorData }
 export { CircuitComponent }
 
 import { SimulationMode } from './SimulationMode'
