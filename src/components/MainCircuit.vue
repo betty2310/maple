@@ -32,7 +32,7 @@ const { onDragOver, onDragLeave, isDragOver } = useDragAndDrop()
 const nodes = ref<MyNode[]>([])
 
 const edgeOptions: DefaultEdgeOptions = {
-  type: 'custom'
+  type: 'custom',
 }
 
 onConnect((connection) => {

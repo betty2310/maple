@@ -8,9 +8,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in outputData" :key="index">
-          <td>{{ inputData[index].toFixed(2) }} {{ inputUnit }}</td>
-          <td>{{ item.toFixed(2) }}</td>
+        <tr v-for="(item, index) in inputData" :key="index">
+          <td>{{ item.toFixed(2) }} {{ inputUnit }}</td>
+          <td>{{ outputData[index].toFixed(2) }}</td>
         </tr>
       </tbody>
     </table>
