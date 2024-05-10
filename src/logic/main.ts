@@ -6,7 +6,8 @@ import {
   DCVoltageSource,
   Ground,
   Resistor,
-  type Component
+  Component,
+  Inductor
 } from './models'
 import { CircuitComponent, type ACVoltageSourceData } from '@/types'
 
@@ -26,6 +27,9 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
         break
       case CircuitComponent.Capacitor:
         component = new Capacitor(node.data.id, node.data.capacitance)
+        break
+      case CircuitComponent.Inductor:
+        component = new Inductor(node.data.id, node.data.inductance)
         break
       case CircuitComponent.DCVoltageSource:
         component = new DCVoltageSource(`V${++idSourceComponent}`, node.data.Dc)
@@ -74,6 +78,8 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
       netlist.push(`${component.id} ${component.pos} ${component.neg} ${component.resistance}`)
     } else if (component instanceof Capacitor) {
       netlist.push(`${component.id} ${component.pos} ${component.neg} ${component.capacitance}`)
+    } else if (component instanceof Inductor) {
+      netlist.push(`${component.id} ${component.pos} ${component.neg} ${component.inductance}`)
     } else if (component instanceof DCVoltageSource) {
       netlist.push(`${component.id} ${component.pos} ${component.neg} ${component.voltage}`)
     } else if (component instanceof ACVoltageSource) {
@@ -100,13 +106,13 @@ function getAnalysisType(edges: Edge[]): exportNode[] {
   const analysisType: exportNode[] = [] // i(R1) or v(1)
 
   edges.forEach((edge) => {
-    if (edge.data.export === 'Voltage') {
+    if (edge.data.export === 'Voltmeter') {
       analysisType.push({
         type: exportType.V,
         node: `${edge.data.id}`
       })
     }
-    if (edge.data === 'Current') {
+    if (edge.data === 'Ammeter') {
       analysisType.push({
         type: exportType.I,
         node: edge.data.id as string

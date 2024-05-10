@@ -20,6 +20,7 @@ import { type ComponentData } from '@/types'
 import CustomEdge from '@/CustomEdge.vue'
 import { obj } from '@/stores/exampleFlowObject'
 import GroundNode from '@/components/circuits/GroundNode.vue'
+import InductorNode from '@/components/circuits/passive/InductorNode.vue'
 
 type NodeTypes = 'resistor' | 'voltagesource' | 'ground'
 
@@ -32,7 +33,7 @@ const { onDragOver, onDragLeave, isDragOver } = useDragAndDrop()
 const nodes = ref<MyNode[]>([])
 
 const edgeOptions: DefaultEdgeOptions = {
-  type: 'custom'
+  type: 'custom',
 }
 
 onConnect((connection) => {
@@ -93,6 +94,10 @@ onNodeClick((event) => {
 
     <template #node-capacitor="capacitorNodeProps">
       <CapacitorNode v-bind="capacitorNodeProps" />
+    </template>
+
+    <template #node-inductor="inductorNodeProps">
+      <InductorNode v-bind="inductorNodeProps" />
     </template>
 
     <template #node-voltagesource="voltagesourceNodeProps">

@@ -17,3 +17,12 @@ export class Capacitor extends Component {
     this.capacitance = capacitance
   }
 }
+
+export class Inductor extends Component {
+  inductance: number
+
+  constructor(id: string, inductance: number) {
+    super(id)
+    this.inductance = inductance
+  }
+}
