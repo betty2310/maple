@@ -37,6 +37,14 @@
         <button
           class="btn"
           :draggable="true"
+          @click="onAutoCreate(CircuitComponent.Diode)"
+          @dragstart="onDragStart($event, CircuitComponent.Diode)"
+        >
+          Diode
+        </button>
+        <button
+          :draggable="true"
+          class="btn"
           @click="onAutoCreate(CircuitComponent.DCVoltageSource)"
           @dragstart="onDragStart($event, CircuitComponent.DCVoltageSource)"
         >

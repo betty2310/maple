@@ -1,13 +1,7 @@
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { Background } from '@vue-flow/background'
-import {
-  ConnectionLineType,
-  VueFlow,
-  useVueFlow,
-  type DefaultEdgeOptions,
-  type Node
-} from '@vue-flow/core'
+import { ConnectionLineType, type DefaultEdgeOptions, type Node, useVueFlow, VueFlow } from '@vue-flow/core'
 import useDragAndDrop from '@/hooks/useDnDCircuitComponent'
 import useCircuitStore from '@/stores/circuitStore'
 
@@ -18,9 +12,9 @@ import ACVoltage from '@/components/circuits/sources/ACVoltage.vue'
 
 import { type ComponentData } from '@/types'
 import CustomEdge from '@/CustomEdge.vue'
-import { obj } from '@/stores/exampleFlowObject'
 import GroundNode from '@/components/circuits/GroundNode.vue'
 import InductorNode from '@/components/circuits/passive/InductorNode.vue'
+import DiodeNode from '@/components/circuits/DiodeNode.vue'
 
 type NodeTypes = 'resistor' | 'voltagesource' | 'ground'
 
@@ -98,6 +92,10 @@ onNodeClick((event) => {
 
     <template #node-inductor="inductorNodeProps">
       <InductorNode v-bind="inductorNodeProps" />
+    </template>
+
+    <template #node-diode="diodeNodeProps">
+      <DiodeNode v-bind="diodeNodeProps" />
     </template>
 
     <template #node-voltagesource="voltagesourceNodeProps">
