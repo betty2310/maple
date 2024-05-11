@@ -1,15 +1,7 @@
 import type { Edge, FlowExportObject, Node } from '@vue-flow/core'
 import useRunStore from '@/stores/runStore'
-import {
-  ACVoltageSource,
-  Capacitor,
-  DCVoltageSource,
-  Ground,
-  Resistor,
-  Component,
-  Inductor
-} from './models'
-import { CircuitComponent, type ACVoltageSourceData } from '@/types'
+import { ACVoltageSource, Capacitor, Component, DCVoltageSource, Diode, Ground, Inductor, Resistor } from './models'
+import { type ACVoltageSourceData, CircuitComponent } from '@/types'
 
 function convertGraphToNetlist(circuit: FlowExportObject): string {
   const nodeMap: { [nodeId: string]: Component } = {}
@@ -34,6 +26,9 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
       case CircuitComponent.DCVoltageSource:
         component = new DCVoltageSource(`V${++idSourceComponent}`, node.data.Dc)
         break
+      case CircuitComponent.Diode:
+        component = new Diode(node.data.id)
+        break
       case CircuitComponent.output:
         component = new Ground(node.id)
         break
@@ -52,16 +47,16 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
     nodeMap[node.id] = component
   })
 
-  // Update component connections based on edges
   let edgeId = 0
   circuit.edges.forEach((edge: Edge) => {
     const sourceNode = nodeMap[edge.source]
     const targetNode = nodeMap[edge.target]
 
     if (targetNode instanceof Ground || sourceNode instanceof Ground) {
-      edge.data.id = 0
+      console.log(typeof edge.data)
+      edge.data.id = '0'
     } else {
-      edge.data.id = ++edgeId
+      edge.data.id = `${++edgeId}`
     }
 
     sourceNode.neg = edge.data.id
@@ -80,11 +75,13 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
       netlist.push(`${component.id} ${component.pos} ${component.neg} ${component.capacitance}`)
     } else if (component instanceof Inductor) {
       netlist.push(`${component.id} ${component.pos} ${component.neg} ${component.inductance}`)
+    } else if (component instanceof Diode) {
+      netlist.push(`${component.id} ${component.pos} ${component.neg} 1N914`)
     } else if (component instanceof DCVoltageSource) {
       netlist.push(`${component.id} ${component.pos} ${component.neg} ${component.voltage}`)
     } else if (component instanceof ACVoltageSource) {
       netlist.push(
-        `${component.id} ${component.pos} ${component.neg} AC 1 SIN(0 ${component.VA} ${component.Freq} 0 0 ${component.Phase})`
+        `${component.id} ${component.pos} ${component.neg} dc 0 ac 1 sin(0 ${component.VA} ${component.Freq} 0 0 ${component.Phase})`
       )
     }
   }

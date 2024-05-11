@@ -25,7 +25,7 @@ const turnBack = () => {
     selectedOption.value = '';
     let edge = findEdge(props.id)
     if (edge) {
-        edge.data = '';
+      edge.data = {}
     }
 };
 </script>
