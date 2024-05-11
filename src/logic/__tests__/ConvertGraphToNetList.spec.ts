@@ -262,7 +262,7 @@ describe('ConvertGraphToNetList', () => {
   })
   it('Should convert AC graph to netlist', () => {
     const netlist = convertGraphToNetlist(simpleACCircuit)
-    const trueValue = 'V1 1 0 AC 1 SIN(0 1 1000 0 0 0)\nC1 0 2 0.000001\nR1 2 1 1000'
+    const trueValue = 'V1 1 0 dc 0 ac 1 sin(0 1 1000 0 0 0)\nC1 0 2 0.000001\nR1 2 1 1000'
     expect(netlist).toEqual(trueValue)
   })
 })
