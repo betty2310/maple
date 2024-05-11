@@ -81,7 +81,7 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
       netlist.push(`${component.id} ${component.pos} ${component.neg} ${component.voltage}`)
     } else if (component instanceof ACVoltageSource) {
       netlist.push(
-        `${component.id} ${component.pos} ${component.neg} AC 1 SIN(0 ${component.VA} ${component.Freq} 0 0 ${component.Phase})`
+        `${component.id} ${component.pos} ${component.neg} dc 0 ac 1 sin(0 ${component.VA} ${component.Freq} 0 0 ${component.Phase})`
       )
     }
   }
