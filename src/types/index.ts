@@ -1,4 +1,5 @@
 import type { Position } from '@vue-flow/core'
+import { SimulationMode } from './SimulationMode'
 
 enum CircuitComponent {
   Ground = 'ground',
@@ -7,6 +8,7 @@ enum CircuitComponent {
   ACVoltageSource = 'acvoltagesource',
   Capacitor = 'capacitor',
   Inductor = 'inductor',
+  Diode = 'diode',
   output = 'output'
 }
 
@@ -42,8 +44,23 @@ interface InductorData extends ComponentData {
   inductance: number
 }
 
-export type { ComponentData, VoltageSourceData, ResistorData, ACVoltageSourceData, CapacitorData, InductorData }
+interface DiodeData extends ComponentData {
+  IS?: string,
+  RS?: string,
+  N?: string,
+  BV?: string,
+  IBV?: string,
+}
+
+export type {
+  ComponentData,
+  VoltageSourceData,
+  ResistorData,
+  ACVoltageSourceData,
+  CapacitorData,
+  InductorData,
+  DiodeData
+}
 export { CircuitComponent }
 
-import { SimulationMode } from './SimulationMode'
 export { SimulationMode }
