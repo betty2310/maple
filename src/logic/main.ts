@@ -9,9 +9,11 @@ import {
   Ground,
   Inductor,
   Resistor,
-  Switch
+  Switch,
+  Transistor
 } from './models'
 import { type ACVoltageSourceData, CircuitComponent } from '@/types'
+
 
 function convertGraphToNetlist(circuit: FlowExportObject): string {
   const nodeMap: { [nodeId: string]: Component } = {}
@@ -22,7 +24,6 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
   // Create component objects from nodes list
   circuit.nodes.forEach((node: Node) => {
     let component: Component
-
     switch (node.type) {
       case CircuitComponent.Resistor:
         component = new Resistor(node.data.id, node.data.resistance)
@@ -38,6 +39,9 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
         break
       case CircuitComponent.Diode:
         component = new Diode(node.data.id)
+        break
+      case CircuitComponent.Transistor:
+        component = new Transistor(node.data.id, '', '', '', '', 'mjd44h11')
         break
       case CircuitComponent.output:
         component = new Ground(node.id)
@@ -56,7 +60,6 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
       default:
         throw new Error(`Unknown component type: ${node.type}`)
     }
-
     nodeMap[node.id] = component
   })
 
@@ -66,14 +69,34 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
     const targetNode = nodeMap[edge.target]
 
     if (targetNode instanceof Ground || sourceNode instanceof Ground) {
-      console.log(typeof edge.data)
       edge.data.id = '0'
     } else {
       edge.data.id = `${++edgeId}`
     }
 
-    sourceNode.neg = edge.data.id
-    targetNode.pos = edge.data.id
+    if (targetNode instanceof Ground) {
+      sourceNode.neg = edge.data.id
+      targetNode.pos = edge.data.id
+    } else {
+      sourceNode.neg = edge.data.id
+      targetNode.pos = edge.data.id
+    }
+
+
+    console.log(sourceNode, targetNode, edge.data.id)
+
+    if (sourceNode instanceof Transistor) {
+      sourceNode.b = edge.data.id
+    }
+    if (targetNode instanceof Transistor) {
+      if (edge.targetHandle?.includes('top')) {
+        targetNode.c = edge.data.id
+      }
+      if (edge.targetHandle?.includes('bottom')) {
+        targetNode.e = edge.data.id
+      }
+    }
+
   })
 
   // Generate netlist string
@@ -81,25 +104,8 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
 
   for (const nodeId in nodeMap) {
     const component = nodeMap[nodeId]
-
-    if (component instanceof Resistor) {
-      netlist.push(`${component.id} ${component.pos} ${component.neg} ${component.resistance}`)
-    } else if (component instanceof Capacitor) {
-      netlist.push(`${component.id} ${component.pos} ${component.neg} ${component.capacitance}`)
-    } else if (component instanceof Inductor) {
-      netlist.push(`${component.id} ${component.pos} ${component.neg} ${component.inductance}`)
-    } else if (component instanceof Diode) {
-      netlist.push(`${component.id} ${component.neg} ${component.pos} 1N914`)
-    } else if (component instanceof Switch) {
-      // treat switch as a resistor, if switch on, make resistance large
-      netlist.push(`R${component.id} ${component.pos} ${component.neg} ${component.isOn ? 1e9 : 0}`)
-    } else if (component instanceof DCVoltageSource) {
-      netlist.push(`${component.id} ${component.pos} ${component.neg} ${component.voltage}`)
-    } else if (component instanceof ACVoltageSource) {
-      netlist.push(
-        `${component.id} ${component.pos} ${component.neg} dc 0 ac 1 sin(0 ${component.VA} ${component.Freq} 0 0 ${component.Phase})`
-      )
-    }
+    if (component instanceof Ground) continue
+    netlist.push(component.toString())
   }
   console.log(netlist.join('\n'))
   return netlist.join('\n')

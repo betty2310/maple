@@ -21,6 +21,9 @@ function convertToCircuiComponent(type: string | undefined): CircuitComponent {
     case 'diode':
       typeCircuit = CircuitComponent.Diode
       break
+    case 'transistor':
+      typeCircuit = CircuitComponent.Transistor
+      break
     case 'switch':
       typeCircuit = CircuitComponent.Switch
       break

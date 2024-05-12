@@ -16,6 +16,7 @@ import GroundNode from '@/components/circuits/GroundNode.vue'
 import InductorNode from '@/components/circuits/passive/InductorNode.vue'
 import DiodeNode from '@/components/circuits/DiodeNode.vue'
 import SwitchNode from '@/components/circuits/SwitchNode.vue'
+import TransistorNode from '@/components/circuits/TransistorNode.vue'
 
 type NodeTypes = 'resistor' | 'voltagesource' | 'ground'
 
@@ -99,6 +100,10 @@ onNodeClick((event) => {
       <DiodeNode v-bind="diodeNodeProps" />
     </template>
 
+    <template #node-transistor="transistorNodeProps">
+      <TransistorNode v-bind="transistorNodeProps" />
+    </template>
+
     <template #node-voltagesource="voltagesourceNodeProps">
       <VoltageSource v-bind="voltagesourceNodeProps" />
     </template>
@@ -115,5 +120,6 @@ onNodeClick((event) => {
       <CustomEdge v-bind="edgeProps" />
     </template>
   </VueFlow>
+
   <!-- </div> -->
 </template>

@@ -45,6 +45,14 @@
         <button
           :draggable="true"
           class="btn"
+          @click="onAutoCreate(CircuitComponent.Transistor)"
+          @dragstart="onDragStart($event, CircuitComponent.Transistor)"
+        >
+          NPN Transistor
+        </button>
+        <button
+          :draggable="true"
+          class="btn"
           @click="onAutoCreate(CircuitComponent.DCVoltageSource)"
           @dragstart="onDragStart($event, CircuitComponent.DCVoltageSource)"
         >

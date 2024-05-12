@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import {
-  Squares2X2Icon,
-  MagnifyingGlassCircleIcon,
-  PlayIcon,
-  Cog6ToothIcon
-} from '@heroicons/vue/24/outline'
+import { Cog6ToothIcon, MagnifyingGlassCircleIcon, PlayIcon, Squares2X2Icon } from '@heroicons/vue/24/outline'
 import { ref, watch } from 'vue'
 import { useLayoutStore } from '@/stores/layoutStore'
 import useCircuitStore from '@/stores/circuitStore'
@@ -108,7 +103,7 @@ watch(
       <div class="font-bold m-4">
         {{ panelItem == ActivityBarItems.Components ? 'Components' : 'Property' }}
       </div>
-      <div class="flex-1 w-full">
+      <div class="flex-1 w-full overflow-y-auto">
         <div v-if="panelItem == ActivityBarItems.Components">
           <CircuitsListBar />
         </div>
