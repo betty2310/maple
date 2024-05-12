@@ -48,6 +48,9 @@ const handleRemoveNode = () => {
 
 const handleToggleSwitch = () => {
   isSwitchOn.value = !isSwitchOn.value
+  updateNodeData<SwitchData>(props.id, {
+    isOn: isSwitchOn.value,
+  })
 }
 </script>
 
@@ -67,7 +70,7 @@ const handleToggleSwitch = () => {
 
   <IconOffComponent v-if="!isSwitchOn" />
   <IconOnComponent v-else />
-  <div>&#160;</div>
+  <div v-if="isSwitchOn">&#160;</div>
 
   <Handle :position="Position.Left" type="source" />
   <Handle :position="Position.Right" type="target" />
