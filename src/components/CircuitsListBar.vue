@@ -58,6 +58,14 @@
         >
           AC Voltage
         </button>
+        <button
+          :draggable="true"
+          class="btn"
+          @click="onAutoCreate(CircuitComponent.Switch)"
+          @dragstart="onDragStart($event, CircuitComponent.Switch)"
+        >
+          Switch
+        </button>
       </div>
     </div>
   </aside>

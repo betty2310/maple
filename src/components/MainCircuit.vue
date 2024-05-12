@@ -15,6 +15,7 @@ import CustomEdge from '@/CustomEdge.vue'
 import GroundNode from '@/components/circuits/GroundNode.vue'
 import InductorNode from '@/components/circuits/passive/InductorNode.vue'
 import DiodeNode from '@/components/circuits/DiodeNode.vue'
+import SwitchNode from '@/components/circuits/SwitchNode.vue'
 
 type NodeTypes = 'resistor' | 'voltagesource' | 'ground'
 
@@ -104,6 +105,10 @@ onNodeClick((event) => {
 
     <template #node-acvoltagesource="acVoltageSourceNodeProps">
       <ACVoltage v-bind="acVoltageSourceNodeProps" />
+    </template>
+
+    <template #node-switch="switchSourceNodeProps">
+      <SwitchNode v-bind="switchSourceNodeProps" />
     </template>
 
     <template #edge-custom="edgeProps">

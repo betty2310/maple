@@ -48,6 +48,9 @@
       <div v-else-if="props.selectedComponent.type == CircuitComponent.Diode">
         <DiodeProperty v-bind="props.selectedComponent.data as DiodeData" />
       </div>
+      <div v-else-if="props.selectedComponent.type == CircuitComponent.Switch">
+        <SwitchProperty v-bind="props.selectedComponent.data as SwitchData" />
+      </div>
     </div>
   </div>
 </template>
@@ -59,7 +62,8 @@ import {
   type CapacitorData,
   CircuitComponent,
   type DiodeData,
-  type InductorData
+  type InductorData,
+  type SwitchData
 } from '@/types'
 import ResistorProperty from './properties/ResistorProperty.vue'
 import CapacitorProperty from './properties/CapacitorProperty.vue'
@@ -67,6 +71,7 @@ import VoltageSourceProperty from './properties/VoltageSourceProperty.vue'
 import ACVoltageSourceProperty from './properties/ACVoltageSourceProperty.vue'
 import InductorProperty from '@/components/properties/InductorProperty.vue'
 import DiodeProperty from '@/components/properties/DiodeProperty.vue'
+import SwitchProperty from '@/components/properties/SwitchProperty.vue'
 
 interface Props {
   selectedComponent: Node | null
