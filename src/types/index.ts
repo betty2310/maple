@@ -9,6 +9,7 @@ enum CircuitComponent {
   Capacitor = 'capacitor',
   Inductor = 'inductor',
   Diode = 'diode',
+  Switch = 'switch',
   output = 'output'
 }
 
@@ -44,6 +45,10 @@ interface InductorData extends ComponentData {
   inductance: number
 }
 
+interface SwitchData extends ComponentData {
+  isOn: boolean
+}
+
 interface DiodeData extends ComponentData {
   IS?: string,
   RS?: string,
@@ -59,7 +64,8 @@ export type {
   ACVoltageSourceData,
   CapacitorData,
   InductorData,
-  DiodeData
+  DiodeData,
+  SwitchData
 }
 export { CircuitComponent }
 

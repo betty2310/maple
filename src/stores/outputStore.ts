@@ -16,7 +16,8 @@ const useOutputStore = defineStore('outputStore', {
 
   actions: {
     setValue(value: number[]) {
-      this.output = value
+      const min = 1e-6
+      this.output = value.map((v) => Math.abs(v) < min ? 0 : v)
     },
     getValue(): number[] {
       return this.output

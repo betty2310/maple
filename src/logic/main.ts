@@ -1,6 +1,16 @@
 import type { Edge, FlowExportObject, Node } from '@vue-flow/core'
 import useRunStore from '@/stores/runStore'
-import { ACVoltageSource, Capacitor, Component, DCVoltageSource, Diode, Ground, Inductor, Resistor } from './models'
+import {
+  ACVoltageSource,
+  Capacitor,
+  Component,
+  DCVoltageSource,
+  Diode,
+  Ground,
+  Inductor,
+  Resistor,
+  Switch
+} from './models'
 import { type ACVoltageSourceData, CircuitComponent } from '@/types'
 
 function convertGraphToNetlist(circuit: FlowExportObject): string {
@@ -31,6 +41,9 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
         break
       case CircuitComponent.output:
         component = new Ground(node.id)
+        break
+      case CircuitComponent.Switch:
+        component = new Switch(node.data.id, node.data.isOn)
         break
       case CircuitComponent.Ground:
         component = new Ground(node.id)
@@ -76,7 +89,10 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
     } else if (component instanceof Inductor) {
       netlist.push(`${component.id} ${component.pos} ${component.neg} ${component.inductance}`)
     } else if (component instanceof Diode) {
-      netlist.push(`${component.id} ${component.pos} ${component.neg} 1N914`)
+      netlist.push(`${component.id} ${component.neg} ${component.pos} 1N914`)
+    } else if (component instanceof Switch) {
+      // treat switch as a resistor, if switch on, make resistance large
+      netlist.push(`R${component.id} ${component.pos} ${component.neg} ${component.isOn ? 1e9 : 0}`)
     } else if (component instanceof DCVoltageSource) {
       netlist.push(`${component.id} ${component.pos} ${component.neg} ${component.voltage}`)
     } else if (component instanceof ACVoltageSource) {
@@ -125,7 +141,6 @@ function handleAPI(circuit: FlowExportObject) {
   netlist = title + netlist
   const exportNodes = getAnalysisType(circuit.edges)
 
-  netlist = netlist + '\n.model 1N914 D(Is=1e-14 Rs=0 N=1 Bv=1e30 Cjo=0 M=0.5 tt=0)'
   netlist = netlist + `\n.END`
   const mode = useRunStore().getMode()
 
