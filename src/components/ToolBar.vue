@@ -20,6 +20,8 @@
           <li><a @click="selected = SimulationMode.ACSweep">AC sweep</a></li>
         </ul>
       </div>
+
+      <RouterLink class="btn btn-accent btn-sm ml-4" to="/signin">Sign in</RouterLink>
     </div>
   </div>
 </template>
