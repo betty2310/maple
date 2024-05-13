@@ -39,7 +39,9 @@ const props = defineProps<{
         </DropdownMenuItem>
         <DropdownMenuItem>
           <FolderDot class="mr-2 h-4 w-4" />
-          <span>Projects</span>
+          <RouterLink to="/projects">
+            <span>Projects</span>
+          </RouterLink>
           <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuGroup>

@@ -49,10 +49,8 @@ const onSubmit = handleSubmit(async (values) => {
 
 const handleSignInWithGoogle = async () => {
   try {
-    const data = await sessionStore.signinWithGoogle()
-    if (data) {
-      router.back()
-    }
+    await sessionStore.signinWithGoogle()
+
   } catch (error) {
     if (error instanceof Error) {
       errorMessage.value = error.message
