@@ -6,9 +6,9 @@
       <h1 class="text-xl font-bold">🍁</h1>
     </div>
     <div class="flex items-center text-sm mr-4">
-      <button class="mr-4 focus:outline-none hover:bg-base-100" @click="onRun">
-        <PlayIcon class="h-6 w-6 text-success" />
-      </button>
+      <Button size="xs" @click="onRun">
+        Run
+      </Button>
       <div class="dropdown dropdown-bottom dropdown-end">
         <div tabindex="0" role="button" class="">{{ selected }}</div>
         <ul
@@ -20,23 +20,33 @@
           <li><a @click="selected = SimulationMode.ACSweep">AC sweep</a></li>
         </ul>
       </div>
-
-      <RouterLink class="btn btn-accent btn-sm ml-4" to="/signin">Sign in</RouterLink>
+      <RouterLink v-if="loggedInUser === null" class="btn btn-accent btn-sm ml-4" to="/signin">
+        <Button size="xs">Sign in</Button>
+      </RouterLink>
+      <UserAvatarDropdown v-else :signout="sessionStore.signOut" :user="loggedInUser" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { PlayIcon } from '@heroicons/vue/24/outline'
 import { useVueFlow } from '@vue-flow/core'
 import { handleAPI } from '@/logic/main'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useFetch } from '@vueuse/core'
 
 import useRunStore from '@/stores/runStore'
 
 import useOutputStore from '@/stores/outputStore'
 import { SimulationMode } from '@/types'
+import { Button } from '@/components/ui/button'
+
+
+import { useSessionStore } from '@/stores/sessionStore'
+import UserAvatarDropdown from '@/components/ui/UserAvatarDropdown.vue'
+
+const sessionStore = useSessionStore()
+
+const loggedInUser = computed(() => sessionStore.user)
 
 const { toObject } = useVueFlow()
 
@@ -45,6 +55,7 @@ const netlist = ref({})
 const selected = ref<SimulationMode>(SimulationMode.Transient)
 
 const runStore = useRunStore()
+
 watch(selected, () => {
   runStore.setMode(selected.value)
 })
