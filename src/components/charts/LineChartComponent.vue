@@ -1,5 +1,5 @@
 <template>
-  <v-chart ref="chart" class="chart" :option="chartOption" />
+  <v-chart ref="chart" :option="chartOption" class="chart" />
 </template>
 
 <script setup lang="ts">

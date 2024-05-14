@@ -14,6 +14,10 @@ defineOptions({
 
 const { updateNodeData, onNodeClick, removeNodes } = useVueFlow()
 
+const c = ref<Position>(Position.Top)
+const e = ref<Position>(Position.Bottom)
+const b = ref<Position>(Position.Left)
+
 onMounted(() => {
   const id = props.id.split(' ')[1]
   updateNodeData<TransistorData>(props.id, {
@@ -22,7 +26,10 @@ onMounted(() => {
     type: 'transistor',
     description: 'NPN transistor',
     toolbarPosition: Position.Right,
-    toolbarVisible: false
+    toolbarVisible: false,
+    c: c.value,
+    e: e.value,
+    b: b.value
   })
 })
 const toolbarVisible = ref(props.data.toolbarVisible)
@@ -51,7 +58,7 @@ const handleRemoveNode = () => {
   <IconComponent />
   <div class="font-mono fixed right-2 top-1/2 transform translate-y-[-50%]">{{ props.data.id }}</div>
 
-  <Handle :position="Position.Left" type="source" />
-  <Handle :position="Position.Top" type="target" />
-  <Handle :position="Position.Bottom" type="target" />
+  <Handle :position="b" type="source" />
+  <Handle :position="c" type="target" />
+  <Handle :position="e" type="target" />
 </template>

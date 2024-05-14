@@ -34,7 +34,7 @@ import LineChartComponent from '@/components/charts/LineChartComponent.vue'
 import TableOutput from '@/components/TableOutput.vue'
 
 const options = ['Table', 'Graph']
-const activeOption = ref('Graph')
+const activeOption = ref('Table')
 
 const outputStore = useOutputStore()
 const layoutStore = useLayoutStore()

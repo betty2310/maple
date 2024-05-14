@@ -53,7 +53,10 @@ interface SwitchData extends ComponentData {
 }
 
 interface TransistorData extends ComponentData {
-  model: string
+  model: string,
+  c: Position,
+  b: Position,
+  e: Position,
 }
 
 interface DiodeData extends ComponentData {

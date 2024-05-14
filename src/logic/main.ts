@@ -12,7 +12,7 @@ import {
   Switch,
   Transistor
 } from './models'
-import { type ACVoltageSourceData, CircuitComponent, type ComponentData } from '@/types'
+import { type ACVoltageSourceData, CircuitComponent, type ComponentData, type TransistorData } from '@/types'
 
 
 function convertGraphToNetlist(circuit: FlowExportObject): string {
@@ -41,7 +41,7 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
         component = new Diode(node.data.id)
         break
       case CircuitComponent.Transistor:
-        component = new Transistor(node.data.id, '', '', '', '', 'mjd44h11')
+        component = new Transistor(node.data.id, '', '', '', '0', 'mjd44h11')
         break
       case CircuitComponent.output:
         component = new Ground(node.id)
@@ -91,26 +91,26 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
       sourceNode.neg = edge.data.id
     }
 
-
-    // if (targetNode instanceof Ground) {
-    //   sourceNode.neg = edge.data.id
-    //   targetNode.pos = edge.data.id
-    // } else {
-    //   sourceNode.neg = edge.data.id
-    //   targetNode.pos = edge.data.id
-    // }
-
-
-    // console.log(sourceNode, targetNode, edge.data.id)
-
     if (sourceNode instanceof Transistor) {
-      sourceNode.b = edge.data.id
+      const transistorComponent = sourceComponent as Node<TransistorData>
+      const edgeConnectPosition = edge.sourceHandle?.split('-')[1]
+      if (edgeConnectPosition === transistorComponent.data?.b) {
+        sourceNode.b = edge.data.id
+      } else if (edgeConnectPosition === transistorComponent.data?.c) {
+        sourceNode.c = edge.data.id
+      } else if (edgeConnectPosition === transistorComponent.data?.e) {
+        sourceNode.e = edge.data.id
+      }
     }
     if (targetNode instanceof Transistor) {
-      if (edge.targetHandle?.includes('top')) {
+      const transistorComponent = targetComponent as Node<TransistorData>
+      const edgeConnectPosition = edge.targetHandle?.split('-')[1]
+      console.log(edgeConnectPosition, transistorComponent.data)
+      if (edgeConnectPosition === transistorComponent.data?.b) {
+        targetNode.b = edge.data.id
+      } else if (edgeConnectPosition === transistorComponent.data?.c) {
         targetNode.c = edge.data.id
-      }
-      if (edge.targetHandle?.includes('bottom')) {
+      } else if (edgeConnectPosition === transistorComponent.data?.e) {
         targetNode.e = edge.data.id
       }
     }
