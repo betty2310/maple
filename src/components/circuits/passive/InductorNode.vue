@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-import { Handle, Position, useVueFlow, type NodeProps } from '@vue-flow/core'
+import { Handle, type NodeProps, Position, useVueFlow } from '@vue-flow/core'
 import { NodeToolbar } from '@vue-flow/node-toolbar'
 import IconComponent from '@/assets/svgs/Inductor.svg?component'
 
@@ -15,6 +15,8 @@ defineOptions({
 const { updateNodeData, onNodeClick, removeNodes } = useVueFlow()
 
 const inductance = ref(1e-6)
+const pos = ref<Position>(Position.Left)
+const neg = ref<Position>(Position.Right)
 
 onMounted(() => {
   const id = props.id.split(' ')[1]
@@ -24,7 +26,9 @@ onMounted(() => {
     description: 'Inductor',
     inductance: inductance.value,
     toolbarPosition: Position.Right,
-    toolbarVisible: false
+    toolbarVisible: false,
+    pos: pos.value,
+    neg: neg.value
   })
 })
 const toolbarVisible = ref(props.data.toolbarVisible)
@@ -54,6 +58,6 @@ const handleRemoveNode = () => {
   <IconComponent class="mx-1" />
   &#160;
 
-  <Handle type="source" :position="Position.Left" />
-  <Handle type="target" :position="Position.Right" />
+  <Handle :position="neg" type="source" />
+  <Handle :position="pos" type="target" />
 </template>

@@ -23,7 +23,8 @@ watch(
     isSwitchOn.value = value
   }
 )
-
+const pos = ref<Position>(Position.Left)
+const neg = ref<Position>(Position.Right)
 onMounted(() => {
   const id = props.id.split(' ')[1]
   updateNodeData<SwitchData>(props.id, {
@@ -32,7 +33,9 @@ onMounted(() => {
     isOn: isSwitchOn.value,
     description: 'Switch',
     toolbarPosition: Position.Right,
-    toolbarVisible: false
+    toolbarVisible: false,
+    pos: pos.value,
+    neg: neg.value
   })
 })
 const toolbarVisible = ref(props.data.toolbarVisible)
@@ -72,6 +75,6 @@ const handleToggleSwitch = () => {
   <IconOnComponent v-else />
   <div v-if="isSwitchOn">&#160;</div>
 
-  <Handle :position="Position.Left" type="source" />
-  <Handle :position="Position.Right" type="target" />
+  <Handle :position="neg" type="source" />
+  <Handle :position="pos" type="target" />
 </template>

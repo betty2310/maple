@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
-import { Handle, Position, useVueFlow, type NodeProps } from '@vue-flow/core'
+import { onMounted, ref } from 'vue'
+import { Handle, type NodeProps, Position, useVueFlow } from '@vue-flow/core'
 import { NodeToolbar } from '@vue-flow/node-toolbar'
 
 import IconComponent from '@/assets/svgs/Ground.svg?component'
 
 
-import type { ComponentData } from '@/types';
+import type { ComponentData } from '@/types'
 
 const props = defineProps<NodeProps<ComponentData>>()
 
@@ -16,6 +16,8 @@ defineOptions({
 
 const { updateNodeData, onNodeClick, removeNodes } = useVueFlow()
 
+const pos = ref<Position>(Position.Top)
+
 onMounted(() => {
   const id = props.id.split(' ')[1]
   updateNodeData<ComponentData>(props.id, {
@@ -24,6 +26,7 @@ onMounted(() => {
     description: 'resistor description',
     toolbarPosition: Position.Right,
     toolbarVisible: false,
+    pos: pos.value
   })
 })
 const toolbarVisible = ref(props.data.toolbarVisible)
@@ -49,5 +52,5 @@ const handleRemoveNode = () => {
 
   <IconComponent />
 
-  <Handle type="target" :position="Position.Top" />
+  <Handle :position="pos" type="target" />
 </template>

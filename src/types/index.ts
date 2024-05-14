@@ -20,6 +20,8 @@ interface ComponentData {
   description: string
   toolbarPosition?: Position
   toolbarVisible?: boolean
+  pos?: Position
+  neg?: Position
 }
 
 interface VoltageSourceData extends ComponentData {

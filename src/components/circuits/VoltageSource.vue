@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-import { Handle, Position, useVueFlow, type NodeProps } from '@vue-flow/core'
+import { Handle, type NodeProps, Position, useVueFlow } from '@vue-flow/core'
 import { NodeToolbar } from '@vue-flow/node-toolbar'
 import IconComponent from '@/assets/svgs/DCVoltageSource.svg?component'
 
-import type { VoltageSourceData } from '@/types';
+import type { VoltageSourceData } from '@/types'
 
 const props = defineProps<NodeProps<VoltageSourceData>>()
 
@@ -15,6 +15,8 @@ defineOptions({
 const { updateNodeData, onNodeClick, removeNodes } = useVueFlow()
 
 const dc = ref(1.0) // base V
+const pos = ref<Position>(Position.Top)
+const neg = ref<Position>(Position.Bottom)
 
 const voltageSourceData: VoltageSourceData = {
   id: `DC ${props.id.split(' ')[1]}`,
@@ -23,6 +25,8 @@ const voltageSourceData: VoltageSourceData = {
   Dc: dc.value,
   toolbarPosition: Position.Right,
   toolbarVisible: false,
+  pos: pos.value,
+  neg: neg.value
 }
 
 onMounted(() => {
@@ -60,6 +64,6 @@ const handleRemoveNode = () => {
     <div class="basis-1/4 font-mono">&#160;</div>
   </div>
 
-  <Handle type="target" :position="Position.Top" />
-  <Handle type="source" :position="Position.Bottom" />
+  <Handle :position="pos" type="target" />
+  <Handle :position="neg" type="source" />
 </template>

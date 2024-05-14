@@ -12,7 +12,7 @@ import {
   Switch,
   Transistor
 } from './models'
-import { type ACVoltageSourceData, CircuitComponent } from '@/types'
+import { type ACVoltageSourceData, CircuitComponent, type ComponentData } from '@/types'
 
 
 function convertGraphToNetlist(circuit: FlowExportObject): string {
@@ -67,23 +67,41 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
   circuit.edges.forEach((edge: Edge) => {
     const sourceNode = nodeMap[edge.source]
     const targetNode = nodeMap[edge.target]
-
     if (targetNode instanceof Ground || sourceNode instanceof Ground) {
       edge.data.id = '0'
     } else {
       edge.data.id = `${++edgeId}`
     }
 
-    if (targetNode instanceof Ground) {
-      sourceNode.neg = edge.data.id
+    const sourceComponent = circuit.nodes.find((node) => node.id === edge.source) as Node<ComponentData>
+    const targetComponent = circuit.nodes.find((node) => node.id === edge.target) as Node<ComponentData>
+
+    const edgeSourceConnectPos = edge.sourceHandle?.split('-')[1]
+    const edgeTargetConnectPos = edge.targetHandle?.split('-')[1]
+
+    if (targetComponent.data?.pos === edgeTargetConnectPos) {
       targetNode.pos = edge.data.id
     } else {
+      targetNode.neg = edge.data.id
+    }
+
+    if (sourceComponent.data?.pos === edgeSourceConnectPos) {
+      sourceNode.pos = edge.data.id
+    } else {
       sourceNode.neg = edge.data.id
-      targetNode.pos = edge.data.id
     }
 
 
-    console.log(sourceNode, targetNode, edge.data.id)
+    // if (targetNode instanceof Ground) {
+    //   sourceNode.neg = edge.data.id
+    //   targetNode.pos = edge.data.id
+    // } else {
+    //   sourceNode.neg = edge.data.id
+    //   targetNode.pos = edge.data.id
+    // }
+
+
+    // console.log(sourceNode, targetNode, edge.data.id)
 
     if (sourceNode instanceof Transistor) {
       sourceNode.b = edge.data.id
