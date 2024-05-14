@@ -1,4 +1,4 @@
-import { expect, describe, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { convertGraphToNetlist } from '@/logic/main'
 import type { FlowExportObject } from '@vue-flow/core'
 
@@ -257,12 +257,12 @@ export const simpleACCircuit: FlowExportObject = {
 describe('ConvertGraphToNetList', () => {
   it('Should convert DC graph to netlist', () => {
     const netlist = convertGraphToNetlist(simpleDCCircuit)
-    const trueValue = 'V1 1 0 1\nR1 2 1 1000\nR2 0 2 1000'
+    const trueValue = 'V1 1 0 1\nR1 2 1 1000\nR2 2 0 1000'
     expect(netlist).toEqual(trueValue)
   })
   it('Should convert AC graph to netlist', () => {
     const netlist = convertGraphToNetlist(simpleACCircuit)
-    const trueValue = 'V1 1 0 dc 0 ac 1 sin(0 1 1000 0 0 0)\nC1 0 2 0.000001\nR1 2 1 1000'
+    const trueValue = 'V1 1 0 dc 0 ac 1 sin(0 1 1000 0 0 0)\nC1 2 0 0.000001\nR1 2 1 1000'
     expect(netlist).toEqual(trueValue)
   })
 })

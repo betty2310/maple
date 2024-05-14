@@ -1,6 +1,12 @@
 import { Component } from './Component'
 
-export class ACVoltageSource extends Component {
+class Source extends Component {
+  constructor(id: string) {
+    super(id)
+  }
+}
+
+export class ACVoltageSource extends Source {
   VA: number
   Freq: number
   Phase: number
@@ -15,13 +21,22 @@ export class ACVoltageSource extends Component {
     this.AC_mag = ac_mag
     this.AC_phase = ac_phase
   }
+
+  toString(): string {
+    return `${this.id} ${this.pos} ${this.neg} dc 0 ac 1 sin(0 ${this.VA} ${this.Freq} 0 0 ${this.Phase})`
+
+  }
 }
 
-export class DCVoltageSource extends Component {
+export class DCVoltageSource extends Source {
   voltage: number
 
   constructor(id: string, voltage: number) {
     super(id)
     this.voltage = voltage
+  }
+
+  toString(): string {
+    return `${this.id} ${this.pos} ${this.neg} ${this.voltage}`
   }
 }

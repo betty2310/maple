@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
-import { Handle, Position, useVueFlow, type NodeProps } from '@vue-flow/core'
+import { onMounted, ref } from 'vue'
+import { Handle, type NodeProps, Position, useVueFlow } from '@vue-flow/core'
 import { NodeToolbar } from '@vue-flow/node-toolbar'
 
 import IconComponent from '@/assets/svgs/resistor.svg?component'
 
 
-import type { ResistorData } from '@/types';
+import type { ResistorData } from '@/types'
 
 const props = defineProps<NodeProps<ResistorData>>()
 
@@ -17,6 +17,8 @@ defineOptions({
 const { updateNodeData, onNodeClick, removeNodes } = useVueFlow()
 
 const resistance = ref(1000)
+const pos = ref<Position>(Position.Left)
+const neg = ref<Position>(Position.Right)
 
 onMounted(() => {
   const id = props.id.split(' ')[1]
@@ -27,6 +29,8 @@ onMounted(() => {
     resistance: resistance.value,
     toolbarPosition: Position.Right,
     toolbarVisible: false,
+    pos: pos.value,
+    neg: neg.value
   })
 })
 const toolbarVisible = ref(props.data.toolbarVisible)
@@ -56,21 +60,6 @@ const handleRemoveNode = () => {
   <IconComponent />
   &#160;
 
-  <Handle type="target" :position="Position.Right" />
-  <Handle type="source" :position="Position.Left" />
+  <Handle :position="pos" type="target" />
+  <Handle :position="neg" type="source" />
 </template>
-
-<style scoped>
-.custom-node {
-  height: 100%;
-  width: 100%;
-  padding: 1rem;
-  display: flex;
-  border-radius: 5px;
-  flex-direction: column;
-  gap: 10px;
-  background: blue;
-  color: white;
-  border: 1px solid black;
-}
-</style>

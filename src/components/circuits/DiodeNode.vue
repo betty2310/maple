@@ -13,6 +13,8 @@ defineOptions({
 })
 
 const { updateNodeData, onNodeClick, removeNodes } = useVueFlow()
+const pos = ref<Position>(Position.Left)
+const neg = ref<Position>(Position.Right)
 
 onMounted(() => {
   const id = props.id.split(' ')[1]
@@ -21,7 +23,9 @@ onMounted(() => {
     type: 'diode',
     description: 'Diode model 1N914',
     toolbarPosition: Position.Right,
-    toolbarVisible: false
+    toolbarVisible: false,
+    pos: pos.value,
+    neg: neg.value
   })
 })
 const toolbarVisible = ref(props.data.toolbarVisible)
@@ -51,6 +55,6 @@ const handleRemoveNode = () => {
   <IconComponent />
   &#160;
 
-  <Handle :position="Position.Left" type="source" />
-  <Handle :position="Position.Right" type="target" />
+  <Handle :position="neg" type="source" />
+  <Handle :position="pos" type="target" />
 </template>

@@ -2,11 +2,11 @@
 import { onMounted, ref } from 'vue'
 import { Handle, type NodeProps, Position, useVueFlow } from '@vue-flow/core'
 import { NodeToolbar } from '@vue-flow/node-toolbar'
-import IconComponent from '@/assets/svgs/Inductor.svg?component'
+import IconComponent from '@/assets/svgs/Transitor.svg?component'
 
-import type { InductorData } from '@/types'
+import type { TransistorData } from '@/types'
 
-const props = defineProps<NodeProps<InductorData>>()
+const props = defineProps<NodeProps<TransistorData>>()
 
 defineOptions({
   inheritAttrs: false
@@ -14,21 +14,22 @@ defineOptions({
 
 const { updateNodeData, onNodeClick, removeNodes } = useVueFlow()
 
-const inductance = ref(1e-6)
-const pos = ref<Position>(Position.Left)
-const neg = ref<Position>(Position.Right)
+const c = ref<Position>(Position.Top)
+const e = ref<Position>(Position.Bottom)
+const b = ref<Position>(Position.Left)
 
 onMounted(() => {
   const id = props.id.split(' ')[1]
-  updateNodeData<InductorData>(props.id, {
-    id: `L${id}`,
-    type: 'inductor',
-    description: 'Inductor',
-    inductance: inductance.value,
+  updateNodeData<TransistorData>(props.id, {
+    id: `Q${id}`,
+    model: 'npn',
+    type: 'transistor',
+    description: 'NPN transistor',
     toolbarPosition: Position.Right,
     toolbarVisible: false,
-    pos: pos.value,
-    neg: neg.value
+    c: c.value,
+    e: e.value,
+    b: b.value
   })
 })
 const toolbarVisible = ref(props.data.toolbarVisible)
@@ -44,20 +45,20 @@ const handleRemoveNode = () => {
 </script>
 
 <template>
-  <div class="font-mono">{{ props.data.id }}</div>
   <NodeToolbar
-    style="display: flex; gap: 0.5rem; align-items: center"
     :is-visible="toolbarVisible"
     :position="data.toolbarPosition"
+    style="display: flex; gap: 0.5rem; align-items: center"
   >
     <div class="flex flex-col gap-2">
       <button class="btn btn-error" @click="handleRemoveNode">x</button>
     </div>
   </NodeToolbar>
 
-  <IconComponent class="mx-1" />
-  &#160;
+  <IconComponent />
+  <div class="font-mono fixed right-2 top-1/2 transform translate-y-[-50%]">{{ props.data.id }}</div>
 
-  <Handle :position="neg" type="source" />
-  <Handle :position="pos" type="target" />
+  <Handle :position="b" type="source" />
+  <Handle :position="c" type="target" />
+  <Handle :position="e" type="target" />
 </template>

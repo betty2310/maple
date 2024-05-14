@@ -9,7 +9,7 @@ export const useLayoutStore = defineStore('layoutStore', {
   state: (): State => {
     return {
       isShowLeftPanel: true,
-      isShowBottomPanel: false
+      isShowBottomPanel: true
     }
   },
   actions: {

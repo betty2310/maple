@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-import { Handle, Position, useVueFlow, type NodeProps } from '@vue-flow/core'
+import { Handle, type NodeProps, Position, useVueFlow } from '@vue-flow/core'
 import { NodeToolbar } from '@vue-flow/node-toolbar'
 import IconComponent from '@/assets/svgs/ACVoltageSource.svg?component'
 
@@ -14,7 +14,8 @@ defineOptions({
 
 const { updateNodeData, onNodeClick, removeNodes } = useVueFlow()
 
-const dc = ref(1.0) // base V
+const pos = ref<Position>(Position.Top)
+const neg = ref<Position>(Position.Bottom)
 
 const voltageSourceData: ACVoltageSourceData = {
   id: `AC ${props.id.split(' ')[1]}`,
@@ -26,7 +27,9 @@ const voltageSourceData: ACVoltageSourceData = {
   Phase: 0,
   AC_phase: 0,
   toolbarPosition: Position.Right,
-  toolbarVisible: false
+  toolbarVisible: false,
+  pos: pos.value,
+  neg: neg.value
 }
 
 onMounted(() => {
@@ -65,22 +68,6 @@ const handleRemoveNode = () => {
   <!--    <div class="h-20 w-20 flex rounded-full items-center justify-center bg-orange-400 border border-slate-600">-->
   <!--        {{ props.data.id }}-->
   <!--    </div>-->
-  <Handle type="target" :position="Position.Top" />
-  <Handle type="source" :position="Position.Bottom" />
+  <Handle :position="pos" type="target" />
+  <Handle :position="neg" type="source" />
 </template>
-
-<style scoped>
-.custom-node {
-  height: 100%;
-  width: 100%;
-  padding: 1rem;
-  display: flex;
-  border-radius: 50%;
-  /* make it a circle */
-  flex-direction: column;
-  gap: 10px;
-  background: orange;
-  color: white;
-  border: 1px solid black;
-}
-</style>

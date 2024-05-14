@@ -10,6 +10,7 @@ enum CircuitComponent {
   Inductor = 'inductor',
   Diode = 'diode',
   Switch = 'switch',
+  Transistor = 'transistor',
   output = 'output'
 }
 
@@ -19,6 +20,8 @@ interface ComponentData {
   description: string
   toolbarPosition?: Position
   toolbarVisible?: boolean
+  pos?: Position
+  neg?: Position
 }
 
 interface VoltageSourceData extends ComponentData {
@@ -49,6 +52,13 @@ interface SwitchData extends ComponentData {
   isOn: boolean
 }
 
+interface TransistorData extends ComponentData {
+  model: string,
+  c: Position,
+  b: Position,
+  e: Position,
+}
+
 interface DiodeData extends ComponentData {
   IS?: string,
   RS?: string,
@@ -65,6 +75,7 @@ export type {
   CapacitorData,
   InductorData,
   DiodeData,
+  TransistorData,
   SwitchData
 }
 export { CircuitComponent }
