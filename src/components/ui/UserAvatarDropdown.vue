@@ -24,7 +24,7 @@ const props = defineProps<{
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger as-child>
-      <Button variant="outline">
+      <Button size="xs" variant="outline">
         {{ props.user.email }}
       </Button>
     </DropdownMenuTrigger>

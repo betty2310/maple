@@ -1,33 +1,34 @@
 <template>
-  <div class="flex items-center justify-between px-4 py-2">
-    <div class="flex space-x-4">
-      <button
-        v-for="(option, index) in options"
-        :key="index"
-        class="btn btn-xs"
-        :class="{ 'btn-primary': activeOption === option }"
-        @click="activeOption = option"
-      >
-        <ChartBarIcon class="h-4 w-4 text-centre-content" v-if="option === 'Graph'" />
-        <TableCellsIcon class="h-4 w-4 text-centre-content" v-if="option === 'Table'" />
-        {{ option }}
+  <div class="bg-primary text-primary-foreground">
+    <div class="flex items-center justify-between px-4 py-2">
+      <div class="flex space-x-4">
+        <button
+          v-for="(option, index) in options"
+          :key="index"
+          :class="{ 'btn-primary': activeOption === option }"
+          class="btn btn-xs"
+          @click="activeOption = option"
+        >
+          <LineChart v-if="option === 'Graph'" class="h-4 w-4 text-centre-content" />
+          <Table v-if="option === 'Table'" class="h-4 w-4 text-centre-content" />
+          {{ option }}
+        </button>
+      </div>
+      <button class="btn btn-xs" @click="layoutStore.toggleBottomPanel()">
+        <X class="h-4 w-4 text-centre-content" />
       </button>
     </div>
-    <button class="btn btn-xs" @click="layoutStore.toggleBottomPanel()">
-      <XMarkIcon class="h-4 w-4 text-centre-content" />
-    </button>
+    <div class="flex-1 overflow-auto px-4 py-2">
+      <LineChartComponent v-if="activeOption === 'Graph'" />
+      <TableOutput v-if="activeOption === 'Table'" />
+    </div>
   </div>
-  <div class="flex-1 overflow-auto px-4 py-2">
-    <LineChartComponent v-if="activeOption === 'Graph'" />
-    <TableOutput v-if="activeOption === 'Table'" />
-  </div>
+
 </template>
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
-import { ChartBarIcon } from '@heroicons/vue/24/outline'
-import { TableCellsIcon } from '@heroicons/vue/24/solid'
-import { XMarkIcon } from '@heroicons/vue/20/solid'
+import { LineChart, Table, X } from 'lucide-vue-next'
 import useOutputStore from '@/stores/outputStore'
 import { useLayoutStore } from '@/stores/layoutStore'
 import LineChartComponent from '@/components/charts/LineChartComponent.vue'

@@ -1,60 +1,81 @@
 <template>
-  <div
-    class="bg-base-200 text-base-content py-1 px-4 flex justify-between items-center fixed top-0 left-0 right-0 z-10"
-  >
-    <div class="flex items-center text-sm">
-      <h1 class="text-xl font-bold">🍁</h1>
-    </div>
-    <div class="flex items-center text-sm mr-4">
-      <Button size="xs" @click="onRun">
-        Run
+  <h1 class="text-xl font-semibold">
+    Circuitcraft
+  </h1>
+  <DropdownMenu class="ml-auto">
+    <DropdownMenuTrigger as-child>
+      <Button class="ml-auto gap-1.5 text-sm" size="xs" variant="ghost">
+        {{ selected }}
+        <ChevronDown class="size-3.5" />
       </Button>
-      <div class="dropdown dropdown-bottom dropdown-end">
-        <div tabindex="0" role="button" class="">{{ selected }}</div>
-        <ul
-          tabindex="0"
-          class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
-        >
-          <li><a @click="selected = SimulationMode.Transient">Transient</a></li>
-          <li><a @click="selected = SimulationMode.DCSweep">DC sweep</a></li>
-          <li><a @click="selected = SimulationMode.ACSweep">AC sweep</a></li>
-        </ul>
-      </div>
-      <RouterLink v-if="loggedInUser === null" class="btn btn-accent btn-sm ml-4" to="/signin">
-        <Button size="xs">Sign in</Button>
-      </RouterLink>
-      <UserAvatarDropdown v-else :signout="sessionStore.signOut" :user="loggedInUser" />
-    </div>
-  </div>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent class="w-56">
+      <DropdownMenuLabel>Simulation mode</DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      <DropdownMenuRadioGroup v-model="selected">
+        <DropdownMenuRadioItem :value="SimulationMode.Transient">
+          Transient
+        </DropdownMenuRadioItem>
+        <DropdownMenuRadioItem :value="SimulationMode.DCSweep">
+          DC sweep
+        </DropdownMenuRadioItem>
+        <DropdownMenuRadioItem :value="SimulationMode.ACSweep">
+          AC sweep
+        </DropdownMenuRadioItem>
+      </DropdownMenuRadioGroup>
+    </DropdownMenuContent>
+  </DropdownMenu>
+
+
+  <Button
+    class="gap-1.5 text-sm"
+    size="xs"
+    variant="default"
+    @click="onRun"
+  >
+    <Play class="size-3.5" />
+  </Button>
+
+  <RouterLink v-if="loggedInUser === null" to="/signin">
+    <Button size="xs">Sign in</Button>
+  </RouterLink>
+  <UserAvatarDropdown v-else :signout="sessionStore.signOut" :user="loggedInUser" />
 </template>
 
 <script lang="ts" setup>
-import { useVueFlow } from '@vue-flow/core'
-import { handleAPI } from '@/logic/main'
-import { computed, ref, watch } from 'vue'
-import { useFetch } from '@vueuse/core'
-
-import useRunStore from '@/stores/runStore'
-
-import useOutputStore from '@/stores/outputStore'
-import { SimulationMode } from '@/types'
+import { ChevronDown, Play } from 'lucide-vue-next'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-
-
-import { useSessionStore } from '@/stores/sessionStore'
 import UserAvatarDropdown from '@/components/ui/UserAvatarDropdown.vue'
 
-const sessionStore = useSessionStore()
+import { computed, ref, watch } from 'vue'
+import { useVueFlow } from '@vue-flow/core'
+import { useFetch } from '@vueuse/core'
 
+import { handleAPI } from '@/logic/main'
+
+import useRunStore from '@/stores/runStore'
+import useOutputStore from '@/stores/outputStore'
+import { useSessionStore } from '@/stores/sessionStore'
+
+import { SimulationMode } from '@/types'
+
+const netlist = ref({})
+const selected = ref<SimulationMode>(SimulationMode.Transient)
 const loggedInUser = computed(() => sessionStore.user)
 
 const { toObject } = useVueFlow()
-
-const netlist = ref({})
-
-const selected = ref<SimulationMode>(SimulationMode.Transient)
-
+const sessionStore = useSessionStore()
 const runStore = useRunStore()
+
 
 watch(selected, () => {
   runStore.setMode(selected.value)
