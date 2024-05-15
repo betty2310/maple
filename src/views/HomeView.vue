@@ -7,7 +7,7 @@
       <ActivityBar />
     </aside>
     <main class="pl-[55px] flex flex-1 overflow-auto">
-      <div v-if="isSidebarOpen" class="w-72 bg-background overflow-y-auto">
+      <div v-if="layoutStore.sidebarItem" class="w-72 bg-background overflow-y-auto">
         <Sidebar />
       </div>
       <div class="flex-1 overflow-auto" @drop="onDrop">
@@ -25,8 +25,6 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
-
 import ToolBar from '@/components/ToolBar.vue'
 import ActivityBar from '@/components/ActivityBar.vue'
 import StatusBar from '@/components/StatusBar.vue'
@@ -39,12 +37,4 @@ import useDragAndDrop from '@/hooks/useDnDCircuitComponent'
 const { onDrop } = useDragAndDrop()
 
 const layoutStore = useLayoutStore()
-
-const isSidebarOpen = ref(false)
-
-watch(() => layoutStore.sidebarItem, (value) => {
-  isSidebarOpen.value = !!value
-})
-
-
 </script>

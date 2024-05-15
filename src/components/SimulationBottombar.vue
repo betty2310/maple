@@ -14,7 +14,7 @@
           {{ option }}
         </button>
       </div>
-      <button class="btn btn-xs" @click="layoutStore.toggleBottomPanel()">
+      <button class="btn btn-xs">
         <X class="h-4 w-4 text-centre-content" />
       </button>
     </div>

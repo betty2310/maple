@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 
-import { Cpu, Hammer, Settings, ZoomIn } from 'lucide-vue-next'
+import { Cpu, Hammer, ZoomIn } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 import { BottomPanelItem, SidebarItem } from '@/enums'
 
 import { useLayoutStore } from '@/stores/layoutStore'
+import SettingDrawer from '@/components/ui/SettingDrawer.vue'
 
 const layoutStore = useLayoutStore()
 const sidebarItem = ref<SidebarItem | null>(null)
@@ -97,15 +98,7 @@ const handleBottomPanelItemClick = (item: BottomPanelItem) => {
       </Tooltip>
       <Tooltip>
         <TooltipTrigger as-child>
-          <Button
-            :variant="bottomPanelItem === BottomPanelItem.Settings ? 'default' : 'ghost'"
-            aria-label="Simulation"
-            class="rounded-lg"
-            size="icon"
-            @click="handleBottomPanelItemClick(BottomPanelItem.Settings)"
-          >
-            <Settings class="size-5" />
-          </Button>
+          <SettingDrawer />
         </TooltipTrigger>
         <TooltipContent :side-offset="5" side="right">
           Setting

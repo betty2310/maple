@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue'
 import type { Node } from '@vue-flow/core'
 
-import CircuitsListBar from '@/components/CircuitsListBar.vue'
+import CircuitsListBar from '@/components/core/CircuitsListBar/CircuitsListBar.vue'
 import PropertiesListBar from '@/components/PropertiesListBar.vue'
 
 import { useLayoutStore } from '@/stores/layoutStore'

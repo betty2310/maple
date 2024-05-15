@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { Handle, type NodeProps, Position, useVueFlow } from '@vue-flow/core'
 import { NodeToolbar } from '@vue-flow/node-toolbar'
-import IconComponent from '@/assets/svgs/Transitor.svg?component'
+import IconComponent from '@/assets/svgs/Transistor.svg?component'
 
 import type { TransistorData } from '@/types'
 
