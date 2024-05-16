@@ -28,7 +28,7 @@ export const useLayoutStore = defineStore('layoutStore', {
     setBottomPanelItem(item: BottomPanelItem) {
       this.bottomPanelItem = item
     },
-    hideSidebar() {
+    resetSidebarItem() {
       this.sidebarItem = null
     },
     hideBottomPanel() {

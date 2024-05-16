@@ -9,6 +9,13 @@ import { BottomPanelItem, SidebarItem } from '@/enums'
 
 import { useLayoutStore } from '@/stores/layoutStore'
 import SettingDrawer from '@/components/ui/SettingDrawer.vue'
+import { ResizablePanel } from '@/components/ui/resizable'
+
+
+const props = defineProps<{
+  panel: InstanceType<typeof ResizablePanel> | null
+}>()
+
 
 const layoutStore = useLayoutStore()
 const sidebarItem = ref<SidebarItem | null>(null)
@@ -24,9 +31,13 @@ watch(() => layoutStore.bottomPanelItem, (value) => {
 
 const handleSidebarItemClick = (item: SidebarItem) => {
   if (layoutStore.sidebarItem === item) {
-    layoutStore.hideSidebar()
+    props.panel?.isCollapsed ? props.panel?.expand() : props.panel?.collapse()
+    layoutStore.sidebarItem = null
   } else {
     layoutStore.setSidebarItem(item)
+    if (props.panel?.isCollapsed) {
+      props.panel?.expand()
+    }
   }
 }
 
