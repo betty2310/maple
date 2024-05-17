@@ -26,6 +26,12 @@ jobs:
       - name: Install dependencies
         run: npm i
 
+      - name: Create env file
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          envkey_VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          envkey_VITE_SUPABASE_KEY: ${{ secrets.VITE_SUPABASE_KEY }}
+
       - name: Build
         run: npm run build-prod
 
