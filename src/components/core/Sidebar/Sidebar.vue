@@ -2,8 +2,8 @@
 import { ref, watch } from 'vue'
 import type { Node } from '@vue-flow/core'
 
-import CircuitsListBar from '@/components/core/CircuitsListBar/CircuitsListBar.vue'
-import PropertiesListBar from '@/components/PropertiesListBar.vue'
+import CircuitsListBar from '@/components/core/Sidebar/CircuitsListBar/CircuitsListBar.vue'
+import PropertiesBar from '@/components/core/Sidebar/PropertiesBar/PropertiesBar.vue'
 
 import { useLayoutStore } from '@/stores/layoutStore'
 import useCircuitStore from '@/stores/circuitStore'
@@ -38,7 +38,7 @@ watch(
       <CircuitsListBar />
     </div>
     <div v-else-if="layoutStore.sidebarItem === SidebarItem.Properties">
-      <PropertiesListBar :selectedComponent="selectedComponent" />
+      <PropertiesBar :selectedComponent="selectedComponent" />
     </div>
   </div>
   <div

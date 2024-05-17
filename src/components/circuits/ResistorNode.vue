@@ -1,12 +1,14 @@
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { Handle, type NodeProps, Position, useVueFlow } from '@vue-flow/core'
 import { NodeToolbar } from '@vue-flow/node-toolbar'
 
 import IconComponent from '@/assets/svgs/resistor.svg?component'
+import { useColorMode } from '@vueuse/core'
 
 
 import type { ResistorData } from '@/types'
+import BaseNode from '@/components/circuits/BaseNode.vue'
 
 const props = defineProps<NodeProps<ResistorData>>()
 
@@ -44,22 +46,29 @@ const handleRemoveNode = () => {
   removeNodes(props.id, true)
 }
 
+const mode = useColorMode();
+const color = ref<'white' | 'black'>('white')
+
+watch(mode, (newVal) => {
+  color.value = newVal === 'dark' ? 'white' : 'black'
+})
 </script>
 
 <template>
-  <div class="font-mono">{{ props.data.id }}</div>
+<!--  <div class="font-mono">{{ props.data.id }}</div>-->
 
 
-  <NodeToolbar style="display: flex; gap: 0.5rem; align-items: center" :is-visible="toolbarVisible"
-    :position="data.toolbarPosition">
-    <div class="flex flex-col gap-2">
-      <button class="btn btn-error" @click="handleRemoveNode">x</button>
-    </div>
-  </NodeToolbar>
+<!--  <NodeToolbar style="display: flex; gap: 0.5rem; align-items: center" :is-visible="toolbarVisible"-->
+<!--    :position="data.toolbarPosition">-->
+<!--    <div class="flex flex-col gap-2">-->
+<!--      <button class="btn btn-error" @click="handleRemoveNode">x</button>-->
+<!--    </div>-->
+<!--  </NodeToolbar>-->
 
-  <IconComponent />
-  &#160;
+<!--  <IconComponent :style="{fill: color}" />-->
+<!--  &#160;-->
 
-  <Handle :position="pos" type="target" />
-  <Handle :position="neg" type="source" />
+<!--  <Handle :position="pos" type="target" />-->
+<!--  <Handle :position="neg" type="source" />-->
+  <BaseNode :node-props="props" :neg="Position.Right" :pos="Position.Left" node-prefix="V"/>
 </template>
