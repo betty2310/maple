@@ -1,23 +1,38 @@
 import { defineStore } from 'pinia'
+import { BottomPanelItem, SidebarItem } from '@/enums'
 
 interface State {
-  isShowLeftPanel: boolean
-  isShowBottomPanel: boolean
+  sidebarItem: SidebarItem | null
+  bottomPanelItem: BottomPanelItem | null
 }
 
 export const useLayoutStore = defineStore('layoutStore', {
   state: (): State => {
     return {
-      isShowLeftPanel: true,
-      isShowBottomPanel: true
+      bottomPanelItem: null,
+      sidebarItem: SidebarItem.Components
+    }
+  },
+  getters: {
+    isSidebarVisible(): boolean {
+      return this.sidebarItem == null
+    },
+    isBottomPanelVisible(): boolean {
+      return this.bottomPanelItem == null
     }
   },
   actions: {
-    toggleLeftPanel() {
-      this.isShowLeftPanel = !this.isShowLeftPanel
+    setSidebarItem(item: SidebarItem) {
+      this.sidebarItem = item
     },
-    toggleBottomPanel() {
-      this.isShowBottomPanel = !this.isShowBottomPanel
+    setBottomPanelItem(item: BottomPanelItem) {
+      this.bottomPanelItem = item
+    },
+    hideSidebar() {
+      this.sidebarItem = null
+    },
+    hideBottomPanel() {
+      this.bottomPanelItem = null
     }
   }
 })

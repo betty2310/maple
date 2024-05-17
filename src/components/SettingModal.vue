@@ -6,9 +6,9 @@
 
                 <p class="py-4">Toggle dark/light theme</p>
                 <label class="flex cursor-pointer gap-2">
-                    <SunIcon class="h-6 w-6" />
+                  <Sun class="h-6 w-6" />
                     <input type="checkbox" value="dark" class="toggle theme-controller" />
-                    <MoonIcon class="h-6 w-6" />
+                  <Moon class="h-6 w-6" />
                 </label>
             </div>
             <div class="modal-action">
@@ -22,6 +22,5 @@
 </template>
 
 <script lang="ts" setup>
-import { MoonIcon } from '@heroicons/vue/24/outline';
-import { SunIcon } from '@heroicons/vue/24/outline';
+import { Moon, Sun } from 'lucide-vue-next'
 </script>

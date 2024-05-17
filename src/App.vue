@@ -1,36 +1,31 @@
 <template>
-    <div class="flex flex-col h-screen">
-        <div>
-            <ToolBar />
-        </div>
-        <div class="flex flex-1">
-            <ActivityBar />
-            <div @drop="onDrop" class="flex-auto mr-0 mb-6 mt-9"
-                :class="layoutStore.isShowLeftPanel ? 'ml-[28rem]' : 'ml-14'">
-                <MainCircuit />
-            </div>
-        </div>
-        <div>
-            <StatusBar />
-        </div>
-    </div>
+  <RouterView />
 </template>
 
 <script setup>
-import ToolBar from './components/ToolBar.vue';
-import ActivityBar from './components/ActivityBar.vue';
-import StatusBar from './components/StatusBar.vue';
-import MainCircuit from './components/MainCircuit.vue';
-import { useLayoutStore } from './stores/layoutStore';
-import useDragAndDrop from '@/hooks/useDnDCircuitComponent'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { themeChange } from 'theme-change'
 
+import { supabase } from '@/lib/supabaseClient'
+import { useSessionStore } from '@/stores/sessionStore'
+
+
+const session = ref()
+const sessionStore = useSessionStore()
+
 onMounted(() => {
-    themeChange(false)
+  themeChange(false)
+  supabase.auth.getSession().then(({ data }) => {
+    session.value = data.session
+    if (data.session?.user) sessionStore.user = data.session?.user
+  })
+
+  supabase.auth.onAuthStateChange((event, _session) => {
+    session.value = _session
+    if (event === 'SIGNED_OUT') sessionStore.user = null
+    if (_session?.user) sessionStore.user = _session?.user
+  })
 })
 
-const { onDrop } = useDragAndDrop()
 
-const layoutStore = useLayoutStore();
 </script>

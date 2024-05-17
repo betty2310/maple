@@ -69,9 +69,8 @@ onNodeClick((event) => {
       <Background
         :size="2"
         :gap="15"
-        pattern-color="#BDBDBD"
+        :bg-color="isDragOver ? 'rgba(0, 0, 0, 0.3)' : 'transparent'"
         :style="{
-          backgroundColor: isDragOver ? '#e7f3ff' : 'transparent',
           transition: 'background-color 0.2s ease'
         }"
       />
