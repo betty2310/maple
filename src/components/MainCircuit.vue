@@ -1,7 +1,14 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Background } from '@vue-flow/background'
-import { ConnectionLineType, type DefaultEdgeOptions, type Node, useVueFlow, VueFlow } from '@vue-flow/core'
+import {
+  ConnectionLineType,
+  type DefaultEdgeOptions,
+  type Node,
+  useVueFlow,
+  VueFlow,
+  type FlowExportObject
+} from '@vue-flow/core'
 import useDragAndDrop from '@/hooks/useDnDCircuitComponent'
 import useCircuitStore from '@/stores/circuitStore'
 
@@ -17,6 +24,7 @@ import InductorNode from '@/components/circuits/passive/InductorNode.vue'
 import DiodeNode from '@/components/circuits/DiodeNode.vue'
 import SwitchNode from '@/components/circuits/SwitchNode.vue'
 import TransistorNode from '@/components/circuits/TransistorNode.vue'
+import type { Json } from '@/database/types'
 
 type NodeTypes = 'resistor' | 'voltagesource' | 'ground'
 
@@ -26,10 +34,14 @@ const { onConnect, addEdges, onPaneReady, onNodeClick, fromObject } = useVueFlow
 
 const { onDragOver, onDragLeave, isDragOver } = useDragAndDrop()
 
+const props = defineProps<{
+  obj?: Json
+}>()
+
 const nodes = ref<MyNode[]>([])
 
 const edgeOptions: DefaultEdgeOptions = {
-  type: 'custom',
+  type: 'custom'
 }
 
 onConnect((connection) => {
@@ -46,9 +58,14 @@ onNodeClick((event) => {
   circuitStore.setSelectedNode(event.node as Node)
 })
 
-// onMounted(async () => {
-//   await fromObject(obj)
-// })
+onMounted(async () => {
+  console.log('props.obj', props.obj)
+  if (props.obj) {
+    await fromObject(props.obj as unknown as FlowExportObject)
+  } else {
+    return
+  }
+})
 </script>
 
 <template>
