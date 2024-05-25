@@ -1,12 +1,7 @@
 <template>
   <div class="flex items-center mx-4">
     <label class="mr-2" for="input-field">Switch</label>
-    <input
-      v-model="isOn"
-      class="toggle toggle-primary"
-      type="checkbox"
-      @change="handleUpdate"
-    />
+    <input v-model="isOn" class="toggle toggle-primary" type="checkbox" @change="handleUpdate" />
   </div>
 </template>
 
@@ -14,6 +9,8 @@
 import { ref, watch } from 'vue'
 import useCircuitStore from '@/stores/circuitStore'
 import type { SwitchData } from '@/types'
+import { Switch } from '@/components/ui/switch'
+import { Input } from '@/components/ui/input'
 
 const props = defineProps<SwitchData>()
 

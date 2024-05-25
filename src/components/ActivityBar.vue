@@ -4,30 +4,35 @@ import { ref, watch } from 'vue'
 import { Cpu, Hammer, ZoomIn } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import SettingDrawer from '@/components/ui/SettingDrawer.vue'
 
 import { BottomPanelItem, SidebarItem } from '@/enums'
 
 import { useLayoutStore } from '@/stores/layoutStore'
-import SettingDrawer from '@/components/ui/SettingDrawer.vue'
 import { ResizablePanel } from '@/components/ui/resizable'
-
 
 const props = defineProps<{
   panel: InstanceType<typeof ResizablePanel> | null
+  bottomPanelRef: InstanceType<typeof ResizablePanel> | null
 }>()
-
 
 const layoutStore = useLayoutStore()
 const sidebarItem = ref<SidebarItem | null>(null)
 const bottomPanelItem = ref<BottomPanelItem | null>(null)
 
-watch(() => layoutStore.sidebarItem, (value) => {
-  sidebarItem.value = value
-})
+watch(
+  () => layoutStore.sidebarItem,
+  (value) => {
+    sidebarItem.value = value
+  }
+)
 
-watch(() => layoutStore.bottomPanelItem, (value) => {
-  bottomPanelItem.value = value
-})
+watch(
+  () => layoutStore.bottomPanelItem,
+  (value) => {
+    bottomPanelItem.value = value
+  }
+)
 
 const handleSidebarItemClick = (item: SidebarItem) => {
   if (layoutStore.sidebarItem === item) {
@@ -43,12 +48,17 @@ const handleSidebarItemClick = (item: SidebarItem) => {
 
 const handleBottomPanelItemClick = (item: BottomPanelItem) => {
   if (layoutStore.bottomPanelItem === item) {
-    layoutStore.hideBottomPanel()
+    props.bottomPanelRef?.isCollapsed
+      ? props.bottomPanelRef?.expand()
+      : props.bottomPanelRef?.collapse()
+    layoutStore.bottomPanelItem = null
   } else {
     layoutStore.setBottomPanelItem(item)
+    if (props.bottomPanelRef?.isCollapsed) {
+      props.bottomPanelRef?.expand()
+    }
   }
 }
-
 </script>
 
 <template>
@@ -66,9 +76,7 @@ const handleBottomPanelItemClick = (item: BottomPanelItem) => {
             <Cpu class="size-5" />
           </Button>
         </TooltipTrigger>
-        <TooltipContent :side-offset="5" side="right">
-          Components
-        </TooltipContent>
+        <TooltipContent :side-offset="5" side="right"> Components </TooltipContent>
       </Tooltip>
       <Tooltip>
         <TooltipTrigger as-child>
@@ -82,12 +90,9 @@ const handleBottomPanelItemClick = (item: BottomPanelItem) => {
             <ZoomIn class="size-5" />
           </Button>
         </TooltipTrigger>
-        <TooltipContent :side-offset="5" side="right">
-          Properties
-        </TooltipContent>
+        <TooltipContent :side-offset="5" side="right"> Properties </TooltipContent>
       </Tooltip>
     </TooltipProvider>
-
   </nav>
   <nav class="mt-auto grid gap-1 p-2">
     <TooltipProvider>
@@ -103,17 +108,13 @@ const handleBottomPanelItemClick = (item: BottomPanelItem) => {
             <Hammer class="size-5" />
           </Button>
         </TooltipTrigger>
-        <TooltipContent :side-offset="5" side="right">
-          Simulation
-        </TooltipContent>
+        <TooltipContent :side-offset="5" side="right"> Simulation </TooltipContent>
       </Tooltip>
       <Tooltip>
         <TooltipTrigger as-child>
           <SettingDrawer />
         </TooltipTrigger>
-        <TooltipContent :side-offset="5" side="right">
-          Setting
-        </TooltipContent>
+        <TooltipContent :side-offset="5" side="right"> Setting </TooltipContent>
       </Tooltip>
     </TooltipProvider>
   </nav>

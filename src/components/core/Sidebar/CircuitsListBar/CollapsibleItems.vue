@@ -10,7 +10,6 @@ const isOpen = ref(true)
 defineProps<{
   name: string
 }>()
-
 </script>
 
 <template>
@@ -29,14 +28,9 @@ defineProps<{
     </div>
 
     <CollapsibleContent class="space-y-4 w-full">
-
       <slot />
-
     </CollapsibleContent>
   </Collapsible>
-
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

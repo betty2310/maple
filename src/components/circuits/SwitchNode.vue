@@ -4,8 +4,16 @@ import { Handle, type NodeProps, Position, useVueFlow } from '@vue-flow/core'
 import { NodeToolbar } from '@vue-flow/node-toolbar'
 import IconOnComponent from '@/assets/svgs/switch_on.svg?component'
 import IconOffComponent from '@/assets/svgs/switch_off.svg?component'
+import Button from '../ui/button/Button.vue'
 
 import type { SwitchData } from '@/types'
+
+import { useColorMode } from '@vueuse/core'
+const mode = useColorMode()
+const color = ref<'white' | 'black'>('white')
+watch(mode, (newVal) => {
+  color.value = newVal === 'dark' ? 'white' : 'black'
+})
 
 const props = defineProps<NodeProps<SwitchData>>()
 
@@ -29,7 +37,6 @@ onMounted(() => {
   const id = props.id.split(' ')[1]
   updateNodeData<SwitchData>(props.id, {
     id: `S${id}`,
-    type: 'switch',
     isOn: isSwitchOn.value,
     description: 'Switch',
     toolbarPosition: Position.Right,
@@ -52,7 +59,7 @@ const handleRemoveNode = () => {
 const handleToggleSwitch = () => {
   isSwitchOn.value = !isSwitchOn.value
   updateNodeData<SwitchData>(props.id, {
-    isOn: isSwitchOn.value,
+    isOn: isSwitchOn.value
   })
 }
 </script>
@@ -64,15 +71,15 @@ const handleToggleSwitch = () => {
     style="display: flex; gap: 0.5rem; align-items: center"
   >
     <div class="flex flex-col gap-2">
-      <button class="btn btn-error" @click="handleRemoveNode">x</button>
+      <Button size="xs" variant="destructive" @click="handleRemoveNode">x</Button>
     </div>
     <div class="flex flex-col gap-2">
-      <button class="btn btn-error" @click="handleToggleSwitch">Toggle</button>
+      <Button size="xs" variant="secondary" @click="handleToggleSwitch">Toggle</Button>
     </div>
   </NodeToolbar>
 
-  <IconOffComponent v-if="!isSwitchOn" />
-  <IconOnComponent v-else />
+  <IconOffComponent v-if="!isSwitchOn" :style="{ fill: color }" />
+  <IconOnComponent v-else :style="{ fill: color }" />
   <div v-if="isSwitchOn">&#160;</div>
 
   <Handle :position="neg" type="source" />

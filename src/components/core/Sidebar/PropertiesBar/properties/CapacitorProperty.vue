@@ -2,7 +2,7 @@
   <div class="flex items-center justify-between mx-4">
     <label for="input-field" class="mr-2">Capacitance</label>
     <div class="relative">
-      <input
+      <Input
         type="number"
         id="input-field"
         class="px-3 py-2 input input-bordered w-auto"
@@ -18,6 +18,7 @@
 import { ref, watch } from 'vue'
 import useCircuitStore from '@/stores/circuitStore'
 import type { CapacitorData } from '@/types'
+import { Input } from '@/components/ui/input'
 
 const props = defineProps<CapacitorData>()
 

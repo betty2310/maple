@@ -12,8 +12,12 @@ import {
   Switch,
   Transistor
 } from './models'
-import { type ACVoltageSourceData, CircuitComponent, type ComponentData, type TransistorData } from '@/types'
-
+import {
+  type ACVoltageSourceData,
+  CircuitComponent,
+  type ComponentData,
+  type TransistorData
+} from '@/types'
 
 function convertGraphToNetlist(circuit: FlowExportObject): string {
   const nodeMap: { [nodeId: string]: Component } = {}
@@ -73,8 +77,12 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
       edge.data.id = `${++edgeId}`
     }
 
-    const sourceComponent = circuit.nodes.find((node) => node.id === edge.source) as Node<ComponentData>
-    const targetComponent = circuit.nodes.find((node) => node.id === edge.target) as Node<ComponentData>
+    const sourceComponent = circuit.nodes.find(
+      (node) => node.id === edge.source
+    ) as Node<ComponentData>
+    const targetComponent = circuit.nodes.find(
+      (node) => node.id === edge.target
+    ) as Node<ComponentData>
 
     const edgeSourceConnectPos = edge.sourceHandle?.split('-')[1]
     const edgeTargetConnectPos = edge.targetHandle?.split('-')[1]
@@ -114,7 +122,6 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
         targetNode.e = edge.data.id
       }
     }
-
   })
 
   // Generate netlist string
@@ -139,9 +146,10 @@ type exportNode = {
   node: string
 }
 
-function getAnalysisType(edges: Edge[]): exportNode[] {
+function getAnalysisType(circuit: FlowExportObject): exportNode[] {
   const analysisType: exportNode[] = [] // i(R1) or v(1)
 
+  const edges = circuit.edges
   edges.forEach((edge) => {
     if (edge.data.export === 'Voltmeter') {
       analysisType.push({
@@ -149,13 +157,17 @@ function getAnalysisType(edges: Edge[]): exportNode[] {
         node: `${edge.data.id}`
       })
     }
-    if (edge.data === 'Ammeter') {
+    if (edge.data.export === 'Ammeter') {
+      const sourceComponent = circuit.nodes.find(
+        (node) => node.id === edge.source
+      ) as Node<ComponentData>
       analysisType.push({
         type: exportType.I,
-        node: edge.data.id as string
+        node: `${sourceComponent.data?.id}`
       })
     }
   })
+  console.log(analysisType)
   return analysisType
 }
 
@@ -163,7 +175,7 @@ function handleAPI(circuit: FlowExportObject) {
   let netlist = convertGraphToNetlist(circuit)
   const title = 'Circuit Analysis\n'
   netlist = title + netlist
-  const exportNodes = getAnalysisType(circuit.edges)
+  const exportNodes = getAnalysisType(circuit)
 
   netlist = netlist + `\n.END`
   const mode = useRunStore().getMode()

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { Handle, type NodeProps, Position, useVueFlow } from '@vue-flow/core'
 import { NodeToolbar } from '@vue-flow/node-toolbar'
 import IconComponent from '@/assets/svgs/Transistor.svg?component'
@@ -23,7 +23,6 @@ onMounted(() => {
   updateNodeData<TransistorData>(props.id, {
     id: `Q${id}`,
     model: 'npn',
-    type: 'transistor',
     description: 'NPN transistor',
     toolbarPosition: Position.Right,
     toolbarVisible: false,
@@ -42,6 +41,14 @@ onNodeClick((event) => {
 const handleRemoveNode = () => {
   removeNodes(props.id, true)
 }
+
+import { useColorMode } from '@vueuse/core'
+import Button from '../ui/button/Button.vue'
+const mode = useColorMode()
+const color = ref<'white' | 'black'>('white')
+watch(mode, (newVal) => {
+  color.value = newVal === 'dark' ? 'white' : 'black'
+})
 </script>
 
 <template>
@@ -51,12 +58,14 @@ const handleRemoveNode = () => {
     style="display: flex; gap: 0.5rem; align-items: center"
   >
     <div class="flex flex-col gap-2">
-      <button class="btn btn-error" @click="handleRemoveNode">x</button>
+      <Button size="xs" variant="destructive" @click="handleRemoveNode">x</Button>
     </div>
   </NodeToolbar>
 
-  <IconComponent />
-  <div class="font-mono fixed right-2 top-1/2 transform translate-y-[-50%]">{{ props.data.id }}</div>
+  <IconComponent :style="{ fill: color }" />
+  <div class="font-mono fixed right-2 top-1/2 transform translate-y-[-50%]">
+    {{ props.data.id }}
+  </div>
 
   <Handle :position="b" type="source" />
   <Handle :position="c" type="target" />

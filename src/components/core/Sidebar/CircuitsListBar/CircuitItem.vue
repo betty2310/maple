@@ -12,7 +12,6 @@ defineProps<{
   circuitComponent: CircuitComponent
   name: string
 }>()
-
 </script>
 
 <template>
@@ -32,6 +31,4 @@ defineProps<{
   </Button>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
