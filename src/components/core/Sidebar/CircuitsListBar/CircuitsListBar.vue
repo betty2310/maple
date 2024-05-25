@@ -51,9 +51,9 @@
 
 <script lang="ts" setup>
 import { CircuitComponent } from '@/types'
-import CollapsibleItems from '@/components/core/CircuitsListBar/CollapsibleItems.vue'
+import CollapsibleItems from '@/components/core/Sidebar/CircuitsListBar/CollapsibleItems.vue'
 
-import CircuitItem from '@/components/core/CircuitsListBar/CircuitItem.vue'
+import CircuitItem from '@/components/core/Sidebar/CircuitsListBar/CircuitItem.vue'
 import GroundIcon from '@/assets/svgs/Ground.svg?component'
 import ResistorIcon from '@/assets/svgs/resistor.svg?component'
 import CapacitorIcon from '@/assets/svgs/Capacitor.svg?component'

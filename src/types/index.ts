@@ -16,7 +16,6 @@ enum CircuitComponent {
 
 interface ComponentData {
   id: string
-  type: string
   description: string
   toolbarPosition?: Position
   toolbarVisible?: boolean
@@ -53,18 +52,18 @@ interface SwitchData extends ComponentData {
 }
 
 interface TransistorData extends ComponentData {
-  model: string,
-  c: Position,
-  b: Position,
-  e: Position,
+  model: string
+  c: Position
+  b: Position
+  e: Position
 }
 
 interface DiodeData extends ComponentData {
-  IS?: string,
-  RS?: string,
-  N?: string,
-  BV?: string,
-  IBV?: string,
+  IS?: string
+  RS?: string
+  N?: string
+  BV?: string
+  IBV?: string
 }
 
 export type {

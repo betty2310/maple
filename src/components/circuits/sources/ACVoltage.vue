@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue'
 import { Handle, type NodeProps, Position, useVueFlow } from '@vue-flow/core'
 import { NodeToolbar } from '@vue-flow/node-toolbar'
 import IconComponent from '@/assets/svgs/ACVoltageSource.svg?component'
+import IconComponentLight from '@/assets/svgs/ACVoltageSourceLight.svg?component'
 
 import type { ACVoltageSourceData } from '@/types'
 
@@ -19,7 +20,6 @@ const neg = ref<Position>(Position.Bottom)
 
 const voltageSourceData: ACVoltageSourceData = {
   id: `AC ${props.id.split(' ')[1]}`,
-  type: 'acvoltagesource',
   description: 'AC (sin) Voltage source',
   VA: 1,
   Freq: 1000,
@@ -46,22 +46,28 @@ onNodeClick((event) => {
 const handleRemoveNode = () => {
   removeNodes(props.id, true)
 }
-
+import { useColorMode } from '@vueuse/core'
+import Button from '@/components/ui/button/Button.vue'
+const mode = useColorMode()
 </script>
 
 <template>
   <!-- <div class="h-20 w-20 flex rounded-full items-center justify-center bg-orange-500 border border-slate-600">
       <div>+</div>
   </div> -->
-  <NodeToolbar style="display: flex; gap: 0.5rem; align-items: center" :is-visible="toolbarVisible"
-               :position="props.data.toolbarPosition">
+  <NodeToolbar
+    style="display: flex; gap: 0.5rem; align-items: center"
+    :is-visible="toolbarVisible"
+    :position="props.data.toolbarPosition"
+  >
     <div class="flex flex-col gap-2">
-      <button class="btn btn-error" @click="handleRemoveNode">x</button>
+      <Button size="xs" variant="destructive" @click="handleRemoveNode">x</Button>
     </div>
   </NodeToolbar>
   <div class="flex flex-row items-center justify-center">
     <div class="basis-1/4 font-mono">{{ props.data.id }}</div>
-    <IconComponent class="basic-2/4" />
+    <IconComponent class="basic-2/4" v-if="mode == 'dark'" />
+    <IconComponentLight class="basic-2/4" v-else />
     <div class="basis-1/4 font-mono">&#160;</div>
   </div>
 

@@ -2,8 +2,8 @@
 import { ref, watch } from 'vue'
 import type { Node } from '@vue-flow/core'
 
-import CircuitsListBar from '@/components/core/CircuitsListBar/CircuitsListBar.vue'
-import PropertiesListBar from '@/components/PropertiesListBar.vue'
+import CircuitsListBar from '@/components/core/Sidebar/CircuitsListBar/CircuitsListBar.vue'
+import PropertiesBar from '@/components/core/Sidebar/PropertiesBar/PropertiesBar.vue'
 
 import { useLayoutStore } from '@/stores/layoutStore'
 import useCircuitStore from '@/stores/circuitStore'
@@ -16,13 +16,19 @@ const sidebarItem = ref<SidebarItem | null>(null)
 const bottomPanelItem = ref<BottomPanelItem | null>(null)
 const selectedComponent = ref<Node | null>(null)
 
-watch(() => layoutStore.sidebarItem, (value) => {
-  sidebarItem.value = value
-})
+watch(
+  () => layoutStore.sidebarItem,
+  (value) => {
+    sidebarItem.value = value
+  }
+)
 
-watch(() => layoutStore.bottomPanelItem, (value) => {
-  bottomPanelItem.value = value
-})
+watch(
+  () => layoutStore.bottomPanelItem,
+  (value) => {
+    bottomPanelItem.value = value
+  }
+)
 
 watch(
   () => useCircuitStore().selectedNode,
@@ -38,17 +44,9 @@ watch(
       <CircuitsListBar />
     </div>
     <div v-else-if="layoutStore.sidebarItem === SidebarItem.Properties">
-      <PropertiesListBar :selectedComponent="selectedComponent" />
+      <PropertiesBar :selectedComponent="selectedComponent" />
     </div>
-  </div>
-  <div
-    v-if="bottomPanelItem === BottomPanelItem.Simulation"
-    class="fixed bottom-6 left-14 right-0 h-2/5 overflow-auto z-10 bg-base-100 border border-t-2"
-  >
-    <SimulationBottombar />
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

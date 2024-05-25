@@ -1,8 +1,8 @@
 <template>
-  <div class="flex items-center justify-between mx-4">
+  <div class="flex items-center justify-between mx-4 my-2">
     <label for="input-field" class="mr-2">AC</label>
     <div class="relative">
-      <input
+      <Input
         type="number"
         id="input-field"
         class="px-3 py-2 input input-bordered w-auto"
@@ -12,10 +12,10 @@
       <span class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500">V</span>
     </div>
   </div>
-  <div class="flex items-center justify-between mx-4">
+  <div class="flex items-center justify-between mx-4 my-2">
     <label for="input-field" class="mr-2">Frequency</label>
     <div class="relative">
-      <input
+      <Input
         type="number"
         id="input-field"
         class="px-3 py-2 input input-bordered w-auto"
@@ -25,10 +25,10 @@
       <span class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500">Hz</span>
     </div>
   </div>
-  <div class="flex items-center justify-between mx-4">
+  <div class="flex items-center justify-between mx-4 my-2">
     <label for="input-field" class="mr-2">Phase</label>
     <div class="relative">
-      <input
+      <Input
         type="number"
         id="input-field"
         class="px-3 py-2 input input-bordered w-auto"
@@ -44,6 +44,7 @@
 import { ref, watch } from 'vue'
 import useCircuitStore from '@/stores/circuitStore'
 import type { ACVoltageSourceData } from '@/types'
+import { Input } from '@/components/ui/input'
 
 const props = defineProps<ACVoltageSourceData>()
 
