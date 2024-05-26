@@ -15,12 +15,14 @@ export const useSessionStore = defineStore('sessionStore', {
       })
       if (error) throw error
       return data
-
     },
 
     async signinWithGoogle() {
       const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google'
+        provider: 'google',
+        options: {
+          redirectTo: import.meta.env.VITE_APP_URL
+        }
       })
       if (error) throw error
       return data
