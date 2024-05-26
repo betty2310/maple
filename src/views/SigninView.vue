@@ -13,7 +13,10 @@ import { useSessionStore } from '@/stores/sessionStore'
 
 const validationSchema = toTypedSchema(
   zod.object({
-    email: zod.string().min(1, { message: 'This is required' }).email({ message: 'Must be a valid email' }),
+    email: zod
+      .string()
+      .min(1, { message: 'This is required' })
+      .email({ message: 'Must be a valid email' }),
     password: zod.string().min(1, { message: 'This is required' }).min(6, { message: 'Too short' })
   })
 )
@@ -33,7 +36,10 @@ const sessionStore = useSessionStore()
 const onSubmit = handleSubmit(async (values) => {
   try {
     loading.value = true
-    const { user, session } = await sessionStore.signinWithEmailAndPassword(values.email, values.password)
+    const { user, session } = await sessionStore.signinWithEmailAndPassword(
+      values.email,
+      values.password
+    )
 
     if (user) {
       router.back()
@@ -50,14 +56,12 @@ const onSubmit = handleSubmit(async (values) => {
 const handleSignInWithGoogle = async () => {
   try {
     await sessionStore.signinWithGoogle()
-
   } catch (error) {
     if (error instanceof Error) {
       errorMessage.value = error.message
     }
   }
 }
-
 </script>
 
 <template>
@@ -65,9 +69,7 @@ const handleSignInWithGoogle = async () => {
     <div class="flex items-center justify-center py-12">
       <div class="mx-auto grid w-[350px] gap-6">
         <div class="grid gap-2 text-center">
-          <h1 class="text-3xl font-bold">
-            Login
-          </h1>
+          <h1 class="text-3xl font-bold">Login</h1>
           <p class="text-balance text-muted-foreground">
             Enter your email below to login to your account
           </p>
@@ -100,9 +102,7 @@ const handleSignInWithGoogle = async () => {
         </form>
         <div class="mt-4 text-center text-sm">
           Don't have an account?
-          <a href="#" class="underline">
-            Sign up
-          </a>
+          <a href="#" class="underline"> Sign up </a>
         </div>
       </div>
     </div>
