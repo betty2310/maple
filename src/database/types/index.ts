@@ -38,8 +38,82 @@ export type Database = {
           {
             foreignKeyName: "profiles_id_fkey"
             columns: ["id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_share_users: {
+        Row: {
+          created_at: string
+          id: number
+          project_share_id: number | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          project_share_id?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          project_share_id?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_share_users_project_share_id_fkey"
+            columns: ["project_share_id"]
+            isOneToOne: false
+            referencedRelation: "project_shares"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_share_users_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_shares: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: number
+          permisison: Database["public"]["Enums"]["share_permision"]
+          project_id: number | null
+          type: Database["public"]["Enums"]["share_type"]
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: number
+          permisison?: Database["public"]["Enums"]["share_permision"]
+          project_id?: number | null
+          type?: Database["public"]["Enums"]["share_type"]
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: number
+          permisison?: Database["public"]["Enums"]["share_permision"]
+          project_id?: number | null
+          type?: Database["public"]["Enums"]["share_type"]
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_shares_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
             referencedColumns: ["id"]
           },
         ]
@@ -87,10 +161,26 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_email_by_user_id: {
+        Args: {
+          user_id: string
+        }
+        Returns: {
+          email: string
+        }[]
+      }
+      get_user_id_by_email: {
+        Args: {
+          email: string
+        }
+        Returns: {
+          id: string
+        }[]
+      }
     }
     Enums: {
-      [_ in never]: never
+      share_permision: "VIEW" | "EDIT"
+      share_type: "PUBLIC" | "PRIVATE"
     }
     CompositeTypes: {
       [_ in never]: never

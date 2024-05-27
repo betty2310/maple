@@ -1,9 +1,14 @@
 <template>
-  <div class="flex flex-col h-screen w-full">
+  <div v-if="project" class="flex flex-col h-screen w-full">
     <header
       class="sticky top-0 z-30 flex h-[45px] w-full items-center gap-1 border-b bg-background px-4"
     >
-      <ToolBar :project-name="project?.name ?? ''" />
+      <ToolBar
+        :content="project?.content"
+        :id="project?.id"
+        :name="project?.name"
+        :showShareDialog="showShareDialog"
+      />
     </header>
     <aside class="pt-[45px] pb-[25px] fixed left-0 z-20 flex h-full flex-col border-r">
       <ActivityBar :panel="panelRef" :bottomPanelRef="bottomPanelRef" />
@@ -25,7 +30,7 @@
           </ResizablePanel>
           <ResizableHandle />
           <ResizablePanel :min-size="50" @drop="onDrop">
-            <MainCircuit v-if="project" :obj="project.content" />
+            <MainCircuit :obj="project.content" />
           </ResizablePanel>
         </ResizablePanelGroup>
       </ResizablePanel>
@@ -48,6 +53,12 @@
     >
       <StatusBar />
     </footer>
+  </div>
+  <div v-else-if="message" class="flex items-center justify-center h-screen w-full">
+    <div class="text-2xl">{{ message }}</div>
+  </div>
+  <div v-else class="flex items-center justify-center h-screen w-full">
+    <div class="text-2xl">Loading...</div>
   </div>
 </template>
 
@@ -92,8 +103,12 @@ watch(
 import { useRoute } from 'vue-router'
 import { supabase } from '@/lib/supabaseClient'
 import type { Json } from '@/database/types'
+import { useSessionStore } from '@/stores/sessionStore'
+const sessionStore = useSessionStore()
 
 const route = useRoute()
+
+const showShareDialog = ref(false)
 
 const project = ref<{
   content: Json
@@ -105,14 +120,56 @@ const project = ref<{
   uuid: string | null
 } | null>()
 
-onMounted(async () => {
-  const { data, error } = await supabase.from('projects').select('*').eq('uuid', route.params.id)
-  console.log(route.params.id)
+const message = ref<string | null>(null)
 
-  if (error) {
-    console.error('Error fetching projects:', error.message)
+onMounted(async () => {
+  message.value = null
+  const { data: projectData, error } = await supabase
+    .from('projects')
+    .select('*')
+    .eq('uuid', route.params.id)
+  if (!projectData || projectData.length === 0) {
+    message.value = 'Something went wrong. Please try again later.'
+    return
+  }
+
+  if (sessionStore.user?.id === projectData[0].user_id) {
+    showShareDialog.value = true
+    project.value = projectData[0]
+    return
+  }
+
+  const { data: projectShare } = await supabase
+    .from('project_shares')
+    .select('*')
+    .eq('project_id', projectData[0].id)
+    .single()
+
+  if (!projectShare) {
+    message.value = 'You do not have access to this project.'
+    return
+  }
+  if (projectShare.type === 'PUBLIC') {
+    project.value = projectData[0]
+    return
   } else {
-    project.value = data[0]
+    if (sessionStore.user === null) {
+      message.value = 'You need to login to access this project.'
+      return
+    } else {
+      const userId = sessionStore.user.id
+      const { data: projectShareUsers } = await supabase
+        .from('project_share_users')
+        .select('*')
+        .eq('project_share_id', projectShare.id)
+        .eq('user_id', userId)
+        .single()
+      if (!projectShareUsers) {
+        message.value = 'You do not have access to this project.'
+        return
+      }
+      project.value = projectData[0]
+    }
   }
 })
 </script>

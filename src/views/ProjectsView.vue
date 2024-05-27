@@ -24,7 +24,9 @@ import { Label } from '@/components/ui/label'
 import { supabase } from '@/lib/supabaseClient'
 
 import { onMounted, ref } from 'vue'
-import type { Json } from '@/database/types'
+import { useProjectStore } from '@/stores/projectStore'
+
+const projectStore = useProjectStore()
 
 const projects = ref<
   | {
@@ -40,18 +42,18 @@ const projects = ref<
 >()
 
 onMounted(async () => {
-  const { data, error } = await supabase.from('projects').select('*')
-
-  if (error) {
-    console.error('Error fetching projects:', error.message)
-  } else {
+  try {
+    const data = await projectStore.getProjects()
     projects.value = data
+  } catch (error) {
+    console.error(error)
   }
 })
 
 import { useField, useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as zod from 'zod'
+import type { Json } from '@/database/types'
 const validationSchema = toTypedSchema(
   zod.object({
     name: zod.string().min(1, { message: 'This is required' })
@@ -109,17 +111,19 @@ const onCreateNewProject = handleSubmit(async (values) => {
             </form>
           </DialogContent>
         </Dialog>
-        <div v-for="project in projects" :key="project.id">
-          <RouterLink :to="`/project/${project.name}/${project.uuid}`">
-            <Card class="w-[350px]">
-              <CardHeader>
-                <CardTitle>{{ project.name }}</CardTitle>
-                <CardDescription>Deploy your new project in one-click.</CardDescription>
-              </CardHeader>
-              <CardContent> {{ project.content }} </CardContent>
-              <CardFooter> </CardFooter>
-            </Card>
-          </RouterLink>
+        <div class="flex gap-4">
+          <div v-for="project in projects" :key="project.id">
+            <RouterLink :to="`/project/${project.name}/${project.uuid}`">
+              <Card class="w-[350px]">
+                <CardHeader>
+                  <CardTitle>{{ project.name }}</CardTitle>
+                  <CardDescription>Deploy your new project in one-click.</CardDescription>
+                </CardHeader>
+                <CardContent> {{ project.content }} </CardContent>
+                <CardFooter> <timeago :datetime="project.updated_at" /> </CardFooter>
+              </Card>
+            </RouterLink>
+          </div>
         </div>
       </main>
     </div>

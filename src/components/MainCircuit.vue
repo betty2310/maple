@@ -1,13 +1,16 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { Background } from '@vue-flow/background'
+import { Controls } from '@vue-flow/controls'
+
 import {
   ConnectionLineType,
   type DefaultEdgeOptions,
   type Node,
   useVueFlow,
   VueFlow,
-  type FlowExportObject
+  type FlowExportObject,
+  PanelPosition
 } from '@vue-flow/core'
 import useDragAndDrop from '@/hooks/useDnDCircuitComponent'
 import useCircuitStore from '@/stores/circuitStore'
@@ -82,6 +85,7 @@ onMounted(async () => {
     @dragover="onDragOver"
     @dragleave="onDragLeave"
   >
+    <Controls :position="PanelPosition.BottomRight" />
     <div style="height: 100%; width: 100%">
       <Background
         :size="2"

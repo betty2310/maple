@@ -1,5 +1,5 @@
 <template>
-  <p class="leading-7 [&:not(:first-child)]:mt-6">{{ props.projectName ?? 'CircuitCraft' }}</p>
+  <p class="leading-7 [&:not(:first-child)]:mt-6">{{ props.name ?? 'CircuitCraft' }}</p>
   <DropdownMenu class="ml-auto">
     <DropdownMenuTrigger as-child>
       <Button class="ml-auto gap-1.5 text-sm" size="xs" variant="ghost">
@@ -22,6 +22,8 @@
     <Play class="size-3.5" />
   </Button>
 
+  <ShareDialog v-if="showShareDialog" :project_id="props.id ?? 100" />
+
   <RouterLink v-if="loggedInUser === null" to="/signin">
     <Button size="xs">Sign in</Button>
   </RouterLink>
@@ -41,6 +43,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import UserAvatarDropdown from '@/components/ui/UserAvatarDropdown.vue'
+import ShareDialog from '@/components/core/Toolbar/ShareDialog.vue'
 
 import { computed, ref, watch } from 'vue'
 import { useVueFlow } from '@vue-flow/core'
@@ -53,9 +56,13 @@ import useOutputStore from '@/stores/outputStore'
 import { useSessionStore } from '@/stores/sessionStore'
 
 import { SimulationMode } from '@/types'
+import type { Json } from '@/database/types'
 
 const props = defineProps<{
-  projectName?: string
+  content: Json | undefined
+  id: number | undefined
+  name: string | null | undefined
+  showShareDialog: boolean
 }>()
 
 const netlist = ref({})

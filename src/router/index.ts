@@ -47,13 +47,7 @@ const router = createRouter({
     {
       path: '/project/:name/:id',
       name: 'project',
-      component: () => import('@/views/ProjectView.vue'),
-      beforeEnter: async (to, from, next) => {
-        const { data } = await supabase.auth.getSession()
-        const currentUser = data?.session?.user
-        if (!currentUser) next('signin')
-        else next()
-      }
+      component: () => import('@/views/ProjectView.vue')
     }
   ]
 })
