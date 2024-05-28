@@ -1,17 +1,21 @@
-import { type Edge, type Node } from '@vue-flow/core'
+import { type Edge, type FlowExportObject, type Node } from '@vue-flow/core'
 import { defineStore } from 'pinia'
 
 interface CircuitState {
   nodes: Node[]
   edges: Edge[]
   selectedNode: Node | null
+  currentCircuit: FlowExportObject | null
+  isCircuitChanged: boolean
 }
 
 const useCircuitStore = defineStore('circuitStore', {
   state: (): CircuitState => ({
     nodes: [],
     edges: [],
-    selectedNode: null
+    selectedNode: null,
+    currentCircuit: null,
+    isCircuitChanged: false
   }),
 
   actions: {

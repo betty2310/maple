@@ -8,6 +8,7 @@
         :id="project?.id"
         :name="project?.name"
         :showShareDialog="showShareDialog"
+        :can-edit="canEdit"
       />
     </header>
     <aside class="pt-[45px] pb-[25px] fixed left-0 z-20 flex h-full flex-col border-r">
@@ -30,7 +31,7 @@
           </ResizablePanel>
           <ResizableHandle />
           <ResizablePanel :min-size="50" @drop="onDrop">
-            <MainCircuit :obj="project.content" />
+            <MainCircuit :obj="project.content" :can-edit="canEdit" />
           </ResizablePanel>
         </ResizablePanelGroup>
       </ResizablePanel>
@@ -71,7 +72,7 @@ import StatusBar from '@/components/StatusBar.vue'
 import MainCircuit from '@/components/MainCircuit.vue'
 import Sidebar from '@/components/core/Sidebar/Sidebar.vue'
 import useDragAndDrop from '@/hooks/useDnDCircuitComponent'
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 
 import { useLayoutStore } from '@/stores/layoutStore'
 import SimulationBottombar from '@/components/SimulationBottombar.vue'
@@ -104,11 +105,13 @@ import { useRoute } from 'vue-router'
 import { supabase } from '@/lib/supabaseClient'
 import type { Json } from '@/database/types'
 import { useSessionStore } from '@/stores/sessionStore'
+import type { RealtimeChannel } from '@supabase/supabase-js'
 const sessionStore = useSessionStore()
 
 const route = useRoute()
 
 const showShareDialog = ref(false)
+const canEdit = ref(false)
 
 const project = ref<{
   content: Json
@@ -135,6 +138,7 @@ onMounted(async () => {
 
   if (sessionStore.user?.id === projectData[0].user_id) {
     showShareDialog.value = true
+    canEdit.value = true
     project.value = projectData[0]
     return
   }
@@ -149,6 +153,7 @@ onMounted(async () => {
     message.value = 'You do not have access to this project.'
     return
   }
+
   if (projectShare.type === 'PUBLIC') {
     project.value = projectData[0]
     return
@@ -168,8 +173,54 @@ onMounted(async () => {
         message.value = 'You do not have access to this project.'
         return
       }
+      if (projectShare.permisison === 'EDIT') {
+        canEdit.value = true
+      }
       project.value = projectData[0]
     }
+  }
+})
+
+let channel: RealtimeChannel | null = null
+// Create a function to handle inserts
+// @ts-ignore
+const handleUpdate = (payload) => {
+  console.log('Change received!', payload)
+  project.value = payload.new
+}
+
+onMounted(() => {
+  channel = supabase.channel(`realtime:project:${route.params.id}`)
+  // Listen to inserts
+  channel
+    .on(
+      'postgres_changes',
+      {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'projects',
+        filter: `uuid=eq.${route.params.id}`
+      },
+      handleUpdate
+    )
+    .subscribe()
+
+  channel
+    .on('presence', { event: 'sync' }, () => {
+      const newState = channel?.presenceState()
+      console.log('sync', newState)
+    })
+    .on('presence', { event: 'join' }, ({ key, newPresences }) => {
+      console.log('join', key, newPresences)
+    })
+    .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
+      console.log('leave', key, leftPresences)
+    })
+})
+
+onUnmounted(() => {
+  if (channel) {
+    supabase.removeChannel(channel)
   }
 })
 </script>

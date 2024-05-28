@@ -1,5 +1,15 @@
 <template>
   <p class="leading-7 [&:not(:first-child)]:mt-6">{{ props.name ?? 'CircuitCraft' }}</p>
+  <Button
+    v-if="props.canEdit"
+    :disabled="!circuitStore.isCircuitChanged || isOnSyncing"
+    class="gap-1.5 text-sm"
+    size="xs"
+    variant="ghost"
+    @click="onSync"
+  >
+    <RefreshCcw :class="!isOnSyncing ? 'size-3.5' : 'size-3.5 animate-spin'" />
+  </Button>
   <DropdownMenu class="ml-auto">
     <DropdownMenuTrigger as-child>
       <Button class="ml-auto gap-1.5 text-sm" size="xs" variant="ghost">
@@ -31,7 +41,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ChevronDown, Play } from 'lucide-vue-next'
+import { ChevronDown, Play, RefreshCcw } from 'lucide-vue-next'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -54,15 +64,18 @@ import { handleAPI } from '@/logic/main'
 import useRunStore from '@/stores/runStore'
 import useOutputStore from '@/stores/outputStore'
 import { useSessionStore } from '@/stores/sessionStore'
+import useCircuitStore from '@/stores/circuitStore'
 
 import { SimulationMode } from '@/types'
 import type { Json } from '@/database/types'
+import { supabase } from '@/lib/supabaseClient'
 
 const props = defineProps<{
   content: Json | undefined
   id: number | undefined
   name: string | null | undefined
   showShareDialog: boolean
+  canEdit: boolean
 }>()
 
 const netlist = ref({})
@@ -99,4 +112,20 @@ const onRun = async () => {
     outputStore.setMode(selected.value)
   }
 }
+
+const isOnSyncing = ref(false)
+const onSync = async () => {
+  isOnSyncing.value = true
+  if (!props.id) return
+  const { data, error } = await supabase
+    .from('projects')
+    .update({
+      content: circuitStore.currentCircuit as Json
+    })
+    .eq('id', props.id)
+  console.log(error)
+  isOnSyncing.value = false
+  circuitStore.isCircuitChanged = false
+}
+const circuitStore = useCircuitStore()
 </script>

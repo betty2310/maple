@@ -38,7 +38,6 @@
     "vue": "^3.4.21",
     "vue-echarts": "^6.7.2",
     "vue-router": "^4.3.0",
-    "vue-timeago3": "^2.3.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {

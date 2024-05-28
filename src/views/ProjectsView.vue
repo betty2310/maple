@@ -25,6 +25,7 @@ import { supabase } from '@/lib/supabaseClient'
 
 import { onMounted, ref } from 'vue'
 import { useProjectStore } from '@/stores/projectStore'
+import { useTimeAgo } from '@vueuse/core'
 
 const projectStore = useProjectStore()
 
@@ -40,6 +41,12 @@ const projects = ref<
     }[]
   | null
 >()
+
+const calculateTimeAgo = (time: string | null) => {
+  console.log(time)
+  if (!time) return ''
+  return useTimeAgo(time)
+}
 
 onMounted(async () => {
   try {
@@ -119,8 +126,10 @@ const onCreateNewProject = handleSubmit(async (values) => {
                   <CardTitle>{{ project.name }}</CardTitle>
                   <CardDescription>Deploy your new project in one-click.</CardDescription>
                 </CardHeader>
-                <CardContent> {{ project.content }} </CardContent>
-                <CardFooter> <timeago :datetime="project.updated_at" /> </CardFooter>
+                <CardContent> </CardContent>
+                <CardFooter>
+                  <p>{{ calculateTimeAgo(project.updated_at) }}</p>
+                </CardFooter>
               </Card>
             </RouterLink>
           </div>

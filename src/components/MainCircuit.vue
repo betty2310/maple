@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
 
@@ -33,12 +33,14 @@ type NodeTypes = 'resistor' | 'voltagesource' | 'ground'
 
 type MyNode = Node<ComponentData, any, NodeTypes>
 
-const { onConnect, addEdges, onPaneReady, onNodeClick, fromObject } = useVueFlow()
+const { onConnect, addEdges, onPaneReady, onNodeClick, fromObject, toObject, setInteractive } =
+  useVueFlow()
 
 const { onDragOver, onDragLeave, isDragOver } = useDragAndDrop()
 
 const props = defineProps<{
   obj?: Json
+  canEdit: boolean
 }>()
 
 const nodes = ref<MyNode[]>([])
@@ -62,21 +64,42 @@ onNodeClick((event) => {
 })
 
 onMounted(async () => {
-  console.log('props.obj', props.obj)
   if (props.obj) {
-    await fromObject(props.obj as unknown as FlowExportObject)
+    const obj = props.obj as unknown as FlowExportObject
+    await fromObject(obj)
+    circuitStore.currentCircuit = obj
   } else {
     return
   }
+  setInteractive(props.canEdit)
 })
+
+watch(
+  () => props.obj,
+  async (newVal) => {
+    if (newVal) {
+      const obj = newVal as unknown as FlowExportObject
+      await fromObject(obj)
+      circuitStore.currentCircuit = obj
+    }
+  }
+)
+
+// @ts-ignore
+const onChange = (changes) => {
+  // @ts-ignore
+  changes.forEach((change) => {
+    if (change.type !== 'dimensions') {
+      circuitStore.currentCircuit = toObject()
+      circuitStore.isCircuitChanged = true
+    }
+  })
+}
+
+import '@vue-flow/controls/dist/style.css'
 </script>
 
 <template>
-  <!-- IMPORTANT here -->
-  <!-- <div @drop="onDrop"> -->
-  <!-- <CircuitsListBar /> -->
-  <!-- <button class="btn" @click="logToObject">Log of vueflow</button>
-      <button class="btn" @click="circuitStore.log">Log of my store</button> -->
   <VueFlow
     :nodes="nodes"
     :connectionLineType="ConnectionLineType.SmoothStep"
@@ -84,8 +107,10 @@ onMounted(async () => {
     :default-edge-options="edgeOptions"
     @dragover="onDragOver"
     @dragleave="onDragLeave"
+    @nodes-change="onChange"
+    @edges-change="onChange"
   >
-    <Controls :position="PanelPosition.BottomRight" />
+    <Controls :position="PanelPosition.TopRight" :showInteractive="props.canEdit" />
     <div style="height: 100%; width: 100%">
       <Background
         :size="2"
