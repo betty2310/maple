@@ -43,9 +43,13 @@ const router = createRouter({
         if (!currentUser) next('signin')
         else next()
       }
+    },
+    {
+      path: '/project/:name/:id',
+      name: 'project',
+      component: () => import('@/views/ProjectView.vue')
     }
   ]
 })
-
 
 export default router

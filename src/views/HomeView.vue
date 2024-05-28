@@ -3,7 +3,13 @@
     <header
       class="sticky top-0 z-30 flex h-[45px] w-full items-center gap-1 border-b bg-background px-4"
     >
-      <ToolBar />
+      <ToolBar
+        :content="{}"
+        :id="10"
+        :name="'Playground'"
+        :showShareDialog="false"
+        :can-edit="true"
+      />
     </header>
     <aside class="pt-[45px] pb-[25px] fixed left-0 z-20 flex h-full flex-col border-r">
       <ActivityBar :panel="panelRef" :bottomPanelRef="bottomPanelRef" />
@@ -25,7 +31,7 @@
           </ResizablePanel>
           <ResizableHandle />
           <ResizablePanel :min-size="50" @drop="onDrop">
-            <MainCircuit />
+            <MainCircuit :obj="{}" :can-edit="true" />
           </ResizablePanel>
         </ResizablePanelGroup>
       </ResizablePanel>
