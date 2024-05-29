@@ -1,23 +1,23 @@
 import { SimulationMode } from '@/types'
+import type { JsonWebKeyInput } from 'crypto'
 import { defineStore } from 'pinia'
 
 interface state {
-  input: number[]
-  output: number[]
-  mode: SimulationMode
+  output: object,
+  mode: SimulationMode,
+  exportNodes: 
 }
 
-const useOutputStore = defineStore('outputStore', {
+export const useSimulationResponseStore = defineStore('outputStore', {
   state: (): state => ({
-    input: [],
-    output: [],
+    output: {},
     mode: SimulationMode.Transient
   }),
 
   actions: {
     setValue(value: number[]) {
       const min = 1e-6
-      this.output = value.map((v) => Math.abs(v) < min ? 0 : v)
+      this.output = value.map((v) => (Math.abs(v) < min ? 0 : v))
     },
     getValue(): number[] {
       return this.output
@@ -36,5 +36,3 @@ const useOutputStore = defineStore('outputStore', {
     }
   }
 })
-
-export default useOutputStore

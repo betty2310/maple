@@ -36,7 +36,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
 import { LineChart, Table, X } from 'lucide-vue-next'
-import useOutputStore from '@/stores/outputStore'
+import useOutputStore from '@/stores/simulationResponseStore'
 import LineChartComponent from '@/components/charts/LineChartComponent.vue'
 import TableOutput from '@/components/TableOutput.vue'
 

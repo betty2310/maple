@@ -62,7 +62,7 @@ import { useFetch } from '@vueuse/core'
 import { handleAPI } from '@/logic/main'
 
 import useRunStore from '@/stores/runStore'
-import useOutputStore from '@/stores/outputStore'
+import { useSimulationResponseStore } from '@/stores/simulationResponseStore'
 import { useSessionStore } from '@/stores/sessionStore'
 import useCircuitStore from '@/stores/circuitStore'
 
@@ -105,11 +105,10 @@ const onRun = async () => {
   if (error.value) {
     console.error(error.value)
   }
-  const outputStore = useOutputStore()
+  const responseStore = useSimulationResponseStore()
   if (data.value) {
-    outputStore.setValue(JSON.parse(data.value).output)
-    outputStore.setInput(JSON.parse(data.value).input)
-    outputStore.setMode(selected.value)
+    responseStore.setValue(JSON.parse(data.value))
+    responseStore.setMode(selected.value)
   }
 }
 
