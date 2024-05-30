@@ -1,38 +1,38 @@
-import { SimulationMode } from '@/types'
-import type { JsonWebKeyInput } from 'crypto'
+import { SimulationMode, type ChartData, type SimulationResponseData } from '@/types'
+import type { ExportNode } from '@/types/AnalysisType'
 import { defineStore } from 'pinia'
 
 interface state {
-  output: object,
-  mode: SimulationMode,
-  exportNodes: 
+  output: ChartData[] | null
+  mode: SimulationMode
+  exportNodes: ExportNode[]
 }
-
-export const useSimulationResponseStore = defineStore('outputStore', {
+export const useSimulationResponseStore = defineStore('simulationResponseStore', {
   state: (): state => ({
-    output: {},
-    mode: SimulationMode.Transient
+    output: null,
+    mode: SimulationMode.Transient,
+    exportNodes: []
   }),
 
   actions: {
-    setValue(value: number[]) {
-      const min = 1e-6
-      this.output = value.map((v) => (Math.abs(v) < min ? 0 : v))
+    setResponse(output: SimulationResponseData) {
+      const a = output.map((data) => {
+        const convertedData: ChartData = {
+          input: data.input
+        }
+
+        const length = this.exportNodes.length
+        const dataList = Object.values(data.exportNodes)
+        for (let i = 0; i < length; i++) {
+          const { node } = this.exportNodes[i]
+          convertedData[node] = dataList[i]
+        }
+        return convertedData
+      })
+      this.output = a
     },
-    getValue(): number[] {
-      return this.output
-    },
-    setInput(value: number[]) {
-      this.input = value
-    },
-    getInput(): number[] {
-      return this.input
-    },
-    getMode(): SimulationMode {
-      return this.mode
-    },
-    setMode(mode: SimulationMode) {
-      this.mode = mode
+    getResponseKeys() {
+      return this.output ? Object.keys(this.output[0]) : []
     }
   }
 })

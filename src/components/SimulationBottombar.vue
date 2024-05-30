@@ -4,8 +4,12 @@
       <TabsTrigger value="result"> result </TabsTrigger>
       <TabsTrigger value="graph"> graph </TabsTrigger>
     </TabsList>
-    <TabsContent value="result" class="border border-red-500"> <TableOutput /> </TabsContent>
-    <TabsContent value="graph"> <LineChartComponent /> </TabsContent>
+    <TabsContent value="result" class="border border-red-500">
+      <TableOutput />
+    </TabsContent>
+    <TabsContent value="graph">
+      <LineChartComponent :response="response" :response-keys="key" />
+    </TabsContent>
   </Tabs>
   <!-- <div class="bg-background text-foreground">
     <div class="flex items-center justify-between px-4 py-2">
@@ -36,7 +40,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
 import { LineChart, Table, X } from 'lucide-vue-next'
-import useOutputStore from '@/stores/simulationResponseStore'
+import { useSimulationResponseStore } from '@/stores/simulationResponseStore'
 import LineChartComponent from '@/components/charts/LineChartComponent.vue'
 import TableOutput from '@/components/TableOutput.vue'
 
@@ -45,22 +49,39 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 const options = ['Table', 'Graph']
 const activeOption = ref('Table')
 
-const outputStore = useOutputStore()
+const simulationResponseStore = useSimulationResponseStore()
 
-const outputData = ref<number[]>(outputStore.getValue())
-const inputData = ref<number[]>(outputStore.getInput())
+const response = ref(simulationResponseStore.output)
+const key = ref(simulationResponseStore.getResponseKeys())
 
 watch(
-  () => outputStore.getValue(),
+  () => simulationResponseStore.output,
   (value) => {
-    outputData.value = value
+    response.value = value
   }
 )
 
 watch(
-  () => outputStore.getInput(),
+  () => simulationResponseStore.getResponseKeys(),
   (value) => {
-    inputData.value = value
+    key.value = value
   }
 )
+
+const outputData = ref<number[]>([])
+const inputData = ref<number[]>([])
+
+// watch(
+//   () => outputStore.getValue(),
+//   (value) => {
+//     outputData.value = value
+//   }
+// )
+
+// watch(
+//   () => outputStore.getInput(),
+//   (value) => {
+//     inputData.value = value
+//   }
+// )
 </script>
