@@ -2,16 +2,16 @@
   <div class="overflow-x-auto">
     <table class="table table-xs">
       <thead>
-      <tr>
-        <th>{{ indexRow }}</th>
-        <th>V(out)</th>
-      </tr>
+        <tr>
+          <th>{{ indexRow }}</th>
+          <th>V(out)</th>
+        </tr>
       </thead>
       <tbody>
-      <tr v-for="(item, index) in inputData" :key="index">
-        <td>{{ guardData(item) }} {{ inputUnit }}</td>
-        <td>{{ guardData(outputData[index]) }}</td>
-      </tr>
+        <tr v-for="(item, index) in inputData" :key="index">
+          <td>{{ guardData(item) }} {{ inputUnit }}</td>
+          <td>{{ guardData(outputData[index]) }}</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -20,10 +20,10 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 import useRunStore from '@/stores/runStore'
-import useOutputStore from '@/stores/outputStore'
+import { useSimulationResponseStore } from '@/stores/simulationResponseStore'
 import { SimulationMode } from '@/types'
 
-const outputStore = useOutputStore()
+const simulationResponseStore = useSimulationResponseStore()
 const runStore = useRunStore()
 
 const mode = ref(runStore.mode)
@@ -33,7 +33,7 @@ watch(
     mode.value = value
   }
 )
-const indexRow = computed(function() {
+const indexRow = computed(function () {
   switch (mode.value) {
     case SimulationMode.Transient:
       return 'Time'
@@ -45,7 +45,7 @@ const indexRow = computed(function() {
       return ''
   }
 })
-const inputUnit = computed(function() {
+const inputUnit = computed(function () {
   switch (mode.value) {
     case SimulationMode.Transient:
       return 's'
@@ -58,25 +58,25 @@ const inputUnit = computed(function() {
   }
 })
 
-const outputData = ref<number[]>(outputStore.getValue())
-const inputData = ref<number[]>(outputStore.getInput())
+const outputData = ref<number[]>([])
+const inputData = ref<number[]>([])
 
 const guardData = ((n: number | undefined) => {
   if (n === undefined) return '0'
   return n.toFixed(2)
 })
 
-watch(
-  () => outputStore.getValue(),
-  (value) => {
-    outputData.value = value
-  }
-)
+// watch(
+//   () => outputStore.getValue(),
+//   (value) => {
+//     outputData.value = value
+//   }
+// )
 
-watch(
-  () => outputStore.getInput(),
-  (value) => {
-    inputData.value = value
-  }
-)
+// watch(
+//   () => outputStore.getInput(),
+//   (value) => {
+//     inputData.value = value
+//   }
+// )
 </script>

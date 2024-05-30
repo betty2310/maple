@@ -18,6 +18,7 @@ import {
   type ComponentData,
   type TransistorData
 } from '@/types'
+import { AnalysisType, type ExportNode } from '@/types/AnalysisType'
 
 function convertGraphToNetlist(circuit: FlowExportObject): string {
   const nodeMap: { [nodeId: string]: Component } = {}
@@ -136,24 +137,14 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
   return netlist.join('\n')
 }
 
-enum exportType {
-  V,
-  I
-}
-
-type exportNode = {
-  type: exportType
-  node: string
-}
-
-function getAnalysisType(circuit: FlowExportObject): exportNode[] {
-  const analysisType: exportNode[] = [] // i(R1) or v(1)
+function getAnalysisType(circuit: FlowExportObject): ExportNode[] {
+  const analysisType: ExportNode[] = [] // i(R1) or v(1)
 
   const edges = circuit.edges
   edges.forEach((edge) => {
     if (edge.data.export === 'Voltmeter') {
       analysisType.push({
-        type: exportType.V,
+        type: AnalysisType.Voltmeter,
         node: `${edge.data.id}`
       })
     }
@@ -162,7 +153,7 @@ function getAnalysisType(circuit: FlowExportObject): exportNode[] {
         (node) => node.id === edge.source
       ) as Node<ComponentData>
       analysisType.push({
-        type: exportType.I,
+        type: AnalysisType.Ammeter,
         node: `${sourceComponent.data?.id}`
       })
     }

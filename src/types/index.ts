@@ -1,5 +1,6 @@
 import type { Position } from '@vue-flow/core'
 import { SimulationMode } from './SimulationMode'
+import { type SimulationResponseData } from './response/SimulationResponse'
 
 enum CircuitComponent {
   Ground = 'ground',
@@ -80,3 +81,10 @@ export type {
 export { CircuitComponent }
 
 export { SimulationMode }
+
+export { type SimulationResponseData }
+
+export type ChartData = {
+  input: number
+  [key: string]: number
+}

@@ -1,13 +1,7 @@
 <template>
   <p class="leading-7 [&:not(:first-child)]:mt-6">{{ props.name ?? 'CircuitCraft' }}</p>
-  <Button
-    v-if="props.canEdit"
-    :disabled="!circuitStore.isCircuitChanged || isOnSyncing"
-    class="gap-1.5 text-sm"
-    size="xs"
-    variant="ghost"
-    @click="onSync"
-  >
+  <Button v-if="props.canEdit" :disabled="!circuitStore.isCircuitChanged || isOnSyncing" class="gap-1.5 text-sm"
+    size="xs" variant="ghost" @click="onSync">
     <RefreshCcw :class="!isOnSyncing ? 'size-3.5' : 'size-3.5 animate-spin'" />
   </Button>
   <DropdownMenu class="ml-auto">
@@ -62,11 +56,11 @@ import { useFetch } from '@vueuse/core'
 import { handleAPI } from '@/logic/main'
 
 import useRunStore from '@/stores/runStore'
-import useOutputStore from '@/stores/outputStore'
+import { useSimulationResponseStore } from '@/stores/simulationResponseStore'
 import { useSessionStore } from '@/stores/sessionStore'
 import useCircuitStore from '@/stores/circuitStore'
 
-import { SimulationMode } from '@/types'
+import { SimulationMode, type SimulationResponseData } from '@/types'
 import type { Json } from '@/database/types'
 import { supabase } from '@/lib/supabaseClient'
 
@@ -105,11 +99,12 @@ const onRun = async () => {
   if (error.value) {
     console.error(error.value)
   }
-  const outputStore = useOutputStore()
+  const responseStore = useSimulationResponseStore()
   if (data.value) {
-    outputStore.setValue(JSON.parse(data.value).output)
-    outputStore.setInput(JSON.parse(data.value).input)
-    outputStore.setMode(selected.value)
+    // @ts-ignore
+    responseStore.exportNodes = netlist.value.exportNodes
+    responseStore.setResponse(JSON.parse(data.value) as SimulationResponseData)
+    responseStore.mode = selected.value
   }
 }
 
