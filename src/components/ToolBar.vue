@@ -1,7 +1,13 @@
 <template>
   <p class="leading-7 [&:not(:first-child)]:mt-6">{{ props.name ?? 'CircuitCraft' }}</p>
-  <Button v-if="props.canEdit" :disabled="!circuitStore.isCircuitChanged || isOnSyncing" class="gap-1.5 text-sm"
-    size="xs" variant="ghost" @click="onSync">
+  <Button
+    v-if="props.canEdit"
+    :disabled="!circuitStore.isCircuitChanged || isOnSyncing"
+    class="gap-1.5 text-sm"
+    size="xs"
+    variant="ghost"
+    @click="onSync"
+  >
     <RefreshCcw :class="!isOnSyncing ? 'size-3.5' : 'size-3.5 animate-spin'" />
   </Button>
   <DropdownMenu class="ml-auto">
@@ -22,8 +28,16 @@
     </DropdownMenuContent>
   </DropdownMenu>
 
-  <Button class="gap-1.5 text-sm" size="xs" variant="default" @click="onRun">
-    <Play class="size-3.5" />
+  <Button
+    class="gap-1.5 text-sm"
+    size="xs"
+    :variant="isFetching ? 'destructive' : 'default'"
+    :disabled="isFetching"
+    @click="onRun"
+  >
+    <RotateCcw v-if="isFetching" class="size-3.5 animate-spin" />
+    <Play v-else class="size-3.5" />
+    <p>{{ isFetching ? 'Running...' : 'Simulate' }}</p>
   </Button>
 
   <ShareDialog v-if="showShareDialog" :project_id="props.id ?? 100" />
@@ -35,7 +49,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ChevronDown, Play, RefreshCcw } from 'lucide-vue-next'
+import { ChevronDown, Play, RefreshCcw, RotateCcw } from 'lucide-vue-next'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -84,10 +98,16 @@ watch(selected, () => {
   runStore.setMode(selected.value)
 })
 
+const isFetching = ref<boolean>(false)
 const onRun = async () => {
   netlist.value = handleAPI(toObject())
+  isFetching.value = true
   const serverUrl = import.meta.env.VITE_SERVER_URL
-  const { isFetching, error, data } = await useFetch<string>(`${serverUrl}/api/Simulator`, {
+  const {
+    isFetching: fetching,
+    error,
+    data
+  } = await useFetch<string>(`${serverUrl}/api/Simulator`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -96,6 +116,7 @@ const onRun = async () => {
     body: JSON.stringify(netlist.value)
   })
 
+  isFetching.value = false
   if (error.value) {
     console.error(error.value)
   }
