@@ -25,9 +25,11 @@ import { supabase } from '@/lib/supabaseClient'
 
 import { onMounted, ref } from 'vue'
 import { useProjectStore } from '@/stores/projectStore'
+import { useSessionStore } from '@/stores/sessionStore'
 import { useTimeAgo } from '@vueuse/core'
 
 const projectStore = useProjectStore()
+const sessionStore = useSessionStore()
 
 const projects = ref<
   | {
@@ -43,14 +45,15 @@ const projects = ref<
 >()
 
 const calculateTimeAgo = (time: string | null) => {
-  console.log(time)
   if (!time) return ''
   return useTimeAgo(time)
 }
 
 onMounted(async () => {
   try {
-    const data = await projectStore.getProjects()
+    const currentUserId = sessionStore.user?.id
+    if (!currentUserId) return
+    const data = await projectStore.getProjects(currentUserId)
     projects.value = data
   } catch (error) {
     console.error(error)

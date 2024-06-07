@@ -103,11 +103,7 @@ const onRun = async () => {
   netlist.value = handleAPI(toObject())
   isFetching.value = true
   const serverUrl = import.meta.env.VITE_SERVER_URL
-  const {
-    isFetching: fetching,
-    error,
-    data
-  } = await useFetch<string>(`${serverUrl}/api/Simulator`, {
+  const { error, data } = await useFetch<string>(`${serverUrl}/api/Simulator`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -36,8 +36,8 @@ export const useProjectStore = defineStore('projectStore', {
     projectShareUsers: [] as ProjectShareUser[] | null
   }),
   actions: {
-    async getProjects() {
-      const { data, error } = await supabase.from('projects').select('*')
+    async getProjects(user_id: string) {
+      const { data, error } = await supabase.from('projects').select('*').eq('user_id', user_id)
       if (error) throw error
       return data
     }
