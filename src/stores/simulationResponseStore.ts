@@ -6,15 +6,22 @@ interface state {
   output: ChartData[] | null
   mode: SimulationMode
   exportNodes: ExportNode[]
+  statusCode: number | null
 }
 export const useSimulationResponseStore = defineStore('simulationResponseStore', {
   state: (): state => ({
     output: null,
     mode: SimulationMode.Transient,
-    exportNodes: []
+    exportNodes: [],
+    statusCode: null
   }),
 
   actions: {
+    clear() {
+      this.output = null
+      this.exportNodes = []
+      this.statusCode = null
+    },
     setResponse(output: SimulationResponseData) {
       const a = output.map((data) => {
         const convertedData: ChartData = {

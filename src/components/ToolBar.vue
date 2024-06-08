@@ -100,6 +100,8 @@ import { SimulationMode, type SimulationResponseData } from '@/types'
 import type { Json } from '@/database/types'
 import { supabase } from '@/lib/supabaseClient'
 import { useRouter } from 'vue-router'
+import { useToast } from '@/components/ui/toast/use-toast'
+const { toast } = useToast()
 
 const props = defineProps<{
   content: Json | undefined
@@ -129,10 +131,12 @@ watch(selected, () => {
 
 const isFetching = ref<boolean>(false)
 const onRun = async () => {
+  const responseStore = useSimulationResponseStore()
+  responseStore.clear()
   netlist.value = handleAPI(toObject())
   isFetching.value = true
   const serverUrl = import.meta.env.VITE_SERVER_URL
-  const { error, data } = await useFetch<string>(`${serverUrl}/api/Simulator`, {
+  const { error, data, statusCode } = await useFetch<string>(`${serverUrl}/api/Simulator`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -143,10 +147,20 @@ const onRun = async () => {
 
   isFetching.value = false
   if (error.value) {
-    console.error(error.value)
+    responseStore.statusCode = statusCode.value
+    toast({
+      title: 'Circuit errror detected!',
+      description: 'Please refer to the Diagnostics Panel for detailed information.',
+      variant: 'destructive'
+    })
+    return
   }
-  const responseStore = useSimulationResponseStore()
   if (data.value) {
+    toast({
+      title: 'Circuit simulate successfully!',
+      description: 'View results in the Simulation Panel.',
+      variant: 'default'
+    })
     // @ts-ignore
     responseStore.exportNodes = netlist.value.exportNodes
     responseStore.setResponse(JSON.parse(data.value) as SimulationResponseData)

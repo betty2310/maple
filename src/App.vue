@@ -1,5 +1,6 @@
 <template>
   <RouterView />
+  <Toaster />
 </template>
 
 <script setup>
@@ -8,7 +9,7 @@ import { themeChange } from 'theme-change'
 
 import { supabase } from '@/lib/supabaseClient'
 import { useSessionStore } from '@/stores/sessionStore'
-
+import Toaster from '@/components/ui/toast/Toaster.vue'
 
 const session = ref()
 const sessionStore = useSessionStore()
@@ -26,6 +27,4 @@ onMounted(() => {
     if (_session?.user) sessionStore.user = _session?.user
   })
 })
-
-
 </script>
