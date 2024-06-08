@@ -1,55 +1,72 @@
 <template>
-  <p class="leading-7 [&:not(:first-child)]:mt-6">{{ props.name ?? 'CircuitCraft' }}</p>
-  <Button
-    v-if="props.canEdit"
-    :disabled="!circuitStore.isCircuitChanged || isOnSyncing"
-    class="gap-1.5 text-sm"
-    size="xs"
-    variant="ghost"
-    @click="onSync"
-  >
-    <RefreshCcw :class="!isOnSyncing ? 'size-3.5' : 'size-3.5 animate-spin'" />
-  </Button>
-  <DropdownMenu class="ml-auto">
-    <DropdownMenuTrigger as-child>
-      <Button class="ml-auto gap-1.5 text-sm" size="xs" variant="ghost">
-        {{ selected }}
-        <ChevronDown class="size-3.5" />
+  <div class="flex justify-between items-center w-full">
+    <div class="flex items-center gap-2">
+      <Zap class="size-5 text-yellow-500" />
+      <p class="pixelify-sans text-lg">CircuitCraft</p>
+    </div>
+    <div class="flex flex-grow-0 flex-shrink-0">
+      <p class="leading-7 [&:not(:first-child)]:mt-6">{{ props.name ?? 'CircuitCraft' }}</p>
+
+      <Button
+        v-if="props.canEdit"
+        :disabled="!circuitStore.isCircuitChanged || isOnSyncing"
+        class="gap-1.5 text-sm"
+        size="xs"
+        variant="ghost"
+        @click="onSync"
+      >
+        <RefreshCcw :class="!isOnSyncing ? 'size-3.5' : 'size-3.5 animate-spin'" />
       </Button>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent class="w-56">
-      <DropdownMenuLabel>Simulation mode</DropdownMenuLabel>
-      <DropdownMenuSeparator />
-      <DropdownMenuRadioGroup v-model="selected">
-        <DropdownMenuRadioItem :value="SimulationMode.Transient"> Transient </DropdownMenuRadioItem>
-        <DropdownMenuRadioItem :value="SimulationMode.DCSweep"> DC sweep </DropdownMenuRadioItem>
-        <DropdownMenuRadioItem :value="SimulationMode.ACSweep"> AC sweep </DropdownMenuRadioItem>
-      </DropdownMenuRadioGroup>
-    </DropdownMenuContent>
-  </DropdownMenu>
 
-  <Button
-    class="gap-1.5 text-sm"
-    size="xs"
-    :variant="isFetching ? 'destructive' : 'default'"
-    :disabled="isFetching"
-    @click="onRun"
-  >
-    <RotateCcw v-if="isFetching" class="size-3.5 animate-spin" />
-    <Play v-else class="size-3.5" />
-    <p>{{ isFetching ? 'Running...' : 'Simulate' }}</p>
-  </Button>
+      <ShareDialog v-if="showShareDialog" :project_id="props.id ?? 100" />
+    </div>
+    <div class="flex items-center gap-3">
+      <DropdownMenu class="ml-auto">
+        <DropdownMenuTrigger as-child>
+          <Button class="ml-auto gap-1.5 text-sm" size="xs" variant="ghost">
+            {{ selected }}
+            <ChevronDown class="size-3.5" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent class="w-56">
+          <DropdownMenuLabel>Simulation mode</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuRadioGroup v-model="selected">
+            <DropdownMenuRadioItem :value="SimulationMode.Transient">
+              Transient
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem :value="SimulationMode.DCSweep">
+              DC sweep
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem :value="SimulationMode.ACSweep">
+              AC sweep
+            </DropdownMenuRadioItem>
+          </DropdownMenuRadioGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
-  <ShareDialog v-if="showShareDialog" :project_id="props.id ?? 100" />
+      <Button
+        class="gap-1.5 text-sm"
+        size="xs"
+        :variant="isFetching ? 'destructive' : 'default'"
+        :disabled="isFetching"
+        @click="onRun"
+      >
+        <RotateCcw v-if="isFetching" class="size-3.5 animate-spin" />
+        <Play v-else class="size-3.5" />
+        <p>{{ isFetching ? 'Running...' : 'Simulate' }}</p>
+      </Button>
 
-  <RouterLink v-if="loggedInUser === null" to="/signin">
-    <Button size="xs">Sign in</Button>
-  </RouterLink>
-  <UserAvatarDropdown v-else :signout="sessionStore.signOut" :user="loggedInUser" />
+      <RouterLink v-if="loggedInUser === null" to="/signin">
+        <Button size="xs">Sign in</Button>
+      </RouterLink>
+      <UserAvatarDropdown v-else :signout="sessionStore.signOut" :user="loggedInUser" />
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { ChevronDown, Play, RefreshCcw, RotateCcw } from 'lucide-vue-next'
+import { ChevronDown, Play, RefreshCcw, RotateCcw, Zap } from 'lucide-vue-next'
 import {
   DropdownMenu,
   DropdownMenuContent,
