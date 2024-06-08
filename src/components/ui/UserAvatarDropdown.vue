@@ -11,22 +11,30 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+
 import { Button } from '@/components/ui/button'
 import { type User } from '@supabase/supabase-js'
 
 const props = defineProps<{
-  user: User,
+  user: User
   signout: () => void
 }>()
-
 </script>
 
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger as-child>
-      <Button size="xs" variant="outline">
-        {{ props.user.email }}
+      <Button size="xs_circle" variant="ghost_circle">
+        <Avatar size="tiny">
+          <AvatarImage :src="user.user_metadata.avatar_url" alt="avatar" />
+          <AvatarFallback><UserIcon class="w-4 h-4" /></AvatarFallback>
+        </Avatar>
       </Button>
+
+      <!-- <Button size="xs" variant="outline">
+        {{ props.user.email }}
+      </Button> -->
     </DropdownMenuTrigger>
     <DropdownMenuContent class="w-56">
       <DropdownMenuLabel>My Account</DropdownMenuLabel>
