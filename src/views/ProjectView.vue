@@ -76,6 +76,8 @@ import { ref, watch, onMounted, onUnmounted } from 'vue'
 
 import { useLayoutStore } from '@/stores/layoutStore'
 import SimulationBottombar from '@/components/SimulationBottombar.vue'
+import { useIDStore } from '@/stores/idStore'
+const idStore = useIDStore()
 const layoutStore = useLayoutStore()
 
 const { onDrop } = useDragAndDrop()
@@ -106,6 +108,7 @@ import { supabase } from '@/lib/supabaseClient'
 import type { Json } from '@/database/types'
 import { useSessionStore } from '@/stores/sessionStore'
 import type { RealtimeChannel } from '@supabase/supabase-js'
+import type { FlowExportObject } from '@vue-flow/core'
 const sessionStore = useSessionStore()
 
 const route = useRoute()
@@ -126,6 +129,7 @@ const project = ref<{
 const message = ref<string | null>(null)
 
 onMounted(async () => {
+  // get project
   message.value = null
   const { data: projectData, error } = await supabase
     .from('projects')
@@ -136,6 +140,7 @@ onMounted(async () => {
     return
   }
 
+  // current user is owner of project
   if (sessionStore.user?.id === projectData[0].user_id) {
     showShareDialog.value = true
     canEdit.value = true
@@ -143,6 +148,7 @@ onMounted(async () => {
     return
   }
 
+  // get share state of project
   const { data: projectShare } = await supabase
     .from('project_shares')
     .select('*')
@@ -154,39 +160,44 @@ onMounted(async () => {
     return
   }
 
+  // check user is login
+  if (sessionStore.user === null) {
+    message.value = 'You need to login to access this project.'
+    return
+  }
+
   if (projectShare.type === 'PUBLIC') {
     project.value = projectData[0]
+    canEdit.value = projectShare.permisison === 'EDIT' ? true : false
     return
   } else {
-    if (sessionStore.user === null) {
-      message.value = 'You need to login to access this project.'
+    const userId = sessionStore.user.id
+    const { data: projectShareUsers } = await supabase
+      .from('project_share_users')
+      .select('*')
+      .eq('project_share_id', projectShare.id)
+      .eq('user_id', userId)
+      .single()
+    if (!projectShareUsers) {
+      message.value = 'You do not have access to this project.'
       return
-    } else {
-      const userId = sessionStore.user.id
-      const { data: projectShareUsers } = await supabase
-        .from('project_share_users')
-        .select('*')
-        .eq('project_share_id', projectShare.id)
-        .eq('user_id', userId)
-        .single()
-      if (!projectShareUsers) {
-        message.value = 'You do not have access to this project.'
-        return
-      }
-      if (projectShare.permisison === 'EDIT') {
-        canEdit.value = true
-      }
-      project.value = projectData[0]
     }
+    if (projectShare.permisison === 'EDIT') {
+      canEdit.value = true
+    }
+    project.value = projectData[0]
   }
 })
 
 let channel: RealtimeChannel | null = null
 // Create a function to handle inserts
 // @ts-ignore
+
 const handleUpdate = (payload) => {
-  console.log('Change received!', payload)
+  console.log(payload)
   project.value = payload.new
+  const obj = project.value?.content as unknown as FlowExportObject
+  idStore.syncID(obj.nodes)
 }
 
 onMounted(() => {

@@ -106,6 +106,7 @@ watch(
         .select('id')
       if (!data) return
       projectShareId.value = data[0].id
+      isShared.value = true
     }
   }
 )
