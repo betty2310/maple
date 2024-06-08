@@ -1,82 +1,49 @@
-<template>
-  <div class="overflow-x-auto">
-    <table class="table table-xs">
-      <thead>
-        <tr>
-          <th>{{ indexRow }}</th>
-          <th>V(out)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item, index) in inputData" :key="index">
-          <td>{{ guardData(item) }} {{ inputUnit }}</td>
-          <td>{{ guardData(outputData[index]) }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</template>
+<script setup lang="ts">
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table'
+import type { ChartData } from '@/types'
+import { computed, onMounted } from 'vue'
 
-<script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
-import useRunStore from '@/stores/runStore'
-import { useSimulationResponseStore } from '@/stores/simulationResponseStore'
-import { SimulationMode } from '@/types'
+const props = defineProps<{
+  response: ChartData[] | null
+  responseKeys: string[]
+}>()
 
-const simulationResponseStore = useSimulationResponseStore()
-const runStore = useRunStore()
-
-const mode = ref(runStore.mode)
-watch(
-  () => runStore.mode,
-  (value) => {
-    mode.value = value
-  }
-)
-const indexRow = computed(function () {
-  switch (mode.value) {
-    case SimulationMode.Transient:
-      return 'Time'
-    case SimulationMode.ACSweep:
-      return 'Frequency'
-    case SimulationMode.DCSweep:
-      return 'V(in)'
-    default:
-      return ''
-  }
+const headers = computed(() => {
+  const keys = new Set<string>()
+  if (props.response === null) return
+  props.response.forEach((item) => {
+    Object.keys(item).forEach((key) => {
+      if (key !== 'input') {
+        keys.add(key)
+      }
+    })
+  })
+  return Object.fromEntries(Array.from(keys).map((key) => [key, null]))
 })
-const inputUnit = computed(function () {
-  switch (mode.value) {
-    case SimulationMode.Transient:
-      return 's'
-    case SimulationMode.ACSweep:
-      return 'Hz'
-    case SimulationMode.DCSweep:
-      return 'V'
-    default:
-      return ''
-  }
-})
-
-const outputData = ref<number[]>([])
-const inputData = ref<number[]>([])
-
-const guardData = ((n: number | undefined) => {
-  if (n === undefined) return '0'
-  return n.toFixed(2)
-})
-
-// watch(
-//   () => outputStore.getValue(),
-//   (value) => {
-//     outputData.value = value
-//   }
-// )
-
-// watch(
-//   () => outputStore.getInput(),
-//   (value) => {
-//     inputData.value = value
-//   }
-// )
 </script>
+
+<template>
+  <Table v-if="props.response !== null">
+    <TableHeader>
+      <TableRow>
+        <TableHead>Input</TableHead>
+        <TableHead v-for="(value, key) in headers" :key="key">{{ key }}</TableHead>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      <TableRow v-for="(item, index) in props.response" :key="index">
+        <TableCell>{{ item.input }}</TableCell>
+        <TableCell v-for="(value, key) in item" :key="key">
+          <div v-if="key !== 'input'">{{ value }}</div>
+        </TableCell>
+      </TableRow>
+    </TableBody>
+  </Table>
+</template>

@@ -5,8 +5,8 @@
       <TabsTrigger value="graph"> graph </TabsTrigger>
       <TabsTrigger value="problem"> problems </TabsTrigger>
     </TabsList>
-    <TabsContent value="result" class="border border-red-500">
-      <TableOutput />
+    <TabsContent value="result">
+      <TableOutput :response="response" :response-keys="key" />
     </TabsContent>
     <TabsContent value="problem">
       <Problem />
@@ -19,16 +19,12 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
-import { LineChart, Table, X } from 'lucide-vue-next'
 import { useSimulationResponseStore } from '@/stores/simulationResponseStore'
 import LineChartComponent from '@/components/core/Bottombar/charts/LineChartComponent.vue'
 import TableOutput from '@/components/core/Bottombar/TableOutput.vue'
 import Problem from '@/components/core/Bottombar/Problem.vue'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-
-const options = ['Table', 'Graph']
-const activeOption = ref('Table')
 
 const simulationResponseStore = useSimulationResponseStore()
 
@@ -48,21 +44,4 @@ watch(
     key.value = value
   }
 )
-
-const outputData = ref<number[]>([])
-const inputData = ref<number[]>([])
-
-// watch(
-//   () => outputStore.getValue(),
-//   (value) => {
-//     outputData.value = value
-//   }
-// )
-
-// watch(
-//   () => outputStore.getInput(),
-//   (value) => {
-//     inputData.value = value
-//   }
-// )
 </script>
