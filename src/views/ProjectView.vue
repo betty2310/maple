@@ -1,7 +1,7 @@
 <template>
   <div v-if="project" class="flex flex-col h-screen w-full">
     <header
-      class="sticky top-0 z-30 flex h-[45px] w-full items-center gap-1 border-b bg-background px-4"
+      class="sticky top-0 z-30 flex h-[45px] w-full items-center gap-1 border-b bg-secondary px-4"
     >
       <ToolBar
         :content="project?.content"
@@ -11,7 +11,7 @@
         :can-edit="canEdit"
       />
     </header>
-    <aside class="pt-[45px] pb-[25px] fixed left-0 z-20 flex h-full flex-col border-r">
+    <aside class="pt-[45px] pb-[25px] fixed left-0 z-20 flex h-full flex-col border-r bg-accent">
       <ActivityBar :panel="panelRef" :bottomPanelRef="bottomPanelRef" />
     </aside>
     <ResizablePanelGroup auto-save-id="app-layout-id-1" class="pl-[56px]" direction="vertical">

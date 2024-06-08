@@ -1,35 +1,31 @@
 <script lang="ts" setup>
-import { PlusCircle } from 'lucide-vue-next'
-
+import { Plus } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
+
+import SortbyComboBox from '@/components/core/projects/SortbyComboBox.vue'
+import { Search } from 'lucide-vue-next'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { supabase } from '@/lib/supabaseClient'
+import { Skeleton } from '@/components/ui/skeleton'
 
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 import { useProjectStore } from '@/stores/projectStore'
 import { useSessionStore } from '@/stores/sessionStore'
-import { useTimeAgo } from '@vueuse/core'
 
 const projectStore = useProjectStore()
 const sessionStore = useSessionStore()
+const loggedInUser = computed(() => sessionStore.user)
+const isLoadingProjects = ref<boolean>(false)
 
 const projects = ref<
   | {
@@ -44,12 +40,39 @@ const projects = ref<
   | null
 >()
 
-const calculateTimeAgo = (time: string | null) => {
-  if (!time) return ''
-  return useTimeAgo(time)
-}
+const searchQuery = ref('')
+const sortValue = ref('modified')
+
+const sortedProjects = computed(() => {
+  if (!projects.value) return []
+
+  // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+  return projects.value.sort((a, b) => {
+    if (sortValue.value === 'modified') {
+      return new Date(b.updated_at || '').getTime() - new Date(a.updated_at || '').getTime()
+    } else if (sortValue.value === 'created') {
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    } else if (sortValue.value === 'alphabetical') {
+      return (a.name || '').localeCompare(b.name || '')
+    }
+    return 0
+  })
+})
+const filteredProjects = computed(() => {
+  if (!sortedProjects.value) return []
+
+  return sortedProjects.value.filter((project) =>
+    project.name?.toLowerCase().includes(searchQuery.value.toLowerCase())
+  )
+})
+
+// const calculateTimeAgo = (time: string | null) => {
+//   if (!time) return ''
+//   return useTimeAgo(time)
+// }
 
 onMounted(async () => {
+  isLoadingProjects.value = true
   try {
     const currentUserId = sessionStore.user?.id
     if (!currentUserId) return
@@ -58,12 +81,16 @@ onMounted(async () => {
   } catch (error) {
     console.error(error)
   }
+  isLoadingProjects.value = false
 })
 
 import { useField, useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as zod from 'zod'
 import type { Json } from '@/database/types'
+import AppIcon from '@/components/core/Toolbar/AppIcon.vue'
+import UserAvatarDropdown from '@/components/ui/UserAvatarDropdown.vue'
+import { useRouter } from 'vue-router'
 const validationSchema = toTypedSchema(
   zod.object({
     name: zod.string().min(1, { message: 'This is required' })
@@ -75,6 +102,8 @@ const { handleSubmit, errors } = useForm({
 const loading = ref<boolean>(false)
 
 const { value: name } = useField<string>('name')
+
+const router = useRouter()
 const onCreateNewProject = handleSubmit(async (values) => {
   loading.value = true
 
@@ -83,61 +112,114 @@ const onCreateNewProject = handleSubmit(async (values) => {
     .insert([{ name: values.name, content: {} }])
     .select()
 
+  if (!data || error) {
+    console.error(error)
+    loading.value = false
+    return
+  }
+
+  router.push(`/project/${data[0].name}/${data[0].uuid}`)
+
   loading.value = false
 })
 </script>
 
 <template>
-  <div class="flex min-h-screen w-full flex-col bg-muted/40">
-    <div class="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-      <main class="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+  <header
+    class="sticky top-0 z-30 flex h-[45px] w-full items-center gap-1 border-b bg-secondary px-4"
+  >
+    <div class="flex justify-between items-center w-full">
+      <div class="flex items-center gap-2">
+        <AppIcon />
+      </div>
+
+      <div>
+        <UserAvatarDropdown :signout="sessionStore.signOut" :user="loggedInUser" />
+      </div>
+    </div>
+  </header>
+  <div class="container h-screen mx-auto p-4">
+    <div class="flex flex-col gap-4">
+      <div class="relative w-full max-w-sm items-center">
+        <Input
+          id="search"
+          v-model="searchQuery"
+          type="text"
+          placeholder="Search in projects"
+          class="pl-10 bg-secondary"
+        />
+        <span class="absolute start-0 inset-y-0 flex items-center justify-center px-2">
+          <Search class="size-6 text-muted-foreground" />
+        </span>
+      </div>
+      <div class="my-2">
+        <h3 class="scroll-m-20 text-xl font-semibold tracking-tight pb-4">Projects</h3>
+        <h1
+          class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+        >
+          Dashboard
+        </h1>
+      </div>
+      <div class="flex justify-between items-center">
         <Dialog>
           <DialogTrigger as-child>
-            <Button variant="default"> Create new project </Button>
+            <Button variant="outline" size="slg" class="flex justify-between">
+              <Plus class="w-4 h-4 mr-5" />
+              <div class="flex flex-col items-start">
+                <div class="font-medium">Empty project</div>
+                <div class="text-xs text-muted-foreground">Start from scratch</div>
+              </div>
+            </Button>
           </DialogTrigger>
           <DialogContent class="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>New project</DialogTitle>
-              <DialogDescription>
-                Create new circuit project here. Click save when you're done.
-              </DialogDescription>
+              <DialogTitle>Create project</DialogTitle>
             </DialogHeader>
             <form @submit="onCreateNewProject">
               <div class="grid gap-4 py-4">
                 <div class="grid grid-cols-4 items-center gap-4">
-                  <Label for="name" class="text-right"> Name </Label>
+                  <Label for="name" class="text-right">Project name </Label>
                   <Input id="name" v-model="name" required class="col-span-3" />
-                </div>
-                <div class="grid grid-cols-4 items-center gap-4">
-                  <Label for="description" class="text-right"> Description </Label>
-                  <Input id="description" class="col-span-3" />
                 </div>
               </div>
               <DialogFooter>
                 <Button :variant="loading ? 'ghost' : 'default'" type="submit">
-                  {{ loading ? 'Loading' : 'Create' }}
+                  {{ loading ? 'Loading...' : 'Create' }}
                 </Button>
               </DialogFooter>
             </form>
           </DialogContent>
         </Dialog>
-        <div class="flex gap-4">
-          <div v-for="project in projects" :key="project.id">
-            <RouterLink :to="`/project/${project.name}/${project.uuid}`">
-              <Card class="w-[350px]">
-                <CardHeader>
-                  <CardTitle>{{ project.name }}</CardTitle>
-                  <CardDescription>Deploy your new project in one-click.</CardDescription>
-                </CardHeader>
-                <CardContent> </CardContent>
-                <CardFooter>
-                  <p>{{ calculateTimeAgo(project.updated_at) }}</p>
-                </CardFooter>
-              </Card>
-            </RouterLink>
+        <div>
+          <p class="text-sm text-muted-foreground">sort by</p>
+          <SortbyComboBox v-model="sortValue" />
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-10 mt-10">
+        <div v-if="isLoadingProjects" class="flex items-center space-x-4">
+          <div class="space-y-2">
+            <Skeleton class="h-4 w-[250px]" />
+            <Skeleton class="h-4 w-[200px]" />
           </div>
         </div>
-      </main>
+        <div
+          v-else
+          v-for="project in filteredProjects"
+          :key="project.id"
+          class="w-[180px] h-[200px]"
+        >
+          <RouterLink :to="`/project/${project.name}/${project.uuid}`">
+            <Card class="p-3 h-[180px] bg-gradient-to-br from-blue-300 to-blue-500 text-white">
+              <CardHeader>
+                <CardTitle class="overflow-hidden whitespace-nowrap">{{ project.name }}</CardTitle>
+              </CardHeader>
+              <CardContent> </CardContent>
+            </Card>
+          </RouterLink>
+          <p class="font-bold text-center text-sm">{{ project.name }}</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>

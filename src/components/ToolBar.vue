@@ -1,8 +1,7 @@
 <template>
   <div class="flex justify-between items-center w-full">
     <div class="flex items-center gap-2">
-      <Zap class="size-5 text-yellow-500" />
-      <p class="pixelify-sans text-lg">CircuitCraft</p>
+      <AppIcon />
     </div>
     <div class="flex flex-grow-0 flex-shrink-0">
       <p class="leading-7 [&:not(:first-child)]:mt-6">{{ props.name ?? 'CircuitCraft' }}</p>
@@ -66,7 +65,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ChevronDown, Play, RefreshCcw, RotateCcw, Zap } from 'lucide-vue-next'
+import { ChevronDown, Play, RefreshCcw, RotateCcw } from 'lucide-vue-next'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -79,6 +78,7 @@ import {
 import { Button } from '@/components/ui/button'
 import UserAvatarDropdown from '@/components/ui/UserAvatarDropdown.vue'
 import ShareDialog from '@/components/core/Toolbar/ShareDialog.vue'
+import AppIcon from '@/components/core/Toolbar/AppIcon.vue'
 
 import { computed, ref, watch } from 'vue'
 import { useVueFlow } from '@vue-flow/core'

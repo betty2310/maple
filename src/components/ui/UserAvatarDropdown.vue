@@ -25,7 +25,7 @@ const props = defineProps<{
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger as-child>
-      <Button size="xs" variant="ghost">
+      <Button size="xs_circle" variant="ghost_circle">
         <Avatar size="tiny">
           <AvatarImage :src="user.user_metadata.avatar_url" alt="avatar" />
           <AvatarFallback><UserIcon class="w-4 h-4" /></AvatarFallback>
