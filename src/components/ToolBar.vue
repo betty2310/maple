@@ -3,7 +3,7 @@
     <div>
       <AppIcon />
     </div>
-    <div class="flex gap-2">
+    <div class="flex gap-2" v-if="!isOnPlayground">
       <div class="flex items-center justify-center gap-2">
         <Cloud v-if="!circuitStore.isCircuitChanged" class="w-4 h-4" />
         <CloudUpload v-else class="w-4 h-4" />
@@ -85,7 +85,7 @@ import UserAvatarDropdown from '@/components/ui/UserAvatarDropdown.vue'
 import ShareDialog from '@/components/core/Toolbar/ShareDialog.vue'
 import AppIcon from '@/components/core/Toolbar/AppIcon.vue'
 
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
 import { useVueFlow } from '@vue-flow/core'
 import { useFetch } from '@vueuse/core'
 
@@ -99,6 +99,7 @@ import useCircuitStore from '@/stores/circuitStore'
 import { SimulationMode, type SimulationResponseData } from '@/types'
 import type { Json } from '@/database/types'
 import { supabase } from '@/lib/supabaseClient'
+import { useRouter } from 'vue-router'
 
 const props = defineProps<{
   content: Json | undefined
@@ -107,6 +108,12 @@ const props = defineProps<{
   showShareDialog: boolean
   canEdit: boolean
 }>()
+
+const isOnPlayground = ref(false)
+onMounted(() => {
+  const router = useRouter()
+  isOnPlayground.value = router.currentRoute.value.name === 'playground' ? true : false
+})
 
 const netlist = ref({})
 const selected = ref<SimulationMode>(SimulationMode.Transient)

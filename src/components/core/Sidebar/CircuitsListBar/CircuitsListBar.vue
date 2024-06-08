@@ -2,48 +2,47 @@
   <div class="flex flex-col space-y-2 content-center mx-4">
     <CollapsibleItems name="Schematic connectors">
       <CircuitItem :circuit-component="CircuitComponent.Ground" name="Ground">
-        <GroundIcon :style="{fill: color}" class="transform scale-50" />
+        <GroundIcon :style="{ fill: color }" class="transform scale-50" />
       </CircuitItem>
     </CollapsibleItems>
 
     <CollapsibleItems name="Sources">
       <CircuitItem :circuit-component="CircuitComponent.DCVoltageSource" name="DC Voltage">
-        <VoltageSourceIcon :style="{fill: color}" class="transform scale-50" />
+        <VoltageSourceIcon :style="{ fill: color }" class="transform scale-50" />
       </CircuitItem>
       <CircuitItem :circuit-component="CircuitComponent.ACVoltageSource" name="AC Voltage">
-        <VoltageSourceIcon :style="{fill: color}" class="transform scale-50" />
+        <VoltageSourceIcon :style="{ fill: color }" class="transform scale-50" />
       </CircuitItem>
     </CollapsibleItems>
 
     <CollapsibleItems name="Passive">
       <CircuitItem :circuit-component="CircuitComponent.Resistor" name="Resistor">
-        <ResistorIcon :style="{fill: color}" class="transform scale-50" />
+        <ResistorIcon :style="{ fill: color }" class="transform scale-50" />
       </CircuitItem>
 
       <CircuitItem :circuit-component="CircuitComponent.Capacitor" name="Capacitor">
-        <CapacitorIcon :style="{fill: color}" class="transform scale-50" />
+        <CapacitorIcon :style="{ fill: color }" class="transform scale-50" />
       </CircuitItem>
 
       <CircuitItem :circuit-component="CircuitComponent.Inductor" name="Inductor">
-        <InductorIcon :style="{fill: color}" class="transform scale-50" />
+        <InductorIcon :style="{ fill: color }" class="transform scale-50" />
       </CircuitItem>
     </CollapsibleItems>
     <CollapsibleItems name="Diodes">
-
       <CircuitItem :circuit-component="CircuitComponent.Diode" name="Diode">
-        <DiodeIcon :style="{fill: color}" class="transform scale-50" />
+        <DiodeIcon :style="{ fill: color }" class="transform scale-50" />
       </CircuitItem>
     </CollapsibleItems>
 
     <CollapsibleItems name="Transistors">
       <CircuitItem :circuit-component="CircuitComponent.Transistor" name="Transistor npn">
-        <TransistorIcon :style="{fill: color}" class="transform scale-50" />
+        <TransistorIcon :style="{ fill: color }" class="transform scale-50" />
       </CircuitItem>
     </CollapsibleItems>
 
     <CollapsibleItems name="Switches">
       <CircuitItem :circuit-component="CircuitComponent.Switch" name="Switch">
-        <SwitchIcon :style="{fill: color}" class="transform scale-50" />
+        <SwitchIcon :style="{ fill: color }" class="transform scale-50" />
       </CircuitItem>
     </CollapsibleItems>
   </div>
@@ -69,6 +68,7 @@ import { ref, watch } from 'vue'
 const mode = useColorMode()
 
 const color = ref<'white' | 'black'>('white')
+color.value = mode.value === 'dark' ? 'white' : 'black'
 
 watch(mode, (newVal) => {
   color.value = newVal === 'dark' ? 'white' : 'black'

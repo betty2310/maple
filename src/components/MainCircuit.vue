@@ -84,6 +84,7 @@ watch(
       const obj = newVal as unknown as FlowExportObject
       await fromObject(obj)
       circuitStore.currentCircuit = obj
+      idStore.syncID(obj.nodes)
     }
   }
 )

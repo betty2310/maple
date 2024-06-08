@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Plus } from 'lucide-vue-next'
+import { Plus, MoveRight } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -166,35 +166,50 @@ const onSignOut = async () => {
         </h1>
       </div>
       <div class="flex justify-between items-center">
-        <Dialog>
-          <DialogTrigger as-child>
-            <Button variant="outline" size="slg" class="flex justify-between">
-              <Plus class="w-4 h-4 mr-5" />
-              <div class="flex flex-col items-start">
-                <div class="font-medium">Empty project</div>
-                <div class="text-xs text-muted-foreground">Start from scratch</div>
-              </div>
-            </Button>
-          </DialogTrigger>
-          <DialogContent class="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Create project</DialogTitle>
-            </DialogHeader>
-            <form @submit="onCreateNewProject">
-              <div class="grid gap-4 py-4">
-                <div class="grid grid-cols-4 items-center gap-4">
-                  <Label for="name" class="text-right">Project name </Label>
-                  <Input id="name" v-model="name" required class="col-span-3" />
+        <div class="flex items-center justify-center gap-4">
+          <Dialog>
+            <DialogTrigger as-child>
+              <Button variant="outline" size="slg" class="flex justify-between">
+                <Plus class="w-4 h-4 mr-5" />
+                <div class="flex flex-col items-start">
+                  <div class="font-medium">Empty project</div>
+                  <div class="text-xs text-muted-foreground">Start from scratch</div>
                 </div>
-              </div>
-              <DialogFooter>
-                <Button :variant="loading ? 'ghost' : 'default'" type="submit">
-                  {{ loading ? 'Loading...' : 'Create' }}
-                </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
+              </Button>
+            </DialogTrigger>
+            <DialogContent class="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Create project</DialogTitle>
+              </DialogHeader>
+              <form @submit="onCreateNewProject">
+                <div class="grid gap-4 py-4">
+                  <div class="grid grid-cols-4 items-center gap-4">
+                    <Label for="name" class="text-right">Project name </Label>
+                    <Input id="name" v-model="name" required class="col-span-3" />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button :variant="loading ? 'ghost' : 'default'" type="submit">
+                    {{ loading ? 'Loading...' : 'Create' }}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
+          <Button
+            variant="outline"
+            size="slg"
+            class="flex justify-between"
+            @click="router.push('/playground')"
+          >
+            <MoveRight class="w-4 h-4 mr-5" />
+            <div class="flex flex-col items-start">
+              <div class="font-medium">Enjoy</div>
+              <div class="text-xs text-muted-foreground">Playground</div>
+            </div>
+          </Button>
+        </div>
+
         <div>
           <p class="text-sm text-muted-foreground">sort by</p>
           <SortbyComboBox v-model="sortValue" />
@@ -217,7 +232,9 @@ const onSignOut = async () => {
           <RouterLink :to="`/project/${project.name}/${project.uuid}`">
             <Card class="p-3 h-[180px] bg-gradient-to-br from-blue-300 to-blue-500 text-white">
               <CardHeader>
-                <CardTitle class="overflow-hidden whitespace-nowrap">{{ project.name }}</CardTitle>
+                <CardTitle class="overflow-hidden pixelify-sans whitespace-nowrap">{{
+                  project.name
+                }}</CardTitle>
               </CardHeader>
               <CardContent> </CardContent>
             </Card>

@@ -59,7 +59,7 @@
     <div class="text-2xl">{{ message }}</div>
   </div>
   <div v-else class="flex items-center justify-center h-screen w-full">
-    <div class="text-2xl">Loading...</div>
+    <div class="text-2xl">Loading project ...</div>
   </div>
 </template>
 

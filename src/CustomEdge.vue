@@ -21,7 +21,7 @@ const { findEdge, removeEdges } = useVueFlow()
 
 type SelectedOption = 'Voltmeter' | 'Ammeter' | ''
 
-const selectedOption = ref<SelectedOption>('')
+const selectedOption = ref<SelectedOption>(props.data.export || '')
 
 const selectOption = (option: SelectedOption) => {
   selectedOption.value = option
@@ -38,6 +38,7 @@ const turnBack = () => {
     edge.data = {}
   }
 }
+console.log()
 </script>
 
 <script lang="ts">

@@ -49,10 +49,6 @@ const mode = useColorMode()
 </script>
 
 <template>
-  <!-- <div class="h-20 w-20 flex rounded-full items-center justify-center bg-orange-500 border border-slate-600">
-        <div>+</div>
-    </div> -->
-
   <NodeToolbar
     style="display: flex; gap: 0.5rem; align-items: center"
     :is-visible="toolbarVisible"
