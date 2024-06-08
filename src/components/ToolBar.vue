@@ -1,20 +1,25 @@
 <template>
   <div class="flex justify-between items-center w-full">
-    <div class="flex items-center gap-2">
+    <div>
       <AppIcon />
     </div>
-    <div class="flex flex-grow-0 flex-shrink-0">
-      <p class="leading-7 [&:not(:first-child)]:mt-6">{{ props.name ?? 'CircuitCraft' }}</p>
+    <div class="flex gap-2">
+      <div class="flex items-center justify-center gap-2">
+        <Cloud v-if="!circuitStore.isCircuitChanged" class="w-4 h-4" />
+        <CloudUpload v-else class="w-4 h-4" />
+        <p class="text-sm">{{ props.name ?? 'CircuitCraft' }}</p>
+      </div>
 
       <Button
         v-if="props.canEdit"
         :disabled="!circuitStore.isCircuitChanged || isOnSyncing"
         class="gap-1.5 text-sm"
         size="xs"
-        variant="ghost"
+        variant="outline"
         @click="onSync"
       >
         <RefreshCcw :class="!isOnSyncing ? 'size-3.5' : 'size-3.5 animate-spin'" />
+        sync
       </Button>
 
       <ShareDialog v-if="showShareDialog" :project_id="props.id ?? 100" />
@@ -65,7 +70,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ChevronDown, Play, RefreshCcw, RotateCcw } from 'lucide-vue-next'
+import { ChevronDown, Play, RefreshCcw, RotateCcw, Cloud, CloudUpload } from 'lucide-vue-next'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -152,7 +157,6 @@ const onSync = async () => {
       content: circuitStore.currentCircuit as Json
     })
     .eq('id', props.id)
-  console.log(error)
   isOnSyncing.value = false
   circuitStore.isCircuitChanged = false
 }

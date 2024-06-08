@@ -27,7 +27,11 @@ const props = defineProps<{
     <DropdownMenuTrigger as-child>
       <Button size="xs_circle" variant="ghost_circle">
         <Avatar size="tiny">
-          <AvatarImage :src="user.user_metadata.avatar_url" alt="avatar" />
+          <AvatarImage
+            v-if="user.user_metadata.avatar_url"
+            :src="user.user_metadata.avatar_url"
+            alt="avatar"
+          />
           <AvatarFallback><UserIcon class="w-4 h-4" /></AvatarFallback>
         </Avatar>
       </Button>
@@ -47,7 +51,7 @@ const props = defineProps<{
         </DropdownMenuItem>
         <DropdownMenuItem>
           <FolderDot class="mr-2 h-4 w-4" />
-          <RouterLink to="/projects">
+          <RouterLink to="/">
             <span>Projects</span>
           </RouterLink>
           <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>

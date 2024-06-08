@@ -7,12 +7,18 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('@/views/HomeView.vue')
+      component: () => import('@/views/ProjectsView.vue'),
+      beforeEnter: async (to, from, next) => {
+        const { data } = await supabase.auth.getSession()
+        const currentUser = data?.session?.user
+        if (!currentUser) next('playground')
+        else next()
+      }
     },
     {
-      path: '/test',
-      name: 'test',
-      component: () => import('@/views/Test.vue')
+      path: '/playground',
+      name: 'playground',
+      component: () => import('@/views/Playground.vue')
     },
     {
       path: '/signin',
@@ -26,29 +32,11 @@ const router = createRouter({
       }
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('@/views/AboutView.vue')
-    },
-    {
-      path: '/projects',
-      name: 'projects',
-      component: () => import('@/views/ProjectsView.vue'),
-      beforeEnter: async (to, from, next) => {
-        const { data } = await supabase.auth.getSession()
-        const currentUser = data?.session?.user
-        if (!currentUser) next('signin')
-        else next()
-      }
-    },
-    {
       path: '/project/:name/:id',
       name: 'project',
       component: () => import('@/views/ProjectView.vue')
-    }
+    },
+    { path: '/:pathMatch(.*)*', component: () => import('@/views/PagenotfoundView.vue') }
   ]
 })
 

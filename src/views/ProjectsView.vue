@@ -122,6 +122,11 @@ const onCreateNewProject = handleSubmit(async (values) => {
 
   loading.value = false
 })
+
+const onSignOut = async () => {
+  await sessionStore.signOut()
+  router.replace('/playground')
+}
 </script>
 
 <template>
@@ -134,7 +139,7 @@ const onCreateNewProject = handleSubmit(async (values) => {
       </div>
 
       <div>
-        <UserAvatarDropdown :signout="sessionStore.signOut" :user="loggedInUser" />
+        <UserAvatarDropdown :signout="onSignOut" :user="loggedInUser" />
       </div>
     </div>
   </header>

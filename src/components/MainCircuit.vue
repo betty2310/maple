@@ -67,7 +67,6 @@ onNodeClick((event) => {
 
 onMounted(async () => {
   if (props.obj) {
-    console.log(props.obj)
     const obj = props.obj as unknown as FlowExportObject
     await fromObject(obj)
     circuitStore.currentCircuit = obj
