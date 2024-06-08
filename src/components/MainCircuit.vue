@@ -14,6 +14,7 @@ import {
 } from '@vue-flow/core'
 import useDragAndDrop from '@/hooks/useDnDCircuitComponent'
 import useCircuitStore from '@/stores/circuitStore'
+import { useIDStore } from '@/stores/idStore'
 
 import ResistorNode from '@/components/circuits/ResistorNode.vue'
 import VoltageSource from '@/components/circuits/VoltageSource.vue'
@@ -58,6 +59,7 @@ onPaneReady(({ fitView }) => {
 })
 
 const circuitStore = useCircuitStore()
+const idStore = useIDStore()
 
 onNodeClick((event) => {
   circuitStore.setSelectedNode(event.node as Node)
@@ -65,9 +67,11 @@ onNodeClick((event) => {
 
 onMounted(async () => {
   if (props.obj) {
+    console.log(props.obj)
     const obj = props.obj as unknown as FlowExportObject
     await fromObject(obj)
     circuitStore.currentCircuit = obj
+    idStore.syncID(obj.nodes)
   } else {
     return
   }
