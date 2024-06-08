@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { type Session, type User } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabaseClient'
+import { useRouter } from 'vue-router'
 
 export const useSessionStore = defineStore('sessionStore', {
   state: () => ({

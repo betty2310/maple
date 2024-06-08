@@ -35,6 +35,7 @@ export const useIDStore = defineStore('circuitComponentID', {
       }
     },
     syncID(nodes: Node[]): void {
+      if (nodes === undefined) return
       nodes.forEach((node) => {
         if (node.data !== undefined) {
           const component = node.type as CircuitComponent

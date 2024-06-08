@@ -25,7 +25,6 @@ watch(
 const circuitStore = useCircuitStore()
 
 function handleUpdate() {
-  console.log(isOn.value)
   const node = circuitStore.getSelectedNode()
   if (!node) return
   node.data.isOn = isOn.value

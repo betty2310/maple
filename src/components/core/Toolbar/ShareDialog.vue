@@ -3,10 +3,8 @@ import { Loader2, Plus, Copy } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger
@@ -173,7 +171,7 @@ const handleShareLink = async () => {
     })
     .select('id')
   if (error) {
-    console.log(error)
+    return
   }
   if (!data) return
   const project_share_id = data[0].id
@@ -201,7 +199,7 @@ const dialogOpen = ref(false)
 <template>
   <Dialog v-model:open="dialogOpen">
     <DialogTrigger as-child>
-      <Button class="gap-1.5 text-sm mx-5" size="xs" variant="secondary">
+      <Button class="gap-1.5 text-sm" size="xs" variant="secondary">
         <Share class="size-3.5" />
       </Button>
     </DialogTrigger>
