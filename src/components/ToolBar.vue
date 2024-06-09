@@ -1,7 +1,8 @@
 <template>
   <div class="flex justify-between items-center w-full">
-    <div>
+    <div class="flex items-center gap-3">
       <AppIcon />
+      <Badge variant="secondary">playground</Badge>
     </div>
     <div class="flex gap-2" v-if="!isOnPlayground">
       <div class="flex items-center justify-center gap-2">
@@ -62,7 +63,7 @@
       </Button>
 
       <RouterLink v-if="loggedInUser === null" to="/signin">
-        <Button size="xs">Sign in</Button>
+        <Button size="xs" variant="outline">Sign in</Button>
       </RouterLink>
       <UserAvatarDropdown v-else :signout="sessionStore.signOut" :user="loggedInUser" />
     </div>
@@ -83,6 +84,7 @@ import {
 import { Button } from '@/components/ui/button'
 import UserAvatarDropdown from '@/components/ui/UserAvatarDropdown.vue'
 import ShareDialog from '@/components/core/Toolbar/ShareDialog.vue'
+import { Badge } from '@/components/ui/badge'
 import AppIcon from '@/components/core/Toolbar/AppIcon.vue'
 
 import { computed, ref, watch, onMounted } from 'vue'

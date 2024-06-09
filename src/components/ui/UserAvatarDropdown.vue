@@ -41,7 +41,7 @@ const props = defineProps<{
       </Button> -->
     </DropdownMenuTrigger>
     <DropdownMenuContent class="w-56">
-      <DropdownMenuLabel>My Account</DropdownMenuLabel>
+      <DropdownMenuLabel>{{ user.user_metadata.email }}</DropdownMenuLabel>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
         <DropdownMenuItem>
