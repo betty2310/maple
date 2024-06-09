@@ -39,7 +39,7 @@
       <ResizablePanel
         ref="bottomPanelRef"
         :default-size="20"
-        :max-size="60"
+        :max-size="70"
         :min-size="20"
         :collapsedSize="0"
         collapsible
@@ -99,6 +99,8 @@ watch(
   (value) => {
     if (value) {
       layoutStore.bottomPanelItem = null
+    } else {
+      layoutStore.bottomPanelItem = BottomPanelItem.Simulation
     }
   }
 )
@@ -109,6 +111,7 @@ import type { Json } from '@/database/types'
 import { useSessionStore } from '@/stores/sessionStore'
 import type { RealtimeChannel } from '@supabase/supabase-js'
 import type { FlowExportObject } from '@vue-flow/core'
+import { BottomPanelItem } from '@/enums'
 const sessionStore = useSessionStore()
 
 const route = useRoute()

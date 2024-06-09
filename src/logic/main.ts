@@ -22,7 +22,6 @@ import { AnalysisType, type ExportNode } from '@/types/AnalysisType'
 
 function convertGraphToNetlist(circuit: FlowExportObject): string {
   const nodeMap: { [nodeId: string]: Component } = {}
-  console.log(circuit)
 
   let idSourceComponent = 0
 
@@ -114,7 +113,6 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
     if (targetNode instanceof Transistor) {
       const transistorComponent = targetComponent as Node<TransistorData>
       const edgeConnectPosition = edge.targetHandle?.split('-')[1]
-      console.log(edgeConnectPosition, transistorComponent.data)
       if (edgeConnectPosition === transistorComponent.data?.b) {
         targetNode.b = edge.data.id
       } else if (edgeConnectPosition === transistorComponent.data?.c) {
@@ -133,7 +131,6 @@ function convertGraphToNetlist(circuit: FlowExportObject): string {
     if (component instanceof Ground) continue
     netlist.push(component.toString())
   }
-  console.log(netlist.join('\n'))
   return netlist.join('\n')
 }
 
@@ -158,7 +155,6 @@ function getAnalysisType(circuit: FlowExportObject): ExportNode[] {
       })
     }
   })
-  console.log(analysisType)
   return analysisType
 }
 

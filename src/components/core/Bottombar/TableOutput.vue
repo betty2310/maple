@@ -27,6 +27,12 @@ const headers = computed(() => {
   })
   return Object.fromEntries(Array.from(keys).map((key) => [key, null]))
 })
+
+const fitlerItems = (item: ChartData) => {
+  if (item === null) return
+  const { input, ...data } = item
+  return data
+}
 </script>
 
 <template>
@@ -40,8 +46,8 @@ const headers = computed(() => {
     <TableBody>
       <TableRow v-for="(item, index) in props.response" :key="index">
         <TableCell>{{ item.input }}</TableCell>
-        <TableCell v-for="(value, key) in item" :key="key">
-          <div v-if="key !== 'input'">{{ value }}</div>
+        <TableCell v-for="(value, key) in fitlerItems(item)" :key="key">
+          <p>{{ value }}</p>
         </TableCell>
       </TableRow>
     </TableBody>

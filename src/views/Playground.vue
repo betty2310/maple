@@ -39,7 +39,7 @@
       <ResizablePanel
         ref="bottomPanelRef"
         :default-size="20"
-        :max-size="60"
+        :max-size="70"
         :min-size="20"
         :collapsedSize="0"
         collapsible

@@ -11,6 +11,11 @@ function getToken() {
   return token
 }
 
+function deleteToken() {
+  const storageKey = `sb-${supabaseProjectId}-auth-token`
+  localStorage.removeItem(storageKey)
+}
+
 function convertToCircuiComponent(type: string | undefined): CircuitComponent {
   let typeCircuit = CircuitComponent.Ground
   switch (type) {
@@ -45,4 +50,4 @@ function convertToCircuiComponent(type: string | undefined): CircuitComponent {
   return typeCircuit
 }
 
-export { convertToCircuiComponent, getToken }
+export { convertToCircuiComponent, getToken, deleteToken }

@@ -31,7 +31,7 @@ onMounted(() => {
 
 const loading = ref(false)
 
-async function updateProfile() {
+async function updateAvatarProfile() {
   try {
     loading.value = true
     const user = sessionStore.user
@@ -39,8 +39,27 @@ async function updateProfile() {
 
     const { error } = await supabase.auth.updateUser({
       data: {
-        full_name: displayName.value,
         avatar_url: avatar_url.value
+      }
+    })
+
+    if (error) throw error
+  } catch (error) {
+    console.error('Error updating profile:', error)
+  } finally {
+    loading.value = false
+  }
+}
+
+async function updateInforProfile() {
+  try {
+    loading.value = true
+    const user = sessionStore.user
+    if (!user) return
+
+    const { error } = await supabase.auth.updateUser({
+      data: {
+        full_name: displayName.value
       }
     })
 
@@ -115,12 +134,12 @@ const onSignOut = async () => {
                 <Label>Email verified</Label>
               </div>
             </div>
-            <Button :disabled="loading" size="sm" :variant="'default'" @click="updateProfile">
+            <Button :disabled="loading" size="sm" :variant="'default'" @click="updateInforProfile">
               {{ loading ? 'Loading' : 'Update' }}
             </Button>
           </div>
           <div class="col-span-1">
-            <Avatar v-model:path="avatar_url" @upload="updateProfile" size="10" />
+            <Avatar v-model:path="avatar_url" @upload="updateAvatarProfile" size="10" />
           </div>
         </div>
       </div>

@@ -11,6 +11,8 @@ import * as zod from 'zod'
 import AppIcon from '@/components/core/Toolbar/AppIcon.vue'
 import { useToast } from '@/components/ui/toast/use-toast'
 import { supabase } from '@/lib/supabaseClient'
+import { deleteToken } from '@/utils'
+import { useRouter } from 'vue-router'
 const { toast } = useToast()
 
 const validationSchema = toTypedSchema(
@@ -38,6 +40,7 @@ const { value: passwordConfirmation } = useField<string>('passwordConfirmation')
 
 const loading = ref<boolean>(false)
 const errorMessage = ref<string>('')
+const router = useRouter()
 
 const onSubmit = handleSubmit(async (values) => {
   loading.value = true
@@ -46,9 +49,11 @@ const onSubmit = handleSubmit(async (values) => {
     password: values.password
   })
   if (data && !error) {
+    deleteToken()
     toast({
       title: `Password has been reset.`
     })
+    await router.replace('/signin')
   }
   if (error) {
     errorMessage.value = error.message
