@@ -2,7 +2,7 @@
   <div class="flex justify-between items-center w-full">
     <div class="flex items-center gap-3">
       <AppIcon />
-      <Badge variant="secondary">playground</Badge>
+      <Badge v-if="isOnPlayground" variant="secondary">playground</Badge>
     </div>
     <div class="flex gap-2" v-if="!isOnPlayground">
       <div class="flex items-center justify-center gap-2">
@@ -23,7 +23,7 @@
         sync
       </Button>
 
-      <ShareDialog v-if="showShareDialog" :project_id="props.id ?? 100" />
+      <ShareDialog v-if="showShareDialog && props.id !== undefined" :project_id="props.id" />
     </div>
     <div class="flex items-center gap-3">
       <DropdownMenu class="ml-auto">

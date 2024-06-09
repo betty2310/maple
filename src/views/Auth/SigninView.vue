@@ -44,7 +44,7 @@ const onSubmit = handleSubmit(async (values) => {
     )
 
     if (user) {
-      router.back()
+      router.push('/')
     }
   } catch (error) {
     if (error instanceof Error) {
@@ -93,7 +93,9 @@ const handleSignInWithGoogle = async () => {
               <div class="flex items-center">
                 <Label for="password">Password</Label>
                 <RouterLink to="/forgot-password" class="ml-auto inline-block text-sm underline">
-                  <Button variant="link" class="text-primary -mx-3">Forgot your password?</Button>
+                  <Button variant="link" class="text-primary -mx-3 -my-2"
+                    >Forgot your password?</Button
+                  >
                 </RouterLink>
               </div>
               <Input id="password" v-model="password" type="password" />

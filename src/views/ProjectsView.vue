@@ -24,7 +24,7 @@ import { useSessionStore } from '@/stores/sessionStore'
 
 const projectStore = useProjectStore()
 const sessionStore = useSessionStore()
-const loggedInUser = computed(() => sessionStore.user)
+const user = sessionStore.user
 const isLoadingProjects = ref<boolean>(false)
 
 const projects = ref<
@@ -77,6 +77,8 @@ onMounted(async () => {
     const currentUserId = sessionStore.user?.id
     if (!currentUserId) return
     const data = await projectStore.getProjects(currentUserId)
+    const avatarUrl = sessionStore.user?.user_metadata.avatar_url
+    await sessionStore.GetAvatarUrl(avatarUrl)
     projects.value = data
   } catch (error) {
     console.error(error)
@@ -123,123 +125,136 @@ const onCreateNewProject = handleSubmit(async (values) => {
   loading.value = false
 })
 
+const isOnSignOut = ref(false)
 const onSignOut = async () => {
+  isOnSignOut.value = true
   await sessionStore.signOut()
+  isOnSignOut.value = false
   router.replace('/playground')
 }
 </script>
 
 <template>
-  <header
-    class="sticky top-0 z-30 flex h-[45px] w-full items-center gap-1 border-b bg-secondary px-4"
+  <div
+    v-if="isOnSignOut"
+    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
   >
-    <div class="flex justify-between items-center w-full">
-      <div class="flex items-center gap-2">
-        <AppIcon />
-      </div>
-
-      <div>
-        <UserAvatarDropdown :signout="onSignOut" :user="loggedInUser" />
-      </div>
+    <div class="bg-white p-4 rounded-lg">
+      <p>Signing out...</p>
     </div>
-  </header>
-  <div class="container h-screen mx-auto p-4">
-    <div class="flex flex-col gap-4">
-      <div class="relative w-full max-w-sm items-center">
-        <Input
-          id="search"
-          v-model="searchQuery"
-          type="text"
-          placeholder="Search in projects"
-          class="pl-10 bg-secondary"
-        />
-        <span class="absolute start-0 inset-y-0 flex items-center justify-center px-2">
-          <Search class="size-6 text-muted-foreground" />
-        </span>
-      </div>
-      <div class="my-2">
-        <h3 class="scroll-m-20 text-xl font-semibold tracking-tight pb-4">Projects</h3>
-        <h1
-          class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
-        >
-          Dashboard
-        </h1>
-      </div>
-      <div class="flex justify-between items-center">
-        <div class="flex items-center justify-center gap-4">
-          <Dialog>
-            <DialogTrigger as-child>
-              <Button variant="outline" size="slg" class="flex justify-between">
-                <Plus class="w-4 h-4 mr-5" />
-                <div class="flex flex-col items-start">
-                  <div class="font-medium">Empty project</div>
-                  <div class="text-xs text-muted-foreground">Start from scratch</div>
-                </div>
-              </Button>
-            </DialogTrigger>
-            <DialogContent class="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Create project</DialogTitle>
-              </DialogHeader>
-              <form @submit="onCreateNewProject">
-                <div class="grid gap-4 py-4">
-                  <div class="grid grid-cols-4 items-center gap-4">
-                    <Label for="name" class="text-right">Project name </Label>
-                    <Input id="name" v-model="name" required class="col-span-3" />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button :variant="loading ? 'ghost' : 'default'" type="submit">
-                    {{ loading ? 'Loading...' : 'Create' }}
-                  </Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
-          <Button
-            variant="outline"
-            size="slg"
-            class="flex justify-between"
-            @click="router.push('/playground')"
-          >
-            <MoveRight class="w-4 h-4 mr-5" />
-            <div class="flex flex-col items-start">
-              <div class="font-medium">Enjoy</div>
-              <div class="text-xs text-muted-foreground">Playground</div>
-            </div>
-          </Button>
+  </div>
+  <div v-else>
+    <header
+      class="sticky top-0 z-30 flex h-[45px] w-full items-center gap-1 border-b bg-secondary px-4"
+    >
+      <div class="flex justify-between items-center w-full">
+        <div class="flex items-center gap-2">
+          <AppIcon />
         </div>
 
         <div>
-          <p class="text-sm text-muted-foreground">sort by</p>
-          <SortbyComboBox v-model="sortValue" />
+          <UserAvatarDropdown :signout="onSignOut" :user="user" v-if="user !== null" />
         </div>
       </div>
+    </header>
+    <div class="container h-screen mx-auto p-4">
+      <div class="flex flex-col gap-4">
+        <div class="relative w-full max-w-sm items-center">
+          <Input
+            id="search"
+            v-model="searchQuery"
+            type="text"
+            placeholder="Search in projects"
+            class="pl-10 bg-secondary"
+          />
+          <span class="absolute start-0 inset-y-0 flex items-center justify-center px-2">
+            <Search class="size-6 text-muted-foreground" />
+          </span>
+        </div>
+        <div class="my-2">
+          <h3 class="scroll-m-20 text-xl font-semibold tracking-tight pb-4">Projects</h3>
+          <h1
+            class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+          >
+            Dashboard
+          </h1>
+        </div>
+        <div class="flex justify-between items-center">
+          <div class="flex items-center justify-center gap-4">
+            <Dialog>
+              <DialogTrigger as-child>
+                <Button variant="outline" size="slg" class="flex justify-between">
+                  <Plus class="w-4 h-4 mr-5" />
+                  <div class="flex flex-col items-start">
+                    <div class="font-medium">Empty project</div>
+                    <div class="text-xs text-muted-foreground">Start from scratch</div>
+                  </div>
+                </Button>
+              </DialogTrigger>
+              <DialogContent class="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Create project</DialogTitle>
+                </DialogHeader>
+                <form @submit="onCreateNewProject">
+                  <div class="grid gap-4 py-4">
+                    <div class="grid grid-cols-4 items-center gap-4">
+                      <Label for="name" class="text-right">Project name </Label>
+                      <Input id="name" v-model="name" required class="col-span-3" />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button :variant="loading ? 'ghost' : 'default'" type="submit">
+                      {{ loading ? 'Loading...' : 'Create' }}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+            <Button
+              variant="outline"
+              size="slg"
+              class="flex justify-between"
+              @click="router.push('/playground')"
+            >
+              <MoveRight class="w-4 h-4 mr-5" />
+              <div class="flex flex-col items-start">
+                <div class="font-medium">Enjoy</div>
+                <div class="text-xs text-muted-foreground">Playground</div>
+              </div>
+            </Button>
+          </div>
 
-      <div class="flex flex-wrap gap-10 mt-10">
-        <div v-if="isLoadingProjects" class="flex items-center space-x-4">
-          <div class="space-y-2">
-            <Skeleton class="h-4 w-[250px]" />
-            <Skeleton class="h-4 w-[200px]" />
+          <div>
+            <p class="text-sm text-muted-foreground">sort by</p>
+            <SortbyComboBox v-model="sortValue" />
           </div>
         </div>
-        <div
-          v-else
-          v-for="project in filteredProjects"
-          :key="project.id"
-          class="w-[180px] h-[200px]"
-        >
-          <RouterLink :to="`/project/${project.name}/${project.uuid}`">
-            <Card class="p-3 h-[180px] bg-gradient-to-br from-blue-300 to-blue-500 text-white">
-              <CardHeader>
-                <CardTitle class="overflow-hidden pixelify-sans whitespace-nowrap">{{
-                  project.name
-                }}</CardTitle>
-              </CardHeader>
-              <CardContent> </CardContent>
-            </Card>
-          </RouterLink>
-          <p class="font-bold text-center text-sm">{{ project.name }}</p>
+
+        <div class="flex flex-wrap gap-10 mt-10">
+          <div v-if="isLoadingProjects" class="flex items-center space-x-4">
+            <div class="space-y-2">
+              <Skeleton class="h-4 w-[250px]" />
+              <Skeleton class="h-4 w-[200px]" />
+            </div>
+          </div>
+          <div
+            v-else
+            v-for="project in filteredProjects"
+            :key="project.id"
+            class="w-[180px] h-[200px]"
+          >
+            <RouterLink :to="`/project/${project.name}/${project.uuid}`">
+              <Card class="p-3 h-[180px] bg-gradient-to-br from-blue-300 to-blue-500 text-white">
+                <CardHeader>
+                  <CardTitle class="overflow-hidden pixelify-sans whitespace-nowrap">{{
+                    project.name
+                  }}</CardTitle>
+                </CardHeader>
+                <CardContent> </CardContent>
+              </Card>
+            </RouterLink>
+            <p class="font-bold text-center text-sm">{{ project.name }}</p>
+          </div>
         </div>
       </div>
     </div>

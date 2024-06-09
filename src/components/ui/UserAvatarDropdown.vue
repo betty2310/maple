@@ -15,11 +15,21 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 import { Button } from '@/components/ui/button'
 import { type User } from '@supabase/supabase-js'
+import { onMounted, ref } from 'vue'
+
+import { useSessionStore } from '@/stores/sessionStore'
+const sessionStore = useSessionStore()
 
 const props = defineProps<{
   user: User
   signout: () => void
 }>()
+
+const avatar = ref<string | null>(null)
+onMounted(async () => {
+  sessionStore.GetAvatarUrl(props.user.user_metadata.avatar_url)
+  avatar.value = sessionStore.avatar
+})
 </script>
 
 <template>
@@ -27,11 +37,7 @@ const props = defineProps<{
     <DropdownMenuTrigger as-child>
       <Button size="xs_circle" variant="ghost_circle">
         <Avatar size="tiny">
-          <AvatarImage
-            v-if="user.user_metadata.avatar_url"
-            :src="user.user_metadata.avatar_url"
-            alt="avatar"
-          />
+          <AvatarImage v-if="avatar" :src="avatar" alt="avatar" />
           <AvatarFallback><UserIcon class="w-4 h-4" /></AvatarFallback>
         </Avatar>
       </Button>
@@ -44,23 +50,25 @@ const props = defineProps<{
       <DropdownMenuLabel>{{ user.user_metadata.email }}</DropdownMenuLabel>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
-        <DropdownMenuItem>
-          <UserIcon class="mr-2 h-4 w-4" />
-          <span>Profile</span>
-          <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <FolderDot class="mr-2 h-4 w-4" />
-          <RouterLink to="/">
+        <RouterLink to="/profile">
+          <DropdownMenuItem>
+            <UserIcon class="mr-2 h-4 w-4" />
+            <span>Profile</span>
+            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </RouterLink>
+        <RouterLink to="/">
+          <DropdownMenuItem>
+            <FolderDot class="mr-2 h-4 w-4" />
             <span>Projects</span>
-          </RouterLink>
-          <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-        </DropdownMenuItem>
+            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </RouterLink>
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
-      <DropdownMenuItem>
+      <DropdownMenuItem @click="props.signout">
         <LogOut class="mr-2 h-4 w-4" />
-        <span @click="props.signout">Log out</span>
+        <span>Log out</span>
         <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
       </DropdownMenuItem>
     </DropdownMenuContent>

@@ -5,7 +5,7 @@
     >
       <ToolBar
         :content="{}"
-        :id="10"
+        :id="undefined"
         :name="'Playground'"
         :showShareDialog="false"
         :can-edit="true"

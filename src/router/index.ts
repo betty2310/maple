@@ -16,6 +16,17 @@ const router = createRouter({
       }
     },
     {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('@/views/ProfileView.vue'),
+      beforeEnter: async (to, from, next) => {
+        const { data } = await supabase.auth.getSession()
+        const currentUser = data?.session?.user
+        if (!currentUser) next('playground')
+        else next()
+      }
+    },
+    {
       path: '/playground',
       name: 'playground',
       component: () => import('@/views/Playground.vue')
@@ -23,7 +34,7 @@ const router = createRouter({
     {
       path: '/signin',
       name: 'signin',
-      component: () => import('@/views/SigninView.vue'),
+      component: () => import('@/views/Auth/SigninView.vue'),
       beforeEnter: async (to, from, next) => {
         const { data } = await supabase.auth.getSession()
         const currentUser = data?.session?.user
@@ -34,7 +45,7 @@ const router = createRouter({
     {
       path: '/signup',
       name: 'signup',
-      component: () => import('@/views/SignUpView.vue'),
+      component: () => import('@/views/Auth/SignUpView.vue'),
       beforeEnter: async (to, from, next) => {
         const { data } = await supabase.auth.getSession()
         const currentUser = data?.session?.user
@@ -45,12 +56,12 @@ const router = createRouter({
     {
       path: '/forgot-password',
       name: 'forgot_password',
-      component: () => import('@/views/ForgotPasswordView.vue')
+      component: () => import('@/views/Auth/ForgotPasswordView.vue')
     },
     {
       path: '/reset-password',
       name: 'reset',
-      component: () => import('@/views/ResetPasswordView.vue')
+      component: () => import('@/views/Auth/ResetPasswordView.vue')
     },
     {
       path: '/project/:name/:id',
