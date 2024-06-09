@@ -32,6 +32,27 @@ const router = createRouter({
       }
     },
     {
+      path: '/signup',
+      name: 'signup',
+      component: () => import('@/views/SignUpView.vue'),
+      beforeEnter: async (to, from, next) => {
+        const { data } = await supabase.auth.getSession()
+        const currentUser = data?.session?.user
+        if (currentUser) next('/')
+        else next()
+      }
+    },
+    {
+      path: '/forgot-password',
+      name: 'forgot_password',
+      component: () => import('@/views/ForgotPasswordView.vue')
+    },
+    {
+      path: '/reset-password',
+      name: 'reset',
+      component: () => import('@/views/ResetPasswordView.vue')
+    },
+    {
       path: '/project/:name/:id',
       name: 'project',
       component: () => import('@/views/ProjectView.vue')

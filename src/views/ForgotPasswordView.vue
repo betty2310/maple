@@ -11,21 +11,21 @@ import * as zod from 'zod'
 import { useRouter } from 'vue-router'
 import { useSessionStore } from '@/stores/sessionStore'
 import AppIcon from '@/components/core/Toolbar/AppIcon.vue'
+import { useToast } from '@/components/ui/toast/use-toast'
+const { toast } = useToast()
 
 const validationSchema = toTypedSchema(
   zod.object({
     email: zod
       .string()
       .min(1, { message: 'This is required' })
-      .email({ message: 'Must be a valid email' }),
-    password: zod.string().min(1, { message: 'This is required' }).min(6, { message: 'Too short' })
+      .email({ message: 'Must be a valid email' })
   })
 )
 const { handleSubmit, errors } = useForm({
   validationSchema
 })
 const { value: email } = useField<string>('email')
-const { value: password } = useField<string>('password')
 
 const loading = ref<boolean>(false)
 const errorMessage = ref<string>('')
@@ -38,13 +38,13 @@ const onSubmit = handleSubmit(async (values) => {
   try {
     loading.value = true
     errorMessage.value = ''
-    const { user, session } = await sessionStore.signinWithEmailAndPassword(
-      values.email,
-      values.password
-    )
-
-    if (user) {
-      router.back()
+    const data = await sessionStore.resetPassowrd(values.email)
+    console.log(data)
+    const email = values.email
+    if (data) {
+      toast({
+        title: `An email has been sent to ${email} with instructions to reset your password.`
+      })
     }
   } catch (error) {
     if (error instanceof Error) {
@@ -54,16 +54,6 @@ const onSubmit = handleSubmit(async (values) => {
     loading.value = false
   }
 })
-
-const handleSignInWithGoogle = async () => {
-  try {
-    await sessionStore.signinWithGoogle()
-  } catch (error) {
-    if (error instanceof Error) {
-      errorMessage.value = error.message
-    }
-  }
-}
 </script>
 
 <template>
@@ -71,11 +61,11 @@ const handleSignInWithGoogle = async () => {
     <div class="flex items-center justify-center py-12">
       <div class="mx-auto grid w-[350px] gap-6">
         <div class="grid gap-2 text-center">
-          <h1 class="text-3xl font-bold">Welcome Back!</h1>
-          <div class="flex items-center justify-center">
-            <p class="text-balance text-muted-foreground pr-1">Let's dive back into the fun!</p>
+          <div class="flex items-center justify-center text-center">
             <AppIcon />
           </div>
+          <h1 class="text-3xl font-bold">Forgot password</h1>
+          <p class="text-balance text-muted-foreground">Enter your email to reset your password</p>
         </div>
         <div class="bg-destructive p-2 rounded-md" v-if="errorMessage !== ''">
           <p class="text-sm text-destructive-foreground">{{ errorMessage }}</p>
@@ -88,31 +78,17 @@ const handleSignInWithGoogle = async () => {
               <span class="text-sm font-medium leading-none text-destructive">{{
                 errors.email
               }}</span>
+
+              <Button :disabled="loading" :variant="'default'" class="w-full" type="submit">
+                {{ loading ? 'Loading' : 'Confirm' }}
+              </Button>
             </div>
-            <div class="grid gap-2">
-              <div class="flex items-center">
-                <Label for="password">Password</Label>
-                <RouterLink to="/forgot-password" class="ml-auto inline-block text-sm underline">
-                  <Button variant="link" class="text-primary -mx-3">Forgot your password?</Button>
-                </RouterLink>
-              </div>
-              <Input id="password" v-model="password" type="password" />
-              <span class="text-sm font-medium leading-none text-destructive">{{
-                errors.password
-              }}</span>
-            </div>
-            <Button :disabled="loading" :variant="'default'" class="w-full" type="submit">
-              {{ loading ? 'Loading' : 'Login' }}
-            </Button>
-            <Button class="w-full" variant="outline" @click="handleSignInWithGoogle">
-              Login with Google
-            </Button>
           </div>
         </form>
         <div class="mt-4 text-center text-sm">
-          Don't have an account?
-          <RouterLink to="/signup">
-            <Button variant="link" class="text-primary -mx-3">Sign up</Button>
+          Back to sign in?
+          <RouterLink to="/signin">
+            <Button variant="link" class="text-primary -mx-3">Sign in</Button>
           </RouterLink>
         </div>
       </div>

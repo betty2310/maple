@@ -18,6 +18,29 @@ export const useSessionStore = defineStore('sessionStore', {
       return data
     },
 
+    async signupWithEmailAndPassword(email: string, password: string, name: string) {
+      const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            full_name: name
+          }
+        }
+      })
+      if (error) throw error
+      return data
+    },
+
+    async resetPassowrd(email: string) {
+      const url = import.meta.env.VITE_APP_URL
+      const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: url + '/reset-password'
+      })
+      if (error) throw error
+      return data
+    },
+
     async signinWithGoogle() {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
