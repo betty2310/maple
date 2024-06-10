@@ -38,7 +38,6 @@ const turnBack = () => {
     edge.data = {}
   }
 }
-console.log()
 </script>
 
 <script lang="ts">

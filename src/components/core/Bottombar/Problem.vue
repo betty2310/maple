@@ -15,8 +15,12 @@ const statusCode = simulationResponseStore.statusCode
 
 const parserStatusCode = (statusCode: number | null) => {
   switch (statusCode) {
-    case 500:
+    case 501:
       return 'No export nodes provided'
+    case 502:
+      return 'The circuit must have a voltage source'
+    case 503:
+      return 'Unknown error occurred while simulating the circuit'
     case null:
       return ''
     default:

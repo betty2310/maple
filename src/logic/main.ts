@@ -20,9 +20,8 @@ import {
 } from '@/types'
 import { AnalysisType, type ExportNode } from '@/types/AnalysisType'
 
-function convertGraphToNetlist(circuit: FlowExportObject): string {
-  const nodeMap: { [nodeId: string]: Component } = {}
-
+let nodeMap: { [nodeId: string]: Component } = {}
+function convertGraphToNetlist(circuit: FlowExportObject) {
   let idSourceComponent = 0
 
   // Create component objects from nodes list
@@ -149,9 +148,10 @@ function getAnalysisType(circuit: FlowExportObject): ExportNode[] {
       const sourceComponent = circuit.nodes.find(
         (node) => node.id === edge.source
       ) as Node<ComponentData>
+      const id = nodeMap[sourceComponent.id].id
       analysisType.push({
         type: AnalysisType.Ammeter,
-        node: `${sourceComponent.data?.id}`
+        node: id
       })
     }
   })
@@ -166,6 +166,8 @@ function handleAPI(circuit: FlowExportObject) {
 
   netlist = netlist + `\n.END`
   const mode = useRunStore().getMode()
+
+  nodeMap = {}
 
   return {
     netlist: netlist,

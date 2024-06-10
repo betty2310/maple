@@ -70,6 +70,7 @@ import { ref, watch } from 'vue'
 
 import { useLayoutStore } from '@/stores/layoutStore'
 import SimulationBottombar from '@/components/SimulationBottombar.vue'
+import { BottomPanelItem } from '@/enums'
 const layoutStore = useLayoutStore()
 
 const { onDrop } = useDragAndDrop()
@@ -91,6 +92,8 @@ watch(
   (value) => {
     if (value) {
       layoutStore.bottomPanelItem = null
+    } else {
+      layoutStore.bottomPanelItem = BottomPanelItem.Simulation
     }
   }
 )

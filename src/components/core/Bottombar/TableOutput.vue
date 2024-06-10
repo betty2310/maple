@@ -8,12 +8,25 @@ import {
   TableRow
 } from '@/components/ui/table'
 import type { ChartData } from '@/types'
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
+import useRunStore from '@/stores/runStore'
+const runStore = useRunStore()
 
 const props = defineProps<{
   response: ChartData[] | null
   responseKeys: string[]
 }>()
+
+const unit = computed(() => {
+  const mode = runStore.getMode()
+  if (mode === 0) {
+    return 's'
+  } else if (mode === 1) {
+    return 'V'
+  } else {
+    return 'Hz'
+  }
+})
 
 const headers = computed(() => {
   const keys = new Set<string>()
@@ -21,7 +34,11 @@ const headers = computed(() => {
   props.response.forEach((item) => {
     Object.keys(item).forEach((key) => {
       if (key !== 'input') {
-        keys.add(key)
+        if (key.at(0) === 'I') {
+          keys.add(`${key} (A)`)
+        } else {
+          keys.add(`${key} (V)`)
+        }
       }
     })
   })
@@ -30,6 +47,7 @@ const headers = computed(() => {
 
 const fitlerItems = (item: ChartData) => {
   if (item === null) return
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { input, ...data } = item
   return data
 }
@@ -39,7 +57,7 @@ const fitlerItems = (item: ChartData) => {
   <Table v-if="props.response !== null">
     <TableHeader>
       <TableRow>
-        <TableHead>Input</TableHead>
+        <TableHead>Input ({{ unit }})</TableHead>
         <TableHead v-for="(value, key) in headers" :key="key">{{ key }}</TableHead>
       </TableRow>
     </TableHeader>
