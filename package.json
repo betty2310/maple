@@ -37,7 +37,7 @@
     "vee-validate": "^4.12.8",
     "vue": "^3.4.21",
     "vue-echarts": "^6.7.2",
-    "vue-router": "^4.3.0",
+    "vue-router": "^4.3.3",
     "zod": "^3.23.8"
   },
   "devDependencies": {
