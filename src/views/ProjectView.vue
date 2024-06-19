@@ -55,8 +55,13 @@
       <StatusBar />
     </footer>
   </div>
-  <div v-else-if="message" class="flex items-center justify-center h-screen w-full">
-    <div class="text-2xl">{{ message }}</div>
+  <div v-else-if="message" class="flex flex-col gap-2 items-center justify-center h-screen w-full">
+    <div class="text-3xl">{{ message }}</div>
+    <div class="flex flex-row items-center">
+      <RouterLink :to="'/signin'"><Button variant="link">Sign in</Button></RouterLink>
+      <div class="text-md">or</div>
+      <RouterLink :to="'/playground'"><Button variant="link">Try playground</Button></RouterLink>
+    </div>
   </div>
   <div v-else class="flex items-center justify-center h-screen w-full">
     <div class="text-2xl">Loading project ...</div>
@@ -72,6 +77,7 @@ import StatusBar from '@/components/StatusBar.vue'
 import MainCircuit from '@/components/MainCircuit.vue'
 import Sidebar from '@/components/core/Sidebar/Sidebar.vue'
 import useDragAndDrop from '@/hooks/useDnDCircuitComponent'
+import Button from '@/components/ui/button/Button.vue'
 import { ref, watch, onMounted, onUnmounted } from 'vue'
 
 import { useLayoutStore } from '@/stores/layoutStore'
@@ -105,7 +111,7 @@ watch(
   }
 )
 
-import { useRoute } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 import { supabase } from '@/lib/supabaseClient'
 import type { Json } from '@/database/types'
 import { useSessionStore } from '@/stores/sessionStore'
@@ -165,7 +171,7 @@ onMounted(async () => {
 
   // check user is login
   if (sessionStore.user === null) {
-    message.value = 'You need to login to access this project.'
+    message.value = 'You need to sign in to access this project.'
     return
   }
 
