@@ -46,6 +46,8 @@ import { useColorMode } from '@vueuse/core'
 import Button from '../ui/button/Button.vue'
 const mode = useColorMode()
 const color = ref<'white' | 'black'>('white')
+color.value = mode.value === 'dark' ? 'white' : 'black'
+
 watch(mode, (newVal) => {
   color.value = newVal === 'dark' ? 'white' : 'black'
 })

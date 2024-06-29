@@ -34,7 +34,12 @@
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent class="w-56">
-          <DropdownMenuLabel>Simulation mode</DropdownMenuLabel>
+          <DropdownMenuLabel>
+            <div class="flex justify-between items-center">
+              <div>Simulation mode</div>
+              <ArgumensDialog />
+            </div>
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuRadioGroup v-model="selected">
             <DropdownMenuRadioItem :value="SimulationMode.Transient">
@@ -86,6 +91,7 @@ import UserAvatarDropdown from '@/components/ui/UserAvatarDropdown.vue'
 import ShareDialog from '@/components/core/Toolbar/ShareDialog.vue'
 import { Badge } from '@/components/ui/badge'
 import AppIcon from '@/components/core/Toolbar/AppIcon.vue'
+import ArgumensDialog from '@/components/core/Toolbar/ArgumentsDialog.vue'
 
 import { computed, ref, watch, onMounted } from 'vue'
 import { useVueFlow } from '@vue-flow/core'

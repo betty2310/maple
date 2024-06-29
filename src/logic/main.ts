@@ -1,5 +1,8 @@
 import type { Edge, FlowExportObject, Node } from '@vue-flow/core'
 import useRunStore from '@/stores/runStore'
+import useSimulationArgumentsStore from '@/stores/simulationArgumentsStore'
+
+const simulationArgumentsStore = useSimulationArgumentsStore()
 import {
   ACVoltageSource,
   Capacitor,
@@ -166,6 +169,7 @@ function handleAPI(circuit: FlowExportObject) {
 
   netlist = netlist + `\n.END`
   const mode = useRunStore().getMode()
+  const simulationArguments = simulationArgumentsStore.getSimulatorArguments()
 
   nodeMap = {}
 
@@ -173,7 +177,8 @@ function handleAPI(circuit: FlowExportObject) {
     netlist: netlist,
     title: title,
     exportNodes: exportNodes,
-    mode: mode
+    mode: mode,
+    arguments: simulationArguments
   }
 }
 
