@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Plus, MoveRight } from 'lucide-vue-next'
+import { Plus, MoveRight, Eye, Edit2, Trash2 } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -26,6 +26,16 @@ const projectStore = useProjectStore()
 const sessionStore = useSessionStore()
 const user = sessionStore.user
 const isLoadingProjects = ref<boolean>(false)
+const isCardHovered = ref(false)
+const hoveredCardId = ref<number | null>(null)
+
+const setHoveredCard = (id: number) => {
+  hoveredCardId.value = id
+}
+
+const clearHoveredCard = () => {
+  hoveredCardId.value = null
+}
 
 const projects = ref<
   | {
@@ -70,7 +80,96 @@ const filteredProjects = computed(() => {
 //   if (!time) return ''
 //   return useTimeAgo(time)
 // }
+import { useToast } from '@/components/ui/toast/use-toast'
 
+const { toast } = useToast()
+
+const viewProject = (url: string) => {
+  router.push(url)
+}
+
+const renameProject = async (id: number, name: string) => {
+  const { data, error } = await supabase
+    .from('projects')
+    .update({ name: name })
+    .eq('id', id)
+    .select()
+  if (error) {
+    console.error(error)
+    toast({
+      title: 'Uh oh! Can not rename this project.',
+      description: 'There was a problem with your request.',
+      variant: 'destructive'
+    })
+    return
+  }
+
+  projects.value = projects.value?.map((project) => {
+    if (project.id === id) {
+      return { ...project, name }
+    }
+    return project
+  })
+
+  toast({
+    title: 'Project renamed successfully!',
+    description: 'Your project has been renamed.',
+    variant: 'default'
+  })
+}
+
+const deleteProject = async (id: number) => {
+  const { error } = await supabase.from('projects').delete().eq('id', id)
+  if (error) {
+    console.error(error)
+    toast({
+      title: 'Uh oh! Can not delete this project.',
+      description: 'There was a problem with your request.',
+      variant: 'destructive'
+    })
+    return
+  }
+  toast({
+    title: 'Project deleted successfully!',
+    description: 'Your project has been deleted.',
+    variant: 'default'
+  })
+  projects.value = projects.value?.filter((project) => project.id !== id)
+}
+const projectToDelete = ref<number | null>(null)
+const projectToRename = ref<number | null>(null)
+
+const openDeleteDialog = (id: number) => {
+  projectToDelete.value = id
+}
+
+const closeDeleteDialog = () => {
+  projectToDelete.value = null
+}
+
+const openRenameDialog = (id: number) => {
+  projectToRename.value = id
+}
+
+const closeRenameDialog = () => {
+  projectToRename.value = null
+}
+
+const newProjectName = ref('')
+
+const confirmRename = async () => {
+  if (projectToRename.value && newProjectName.value.trim()) {
+    await renameProject(projectToRename.value, newProjectName.value.trim())
+    closeRenameDialog()
+  }
+}
+
+const confirmDelete = () => {
+  if (projectToDelete.value) {
+    deleteProject(projectToDelete.value)
+    closeDeleteDialog()
+  }
+}
 onMounted(async () => {
   isLoadingProjects.value = true
   try {
@@ -241,22 +340,75 @@ const onSignOut = async () => {
             v-else
             v-for="project in filteredProjects"
             :key="project.id"
+            @mouseenter="setHoveredCard(project.id)"
+            @mouseleave="clearHoveredCard"
             class="w-[180px] h-[200px]"
           >
-            <RouterLink :to="`/project/${project.name}/${project.uuid}`">
+            <div class="relative">
               <Card class="p-3 h-[180px] bg-gradient-to-br from-blue-300 to-blue-500 text-white">
                 <CardHeader>
                   <CardTitle class="overflow-hidden pixelify-sans whitespace-nowrap">{{
                     project.name
                   }}</CardTitle>
                 </CardHeader>
-                <CardContent> </CardContent>
+                <CardContent>
+                  <div
+                    v-if="hoveredCardId === project.id"
+                    class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300"
+                  >
+                    <div class="flex space-x-2">
+                      <Button
+                        @click="viewProject(`/project/${project.name}/${project.uuid}`)"
+                        variant="secondary"
+                        size="xs"
+                      >
+                        <Eye class="w-4 h-4" />
+                      </Button>
+                      <Button @click="openRenameDialog(project.id)" variant="secondary" size="xs">
+                        <Edit2 class="w-4 h-4" />
+                      </Button>
+                      <Button @click="openDeleteDialog(project.id)" variant="secondary" size="xs">
+                        <Trash2 class="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
               </Card>
-            </RouterLink>
+            </div>
             <p class="font-bold text-center text-sm">{{ project.name }}</p>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <Dialog :open="!!projectToDelete" @update:open="closeDeleteDialog">
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogDescription>
+          Are you sure you want to delete this project ? This action cannot be undone.
+        </DialogDescription>
+      </DialogHeader>
+      <DialogFooter>
+        <Button @click="closeDeleteDialog" variant="secondary">Cancel</Button>
+        <Button @click="confirmDelete" variant="destructive">Delete</Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
+
+  <!-- Rename Dialog -->
+  <Dialog :open="!!projectToRename" @update:open="closeRenameDialog">
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>Rename Project</DialogTitle>
+        <DialogDescription> Enter a new name for project </DialogDescription>
+      </DialogHeader>
+      <Input v-model="newProjectName" placeholder="New project name" class="mt-4" />
+      <DialogFooter>
+        <Button @click="closeRenameDialog" variant="secondary">Cancel</Button>
+        <Button @click="confirmRename" variant="default">Save</Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
 </template>
